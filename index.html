@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משחק זיכרון עברית-אנגלית</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .card {
+            width: 100px;
+            height: 150px;
+            background-color: #3498db;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card.flipped {
+            background-color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="gameContainer"></div>
+
+    <script>
+        const words = [
+            { english: "Hello", hebrew: "שלום" },
+            { english: "Goodbye", hebrew: "להתראות" },
+            { english: "Thank you", hebrew: "תודה" },
+            { english: "Please", hebrew: "בבקשה" },
+            { english: "Yes", hebrew: "כן" },
+            { english: "No", hebrew: "לא" }
+        ];
+
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function createCard(word, language) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.word = word;
+            card.dataset.language = language;
+            card.addEventListener('click', flipCard);
+            return card;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initializeGame() {
+            const gameContainer = document.getElementById('gameContainer');
+            const allCards = [];
+
+            words.forEach(wordPair => {
+                allCards.push(createCard(wordPair.english, 'english'));
+                allCards.push(createCard(wordPair.hebrew, 'hebrew'));
+            });
+
+            shuffleArray(allCards);
+
+            allCards.forEach(card => {
+                gameContainer.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
+                this.textContent = this.dataset.word;
+                this.classList.add('flipped');
+                flippedCards.push(this);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMatch, 1000);
+                }
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            const isMatch = words.some(wordPair => 
+                (card1.dataset.word === wordPair.english && card2.dataset.word === wordPair.hebrew) ||
+                (card1.dataset.word === wordPair.hebrew && card2.dataset.word === wordPair.english)
+            );
+
+            if (isMatch) {
+                card1.removeEventListener('click', flipCard);
+                card2.removeEventListener('click', flipCard);
+                matchedPairs++;
+
+                if (matchedPairs === words.length) {
+                    alert('כל הכבוד! סיימת את המשחק!');
+                }
+            } else {
+                card1.textContent = '';
+                card2.textContent = '';
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+            }
+
+            flippedCards = [];
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>
