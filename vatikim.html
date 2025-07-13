@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תעודות ותיקים 2025</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .print-info {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .print-info h1 {
+            color: #8B5CF6;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .print-info p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .certificates-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .certificate {
+            width: 21cm;
+            height: 29.7cm;
+            background-image: url('vatikim.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            page-break-after: always;
+            break-after: page;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .certificate:last-child {
+            page-break-after: avoid;
+            break-after: avoid;
+        }
+
+        .participant-name {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: 800;
+            color: #2C1810;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            z-index: 10;
+            width: 80%;
+            line-height: 1.2;
+        }
+
+        /* הגדרות הדפסה */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .print-info,
+            .controls {
+                display: none;
+            }
+
+            .certificates-container {
+                gap: 0;
+            }
+
+            .certificate {
+                box-shadow: none;
+                border-radius: 0;
+                margin: 0;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+
+        /* עיצוב רספונסיבי */
+        @media screen and (max-width: 768px) {
+            .certificate {
+                width: 90vw;
+                height: calc(90vw * 1.414);
+            }
+            
+            .participant-name {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-info">
+        <h1>תעודות ותיקים 2025</h1>
+        <p>תעודות אישיות לותיקים • גודל A4 • דוגמאות לאישור</p>
+    </div>
+
+    <div class="controls">
+        <button class="print-btn" onclick="window.print()">
+            🖨️ הדפס תעודות
+        </button>
+        <button class="print-btn" onclick="generateAllCertificates()">
+            📜 צור את כל התעודות
+        </button>
+    </div>
+
+    <div class="certificates-container" id="certificatesContainer">
+        <!-- כל התעודות ייווצרו כאן אוטומטית -->
+    </div>
+
+    <script>
+        // נתוני כל הותיקים
+        const allParticipants = [
+            { name: "ג'נט אדרי" },
+            { name: "דינה אחרק" },
+            { name: "צביה אטיאס" },
+            { name: "ליזט איטח" },
+            { name: "רותי אליהו" },
+            { name: "מלכה אלימלך" },
+            { name: "מלכה אנג'ל" },
+            { name: "ראובן אפשטיין" },
+            { name: "דורית ארגמן" },
+            { name: "תמר אריה" },
+            { name: "אילנה ארליך" },
+            { name: "משה ארליך" },
+            { name: "רמונה בית און" },
+            { name: "יעקב בכרך" },
+            { name: "אסתר בן משה" },
+            { name: "הודיאל בן ענת" },
+            { name: "מרים בנדיק" },
+            { name: "פייבל ברג" },
+            { name: "חנה ברג" },
+            { name: "שושנה בת אור" },
+            { name: "דינה גולן" },
+            { name: "רותי גידה" },
+            { name: "רותי גל גו'אן" },
+            { name: "אבי דאלי" },
+            { name: "שולמית דמארי" },
+            { name: "הלה דמרי" },
+            { name: "רזיאל דמרי" },
+            { name: "תחיה דמתי" },
+            { name: "יעקב הדר" },
+            { name: "מתי היימס בן מנחם" },
+            { name: "רחל וולפברג" },
+            { name: "לאה חדד" },
+            { name: "ניצה חלפון" },
+            { name: "לודמילה חנצ'יס" },
+            { name: "מיכאל טולדנו" },
+            { name: "טוני טולדנו" },
+            { name: "חיים טומלק" },
+            { name: "רחל טומלק" },
+            { name: "גניס טל" },
+            { name: "רענן טל" },
+            { name: "רחל טננבאום" },
+            { name: "רחל טפירו" },
+            { name: "רפאל יאבו" },
+            { name: "עמליה יאזמה" },
+            { name: "הדסה ידעי" },
+            { name: "עדנה יעקובי" },
+            { name: "שרה כהן" },
+            { name: "אתי כהן" },
+            { name: "ורד כהן" },
+            { name: "חנה כהן לוי" },
+            { name: "אבי לוי" },
+            { name: "יהודית לוי" },
+            { name: "מסודי לוי" },
+            { name: "ציונה ליפקוביץ" },
+            { name: "צביה ליפשין" },
+            { name: "שרה מוזס" },
+            { name: "אברהם מוזס" },
+            { name: "מלכה מטרי" },
+            { name: "חוה מנדל" },
+            { name: "עזרא נוב" },
+            { name: "רנה נצר" },
+            { name: "ארנון נצר" },
+            { name: "צדוק נשר" },
+            { name: "נחמה נשר" },
+            { name: "רחל סוירסקי" },
+            { name: "עירית סימיאן" },
+            { name: "טובה סלמה" },
+            { name: "רינה סראג" },
+            { name: "אילנה סרוסי" },
+            { name: "פנינה עמיאל" },
+            { name: "דוד עמיאל" },
+            { name: "רבקה קנפו" },
+            { name: "סימונה קרופ" },
+            { name: "תקוה קרן" },
+            { name: "יעקב רוט" },
+            { name: "פנינה רון" },
+            { name: "אברהם רכלי" },
+            { name: "גבור רמני" },
+            { name: "דליה שמואל" },
+            { name: "יצחק שמש" },
+            { name: "ציון שמש" },
+            { name: "שושנה ששון" },
+            { name: "יפה תוהמי" }
+        ];
+
+        function generateAllCertificates() {
+            const container = document.getElementById('certificatesContainer');
+            container.innerHTML = ''; // נקה תעודות קיימות
+            
+            allParticipants.forEach(participant => {
+                const certificate = document.createElement('div');
+                certificate.className = 'certificate';
+                
+                certificate.innerHTML = `
+                    <div class="participant-name">${participant.name}</div>
+                `;
+                
+                container.appendChild(certificate);
+            });
+            
+            // עדכון מידע בכותרת
+            document.querySelector('.print-info p').textContent = `${allParticipants.length} תעודות אישיות לותיקים • גודל A4`;
+        }
+
+        // יצירת כל התעודות מיד בטעינת הדף
+        document.addEventListener('DOMContentLoaded', generateAllCertificates);
+    </script>
+</body>
+</html>
