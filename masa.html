@@ -38,6 +38,40 @@
             overflow: hidden;
         }
 
+        .qr-code-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .qr-code-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .qr-code-container img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .qr-code-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.8em;
+            color: #495057;
+            font-weight: 600;
+        }
+
         .header::before {
             content: '';
             position: absolute;
@@ -251,6 +285,21 @@
                 font-size: 1.1em;
             }
 
+            .qr-code-container {
+                top: 15px;
+                right: 15px;
+                padding: 10px;
+            }
+
+            .qr-code-container img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .qr-code-text {
+                font-size: 0.7em;
+            }
+
             .schedule-container {
                 padding: 20px 15px;
             }
@@ -298,6 +347,22 @@
 
             .header h1 {
                 font-size: 1.5em;
+            }
+
+            .qr-code-container {
+                top: 10px;
+                right: 10px;
+                padding: 8px;
+            }
+
+            .qr-code-container img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .qr-code-text {
+                font-size: 0.65em;
+                margin-top: 5px;
             }
 
             .schedule-table {
@@ -354,6 +419,12 @@
     </style>
 </head>
 <body>
+    <!-- QR Code Container -->
+    <div class="qr-code-container">
+        <img src="qr.png" alt="QR Code לפרטים נוספים">
+        <div class="qr-code-text">סרוק לפרטים נוספים</div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>🕰️ הפנינג מסע במנהרת הזמן</h1>
