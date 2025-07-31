@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הפנינג מסע במנהרת הזמן - טכנודע חדרה</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0.05) 20px
+            );
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%); }
+            100% { transform: translateX(100%) translateY(100%); }
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h2 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .header .date {
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .legend {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .legend h3 {
+            margin-bottom: 15px;
+            color: #495057;
+            text-align: center;
+        }
+
+        .bracelet-colors {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .color-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .color-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .pink { background-color: #ff6b9d; }
+        .green { background-color: #51cf66; }
+        .blue { background-color: #339af0; }
+        .orange { background-color: #ff922b; }
+
+        .schedule-container {
+            padding: 30px;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .schedule-table th {
+            background: linear-gradient(45deg, #495057, #6c757d);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            position: relative;
+        }
+
+        .schedule-table th:first-child {
+            width: 120px;
+        }
+
+        .schedule-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-table tr:hover td {
+            background-color: #f8f9fa;
+            transform: scale(1.02);
+        }
+
+        .time-cell {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .activity-cell {
+            position: relative;
+            cursor: pointer;
+            border-radius: 10px;
+            margin: 2px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .activity-cell:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .pink-activity {
+            background: linear-gradient(135deg, #ff6b9d, #ff8cc8);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .green-activity {
+            background: linear-gradient(135deg, #51cf66, #69db7c);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .blue-activity {
+            background: linear-gradient(135deg, #339af0, #4dabf7);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .orange-activity {
+            background: linear-gradient(135deg, #ff922b, #ffa94d);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .empty-cell {
+            background: #f8f9fa;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .activity-title {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .activity-subtitle {
+            font-size: 0.7em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header h2 {
+                font-size: 1.1em;
+            }
+
+            .schedule-container {
+                padding: 15px;
+            }
+
+            .schedule-table {
+                font-size: 0.85em;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: 10px 5px;
+            }
+
+            .activity-cell {
+                min-height: 50px;
+                padding: 5px;
+            }
+
+            .activity-title {
+                font-size: 0.8em;
+            }
+
+            .activity-subtitle {
+                font-size: 0.65em;
+            }
+
+            .bracelet-colors {
+                gap: 10px;
+            }
+
+            .color-item {
+                padding: 6px 12px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .legend {
+                padding: 15px;
+            }
+
+            .schedule-table {
+                font-size: 0.8em;
+            }
+
+            .schedule-table th:first-child {
+                width: 80px;
+            }
+
+            .activity-cell {
+                min-height: 45px;
+            }
+
+            .activity-title {
+                font-size: 0.75em;
+            }
+
+            .activity-subtitle {
+                font-size: 0.6em;
+            }
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕰️ הפנינג מסע במנהרת הזמן</h1>
+            <h2>טכנודע חדרה</h2>
+            <div class="date">31.07.2025</div>
+        </div>
+
+        <div class="legend">
+            <h3>צבעי צמידים</h3>
+            <div class="bracelet-colors">
+                <div class="color-item">
+                    <div class="color-circle pink"></div>
+                    <span>ורוד</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-circle green"></div>
+                    <span>ירוק</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-circle blue"></div>
+                    <span>תכלת</span>
+                </div>
+                <div class="color-item">
+                    <div class="color-circle orange"></div>
+                    <span>כתום</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="schedule-container">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>שעה</th>
+                        <th>צמיד ורוד</th>
+                        <th>צמיד ירוק</th>
+                        <th>צמיד תכלת</th>
+                        <th>צמיד כתום</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="time-cell">16:30-17:00</td>
+                        <td class="activity-cell pink-activity">
+                            <div>
+                                <div class="activity-title">🎭 אודיטוריום</div>
+                                <div class="activity-subtitle">הצגת זמן</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell green-activity">
+                            <div>
+                                <div class="activity-title">🔬 מעבדה</div>
+                                <div class="activity-subtitle">מיקרוסקופ דיגיטלי</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell blue-activity">
+                            <div>
+                                <div class="activity-title">💻 מחשבים 2</div>
+                                <div class="activity-subtitle">מסופר מריו לימינו</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell orange-activity">
+                            <div>
+                                <div class="activity-title">🏥 יחידה רפואית ב'</div>
+                                <div class="activity-subtitle">הדפסה תלת מימדית</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">17:00-17:30</td>
+                        <td class="activity-cell green-activity">
+                            <div>
+                                <div class="activity-title">🔬 מעבדה</div>
+                                <div class="activity-subtitle">מיקרוסקופ דיגיטלי</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell blue-activity">
+                            <div>
+                                <div class="activity-title">💻 מחשבים 2</div>
+                                <div class="activity-subtitle">מסופר מריו לימינו</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell orange-activity">
+                            <div>
+                                <div class="activity-title">🏥 יחידה רפואית ב'</div>
+                                <div class="activity-subtitle">הדפסה תלת מימדית</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell pink-activity">
+                            <div>
+                                <div class="activity-title">🎭 אודיטוריום</div>
+                                <div class="activity-subtitle">הצגת זמן</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">17:30-18:00</td>
+                        <td class="activity-cell blue-activity">
+                            <div>
+                                <div class="activity-title">💻 מחשבים 2</div>
+                                <div class="activity-subtitle">מסופר מריו לימינו</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell orange-activity">
+                            <div>
+                                <div class="activity-title">🏥 יחידה רפואית ב'</div>
+                                <div class="activity-subtitle">הדפסה תלת מימדית</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell pink-activity">
+                            <div>
+                                <div class="activity-title">🎭 אודיטוריום</div>
+                                <div class="activity-subtitle">הצגת זמן</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell green-activity">
+                            <div>
+                                <div class="activity-title">🔬 מעבדה</div>
+                                <div class="activity-subtitle">מיקרוסקופ דיגיטלי</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">18:00-18:30</td>
+                        <td class="activity-cell orange-activity">
+                            <div>
+                                <div class="activity-title">🏥 יחידה רפואית ב'</div>
+                                <div class="activity-subtitle">הדפסה תלת מימדית</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell pink-activity">
+                            <div>
+                                <div class="activity-title">🎭 אודיטוריום</div>
+                                <div class="activity-subtitle">הצגת זמן</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell green-activity">
+                            <div>
+                                <div class="activity-title">🔬 מעבדה</div>
+                                <div class="activity-subtitle">מיקרוסקופ דיגיטלי</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell blue-activity">
+                            <div>
+                                <div class="activity-title">💻 מחשבים 2</div>
+                                <div class="activity-subtitle">מסופר מריו לימינו</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="time-cell">18:30-19:00</td>
+                        <td class="activity-cell pink-activity pulse">
+                            <div>
+                                <div class="activity-title">🌳 פארק ומוזיאון</div>
+                                <div class="activity-subtitle">סיור חופשי</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell green-activity pulse">
+                            <div>
+                                <div class="activity-title">🌳 פארק ומוזיאון</div>
+                                <div class="activity-subtitle">סיור חופשי</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell blue-activity pulse">
+                            <div>
+                                <div class="activity-title">🌳 פארק ומוזיאון</div>
+                                <div class="activity-subtitle">סיור חופשי</div>
+                            </div>
+                        </td>
+                        <td class="activity-cell orange-activity pulse">
+                            <div>
+                                <div class="activity-title">🌳 פארק ומוזיאון</div>
+                                <div class="activity-subtitle">סיור חופשי</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>🎉 נתראה במסע המופלא במנהרת הזמן! 🎉</p>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive hover effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const activityCells = document.querySelectorAll('.activity-cell');
+            
+            activityCells.forEach(cell => {
+                cell.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.05)';
+                });
+                
+                cell.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+                
+                cell.addEventListener('click', function() {
+                    // Add a click animation
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-5px) scale(1.05)';
+                    }, 150);
+                });
+            });
+        });
+
+        // Add smooth scrolling and responsive adjustments
+        window.addEventListener('resize', function() {
+            // Adjust table layout on window resize
+            const container = document.querySelector('.container');
+            if (window.innerWidth < 480) {
+                container.style.margin = '5px';
+            } else {
+                container.style.margin = '20px auto';
+            }
+        });
+    </script>
+</body>
+</html>
