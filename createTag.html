@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחולל תגי שם לעובדי הטכנודע</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            text-align: center;
+            color: #8B5CF6;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #4A5568;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Heebo', sans-serif;
+            transition: all 0.3s ease;
+            background: #F8FAFC;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 12px 20px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #F8FAFC;
+            min-width: 200px;
+        }
+
+        .radio-option:hover {
+            border-color: #8B5CF6;
+            background: #F3F4F6;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #8B5CF6;
+        }
+
+        .radio-option input[type="radio"]:checked ~ .radio-label {
+            color: #8B5CF6;
+            font-weight: 600;
+        }
+
+        .radio-option:has(input[type="radio"]:checked) {
+            border-color: #8B5CF6;
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .radio-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #4A5568;
+        }
+
+        .optional-label {
+            color: #9CA3AF;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .input-section {
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            background: #F8FAFC;
+            margin-bottom: 20px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Heebo', sans-serif;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: #F1F5F9;
+            color: #64748B;
+            border: 2px solid #E2E8F0;
+        }
+
+        .btn-secondary:hover {
+            background: #E2E8F0;
+            color: #475569;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .preview-container {
+            display: none;
+            margin-top: 40px;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .print-instructions {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .print-instructions strong {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* תצוגה במסך */
+        .name-tags-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(8.5cm, 1fr));
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .name-tag {
+            width: 8.5cm;
+            height: 5.5cm;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            background-image: url('tag.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f0f0f0;
+        }
+
+        .name-tag-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 100px;
+            padding-bottom: 20px;
+        }
+
+        .employee-name {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1F2937;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .employee-position {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4B5563;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            line-height: 1.3;
+        }
+
+        .preview-actions {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        /* הגדרות הדפסה */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+                font-size: 12pt;
+            }
+
+            .header,
+            .form-container,
+            .preview-actions,
+            .success-message,
+            .print-instructions {
+                display: none;
+            }
+
+            .preview-container {
+                display: block !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            .name-tags-preview {
+                display: block;
+                margin: 0;
+                padding: 0;
+            }
+
+            /* סידור התגים - 6 תגים בדף (2x3) - מיושר מרכז */
+            .print-page {
+                page-break-after: always;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr 1fr;
+                gap: 10mm;
+                width: 100%;
+                height: calc(100vh - 20mm);
+                padding: 10mm 5mm 10mm 25mm; /* יותר padding משמאל לדחוף הכל ימינה */
+                justify-items: center;
+                align-items: center;
+            }
+
+            .print-page:last-child {
+                page-break-after: avoid;
+            }
+
+            .name-tag {
+                width: 8.5cm;
+                height: 5.5cm;
+                border-radius: 10px;
+                box-shadow: none;
+                border: 1px solid #ddd;
+                margin: 0;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .name-tag-overlay {
+                padding-top: 80px;
+                padding-bottom: 15px;
+            }
+
+            .employee-name {
+                font-size: 28px;
+                margin-bottom: 6px;
+            }
+
+            .employee-position {
+                font-size: 18px;
+            }
+
+            .delete-btn {
+                display: none !important;
+            }
+
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+        }
+
+        /* עיצוב רספונסיבי */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
+
+            .radio-option {
+                min-width: auto;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .name-tags-preview {
+                grid-template-columns: 1fr;
+                justify-items: center;
+            }
+
+            .name-tag {
+                width: 90vw;
+                height: calc(90vw * 0.647);
+                max-width: 8.5cm;
+                max-height: 5.5cm;
+            }
+        }
+
+        /* אנימציות */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .form-container {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏷️ מחולל תגי שם</h1>
+            <p>מחולל תגי שם לעובדי הטכנודע</p>
+        </div>
+
+        <div class="form-container">
+            <h2 class="form-title">📝 יצירת תג שם חדש</h2>
+            
+            <form id="nameTagForm">
+                <div class="form-group">
+                    <label>בחר סוג הזנה:</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="inputType" value="single" checked>
+                            <span class="radio-label">👤 שם יחיד</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="inputType" value="multiple">
+                            <span class="radio-label">👥 שם מרשימה</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- שם יחיד -->
+                <div id="singleNameSection" class="input-section">
+                    <div class="form-group">
+                        <label for="employeeName">שם העובד/ת:</label>
+                        <input type="text" id="employeeName" name="employeeName" placeholder="הכנס/י את השם המלא">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employeePosition">תפקיד <span class="optional-label">(אופציונלי):</span></label>
+                        <input type="text" id="employeePosition" name="employeePosition" placeholder="הכנס/י את התפקיד">
+                    </div>
+                </div>
+
+                <!-- שמות מרשימה -->
+                <div id="multipleNamesSection" class="input-section hidden">
+                    <div class="form-group">
+                        <label for="employeeNames">רשימת שמות עובדים:</label>
+                        <textarea id="employeeNames" name="employeeNames" placeholder="הכנס/י שמות מופרדים בפסיק, לדוגמה:&#10;אברהם כהן, שרה לוי, משה ישראלי, רחל דוד"></textarea>
+                        <small style="color: #6B7280; font-size: 14px; margin-top: 5px; display: block;">
+                            * הפרד/י בין השמות בפסיק. כל שם יקבל תג נפרד
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="multiplePosition">תפקיד משותף <span class="optional-label">(אופציונלי):</span></label>
+                        <input type="text" id="multiplePosition" name="multiplePosition" placeholder="תפקיד שיופיע בכל התגים">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        ✨ צור תגי שם
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                        🗑️ נקה טופס
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="preview-container" id="previewContainer">
+            <div class="success-message" id="successMessage">
+                ✅ תגי השם נוצרו בהצלחה! ניתן להדפיס עכשיו
+            </div>
+            
+            <div class="print-instructions">
+                <strong>🖨️ הדפסה דו-צדדית נדרשת!</strong>
+                יש להדפיס את התגים על שני הצדדים של הנייר (6 תגים בכל דף).
+                <br>דף ראשון: צדדים קדמיים | דף שני: צדדים אחוריים
+            </div>
+            
+            <div class="name-tags-preview" id="nameTagsPreview">
+                <!-- התגים יופיעו כאן -->
+            </div>
+
+            <div class="preview-actions">
+                <button class="btn btn-success" onclick="printNameTags()">
+                    🖨️ הדפס תגים
+                </button>
+                <button class="btn btn-primary" onclick="addAnother()">
+                    ➕ הוסף תגים נוספים
+                </button>
+                <button class="btn btn-secondary" onclick="createNew()">
+                    📝 התחל מחדש
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let createdTags = [];
+
+        // אתחול הטופס
+        function initForm() {
+            document.getElementById('nameTagForm').addEventListener('submit', handleSubmit);
+            setupRadioButtons();
+            document.getElementById('employeeName').focus();
+        }
+
+        // הגדרת רדיו באטנים
+        function setupRadioButtons() {
+            const radioButtons = document.querySelectorAll('input[name="inputType"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', toggleInputSections);
+            });
+        }
+
+        // החלפת סקציות הזנה
+        function toggleInputSections() {
+            const selectedType = document.querySelector('input[name="inputType"]:checked').value;
+            const singleSection = document.getElementById('singleNameSection');
+            const multipleSection = document.getElementById('multipleNamesSection');
+
+            if (selectedType === 'single') {
+                singleSection.classList.remove('hidden');
+                multipleSection.classList.add('hidden');
+                document.getElementById('employeeName').focus();
+            } else {
+                singleSection.classList.add('hidden');
+                multipleSection.classList.remove('hidden');
+                document.getElementById('employeeNames').focus();
+            }
+        }
+
+        // טיפול בשליחת הטופס
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            const inputType = document.querySelector('input[name="inputType"]:checked').value;
+            
+            if (inputType === 'single') {
+                handleSingleName();
+            } else {
+                handleMultipleNames();
+            }
+        }
+
+        // טיפול בשם יחיד
+        function handleSingleName() {
+            const employeeName = document.getElementById('employeeName').value.trim();
+            const employeePosition = document.getElementById('employeePosition').value.trim();
+
+            if (!employeeName) {
+                alert('אנא הכנס את שם העובד');
+                return;
+            }
+
+            const tagData = {
+                name: employeeName,
+                position: employeePosition
+            };
+
+            addNameTag(tagData);
+        }
+
+        // טיפול בשמות מרובים
+        function handleMultipleNames() {
+            const employeeNames = document.getElementById('employeeNames').value.trim();
+            const multiplePosition = document.getElementById('multiplePosition').value.trim();
+
+            if (!employeeNames) {
+                alert('אנא הכנס לפחות שם אחד');
+                return;
+            }
+
+            // פיצול השמות לפי פסיק וניקוי רווחים
+            const namesArray = employeeNames.split(',').map(name => name.trim()).filter(name => name.length > 0);
+
+            if (namesArray.length === 0) {
+                alert('לא נמצאו שמות תקינים ברשימה');
+                return;
+            }
+
+            // יצירת תגים לכל השמות
+            namesArray.forEach(name => {
+                const tagData = {
+                    name: name,
+                    position: multiplePosition
+                };
+                createdTags.push(tagData);
+            });
+
+            updatePreview();
+            showPreview(namesArray.length);
+        }
+
+        // הוספת תג יחיד
+        function addNameTag(tagData) {
+            createdTags.push(tagData);
+            updatePreview();
+            showPreview(1);
+        }
+
+        // הצגת תצוגה מקדימה
+        function showPreview(count) {
+            document.getElementById('previewContainer').style.display = 'block';
+            
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = `✅ ${count === 1 ? 'תג נוצר' : `${count} תגים נוצרו`} בהצלחה! ניתן להדפיס עכשיו`;
+            
+            document.getElementById('previewContainer').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // עדכון התצוגה המקדימה
+        function updatePreview() {
+            const previewContainer = document.getElementById('nameTagsPreview');
+            previewContainer.innerHTML = '';
+
+            // תצוגה במסך - כל התגים ברצף
+            createdTags.forEach((tag, index) => {
+                const nameTag = createNameTagElement(tag, index, false);
+                previewContainer.appendChild(nameTag);
+            });
+        }
+
+        // יצירת אלמנט תג שם
+        function createNameTagElement(tag, index, isPrintMode) {
+            const tagWrapper = document.createElement('div');
+            tagWrapper.style.position = 'relative';
+            
+            const nameTag = document.createElement('div');
+            nameTag.className = 'name-tag';
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'name-tag-overlay';
+            
+            const nameElement = document.createElement('div');
+            nameElement.className = 'employee-name';
+            nameElement.textContent = tag.name;
+            overlay.appendChild(nameElement);
+            
+            if (tag.position && tag.position.trim() !== '') {
+                const positionElement = document.createElement('div');
+                positionElement.className = 'employee-position';
+                positionElement.textContent = tag.position;
+                overlay.appendChild(positionElement);
+            }
+            
+            nameTag.appendChild(overlay);
+
+            // כפתור מחיקה (רק במסך, לא בהדפסה)
+            if (!isPrintMode) {
+                const deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '❌';
+                deleteButton.className = 'delete-btn';
+                deleteButton.onclick = () => removeTag(index);
+                tagWrapper.appendChild(deleteButton);
+            }
+
+            tagWrapper.appendChild(nameTag);
+            return tagWrapper;
+        }
+
+        // הדפסת התגים - ארגון מחדש לצורך הדפסה
+// הדפסת התגים - ארגון מחדש לצורך הדפסה
+        function printNameTags() {
+            const previewContainer = document.getElementById('nameTagsPreview');
+            const originalContent = previewContainer.innerHTML;
+            
+            const tagsPerPage = 6;      
+            previewContainer.innerHTML = '';
+            
+            // לכל קבוצה של 6 תגים (או פחות) - יצירת זוג דפים (קדמי ואחורי)
+            for (let pageIndex = 0; pageIndex < Math.ceil(createdTags.length / tagsPerPage); pageIndex++) {
+                const startIndex = pageIndex * tagsPerPage;
+                const endIndex = Math.min(startIndex + tagsPerPage, createdTags.length);
+                
+                // מערך התגים לדף הנוכחי
+                const pageTagsOrder = [];
+                for (let i = startIndex; i < endIndex; i++) {
+                    pageTagsOrder.push(i);
+                }
+                
+                // יצירת הדף הקדמי
+                const frontPage = document.createElement('div');
+                frontPage.className = 'print-page';
+                
+                pageTagsOrder.forEach((tagIndex, position) => {
+                    const nameTag = createNameTagElement(createdTags[tagIndex], tagIndex, true);
+                    const row = Math.floor(position / 2) + 1;
+                    const col = (position % 2) + 1;
+                    nameTag.style.gridArea = `${row} / ${col}`;
+                    frontPage.appendChild(nameTag);
+                });
+                
+                previewContainer.appendChild(frontPage);
+                
+                // יצירת הדף האחורי (מיד אחרי הקדמי) - במראה מדויקת
+                const backPage = document.createElement('div');
+                backPage.className = 'print-page';
+                backPage.style.transform = 'scaleX(-1)'; // מראה של כל הדף
+                
+                pageTagsOrder.forEach((tagIndex, position) => {
+                    const nameTag = createNameTagElement(createdTags[tagIndex], tagIndex, true);
+                    nameTag.style.transform = 'scaleX(-1)'; // מראה חזרה של התוכן
+                    const row = Math.floor(position / 2) + 1;
+                    const col = (position % 2) + 1;
+                    nameTag.style.gridArea = `${row} / ${col}`;
+                    backPage.appendChild(nameTag);
+                });
+                
+                previewContainer.appendChild(backPage);
+            }
+            
+            // הדפסה
+            window.print();
+            
+            // החזרת התוכן המקורי אחרי ההדפסה
+            setTimeout(() => {
+                previewContainer.innerHTML = originalContent;
+            }, 1000);
+        }
+
+        // הוספת תגים נוספים
+        function addAnother() {
+            const inputType = document.querySelector('input[name="inputType"]:checked').value;
+            
+            if (inputType === 'single') {
+                document.getElementById('employeeName').value = '';
+                document.getElementById('employeePosition').value = '';
+                document.getElementById('employeeName').focus();
+            } else {
+                document.getElementById('employeeNames').value = '';
+                document.getElementById('multiplePosition').value = '';
+                document.getElementById('employeeNames').focus();
+            }
+            
+            document.querySelector('.form-container').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // ניקוי הטופס
+        function clearForm() {
+            document.getElementById('nameTagForm').reset();
+            document.getElementById('previewContainer').style.display = 'none';
+            createdTags = [];
+            
+            // איפוס לשם יחיד
+            document.querySelector('input[name="inputType"][value="single"]').checked = true;
+            toggleInputSections();
+            document.getElementById('employeeName').focus();
+        }
+
+        // התחלה מחדש
+        function createNew() {
+            clearForm();
+        }
+        // מחיקת תג בודד
+        function removeTag(index) {
+            if (confirm('האם אתה בטוח שברצונך למחוק תג זה?')) {
+                createdTags.splice(index, 1);
+                
+                if (createdTags.length === 0) {
+                    document.getElementById('previewContainer').style.display = 'none';
+                } else {
+                    updatePreview();
+                    
+                    const count = createdTags.length;
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.textContent = `✅ ${count} תגים נוצרו בהצלחה! ניתן להדפיס עכשיו`;
+                }
+            }
+        }
+
+        // קיצורי מקלדת
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                handleSubmit(e);
+            }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                if (createdTags.length > 0) {
+                    e.preventDefault();
+                    printNameTags();
+                }
+            }
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                if (createdTags.length > 0) {
+                    e.preventDefault();
+                    addAnother();
+                }
+            }
+        });
+
+        // אתחול האפליקציה
+        document.addEventListener('DOMContentLoaded', function() {
+            initForm();
+        });
+    </script>
+</body>
+</html>
