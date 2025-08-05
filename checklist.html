@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>צ'קליסט מנהלי משמרת - טכנודע</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .stats {
+            padding: 15px 20px;
+            background: #f7fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .section {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            background: #f7fafc;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header:hover {
+            background: #edf2f7;
+        }
+
+        .section-header.collapsed {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 1rem;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 1.2rem;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            color: #718096;
+        }
+
+        .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            padding: 0;
+        }
+
+        .task-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item.completed {
+            background: #f0fff4;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            margin-top: 2px;
+            position: relative;
+        }
+
+        .task-checkbox.checked {
+            background: #48bb78;
+            border-color: #48bb78;
+        }
+
+        .task-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #2d3748;
+        }
+
+        .task-item.completed .task-text {
+            color: #68d391;
+            text-decoration: line-through;
+        }
+
+        .task-note {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .action-buttons {
+            padding: 20px;
+            background: #f7fafc;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-reset {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .btn-reset:hover {
+            background: #feb2b2;
+        }
+
+        .btn-export {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .btn-export:hover {
+            background: #90cdf4;
+        }
+
+        .emergency-section {
+            background: #fed7d7;
+            border: 2px solid #fc8181;
+            margin: 10px;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .emergency-title {
+            color: #c53030;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timestamp {
+            font-size: 0.8rem;
+            color: #718096;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .video-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .video-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .video-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .video-popup.show {
+            display: flex;
+        }
+
+        .video-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .video-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .close-btn {
+            background: #fed7d7;
+            color: #c53030;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #feb2b2;
+            transform: scale(1.1);
+        }
+
+        .video-element {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .video-container {
+                max-width: 95%;
+                padding: 15px;
+            }
+            
+            .video-title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .header {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .stats {
+                padding: 10px 15px;
+            }
+            
+            .task-item {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>צ'קליסט מנהלי משמרת</h1>
+            <p>טכנודע - מדעטק</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="completedTasks">0</div>
+                <div class="stat-label">הושלמו</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">סה"כ משימות</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="progressPercent">0%</div>
+                <div class="stat-label">התקדמות</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('preparation')">
+                <div class="section-title">
+                    <span class="section-icon">🌅</span>
+                    הכנות טכניות לפני המשמרת
+                </div>
+                <span class="toggle-icon" id="toggle-preparation">▼</span>
+            </div>
+            <div class="section-content" id="content-preparation">
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">הדלקת מחשבים ומזגנים בכל מתחמי הפעילות</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">וידוא עם המדצ בקיוסק שהרמקול עובד אצלו</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">וידוא מסכים דלוקים</div>
+                        <div class="task-note">חוץ, מבואה, מעל קופה, מעל המעבדות בקומה 1</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">מעבר דרך דינה לקבלת מספרי מבקרים להיום</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">רענון תיק עזרה ראשונה במזכירות</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">בדיקת דפיברילטור</div>
+                        <div class="task-note">ימי ראשון - מדריכי רפואה</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('start')">
+                <div class="section-title">
+                    <span class="section-icon">🎯</span>
+                    ניהול צוות ותחילת משמרת
+                </div>
+                <span class="toggle-icon" id="toggle-start">▼</span>
+            </div>
+            <div class="section-content" id="content-start">
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">תדריך בוקר ובדיקת נוכחות צוות</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">הצגת צבעי צמידים לסדרנים</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">הסברת זמני הפסקות</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">הסברת חלוקת מתחמים וצמידים</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">סדרן רץ - מעבר על משימות היום</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('training')">
+                <div class="section-title">
+                    <span class="section-icon">🎓</span>
+                    הדרכות טכניות
+                </div>
+                <span class="toggle-icon" id="toggle-training">▼</span>
+            </div>
+            <div class="section-content" id="content-training">
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">כריזה נכונה</div>
+                        <button class="video-btn" onclick="showVideo('kriza.mp4', 'הדרכת כריזה נכונה')">📺 צפה בהדרכה</button>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">הכנסת דיסק און קי</div>
+                        <button class="video-btn" onclick="showVideo('dok.mp4', 'הדרכת דיסק און קי')">📺 צפה בהדרכה</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('announcements')">
+                <div class="section-title">
+                    <span class="section-icon">📢</span>
+                    ניהול כריזות וזמנים
+                </div>
+                <span class="toggle-icon" id="toggle-announcements">▼</span>
+            </div>
+            <div class="section-content" id="content-announcements">
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">כלל בסיס: רק מנהל המשמרת כורז</div>
+                        <div class="task-note">עם נטרול מעבדות/פלנטריום</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">מוזיאון רפואה - כריזה רבע שעה לפני</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">מוזיאון רפואה - כריזה 2 דקות לפני</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">פלנטריום - כריזה אחת 5 דקות לפני</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">אודיטוריום - כריזה אחת 5 דקות לפני</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">הוספת משפטים שיווקיים בכריזות</div>
+                        <div class="task-note">כרטיסים אחרונים לפלנטריום</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('activities')">
+                <div class="section-title">
+                    <span class="section-icon">🎬</span>
+                    ניהול פעילויות וקהל
+                </div>
+                <span class="toggle-icon" id="toggle-activities">▼</span>
+            </div>
+            <div class="section-content" id="content-activities">
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">להדגיש למדריכים להציג סרטוני פתיחה</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">פלנטריום - מעקב מספר קונים vs נוכחים</div>
+                        <div class="task-note">וידוא שאפשר להתחיל ולא מצפים למאחרים</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">סיוע למאחרים במוזיאון רפואה</div>
+                        <div class="task-note">קריאה לסדרן רץ - זה תפקידו</div>
+                    </div>
+                </div>
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">התכנסות מוזיאון רפואה באודיטוריום</div>
+                        <div class="task-note">הצגת דף למבקר עם הפנינג ושיווק אותו</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="emergency-section">
+            <div class="emergency-title">
+                🛡️ בטיחות - זמין תמיד
+            </div>
+            <div class="task-item">
+                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                <div class="task-content">
+                    <div class="task-text">במקרה של אזעקה</div>
+                    <div class="task-note">ירידה למטה לכיתות צמוד לקיר פנימי</div>
+                </div>
+            </div>
+            <div class="task-item">
+                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                <div class="task-content">
+                    <div class="task-text">בטיחות מעבדות</div>
+                    <div class="task-note">וידוא שאין חשמל בשולחנות ע"י לחיצה על הפטרייה פנימה</div>
+                </div>
+            </div>
+            <div class="task-item">
+                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                <div class="task-content">
+                    <div class="task-text">עזרה ראשונה</div>
+                    <div class="task-note">יש לפנות למי ששובץ להיות מע"ר</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('end')">
+                <div class="section-title">
+                    <span class="section-icon">🌆</span>
+                    סגירת משמרת
+                </div>
+                <span class="toggle-icon" id="toggle-end">▼</span>
+            </div>
+            <div class="section-content" id="content-end">
+                <div class="task-item">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-text">תדריך סוף יום</div>
+                        <div class="task-note">רק בחמישי לקראת סופ"ש או במקרה דרמה</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-reset" onclick="resetChecklist()">איפוס</button>
+            <button class="btn btn-export" onclick="exportProgress()">ייצוא דוח</button>
+        </div>
+
+        <div class="timestamp" id="timestamp">
+            עודכן לאחרונה: --
+        </div>
+    </div>
+
+    <!-- Video Popup -->
+    <div class="video-popup" id="videoPopup">
+        <div class="video-container">
+            <div class="video-header">
+                <div class="video-title" id="videoTitle">הדרכה</div>
+                <button class="close-btn" onclick="closeVideo()">×</button>
+            </div>
+            <video class="video-element" id="videoElement" controls>
+                <source src="" type="video/mp4">
+                הדפדפן שלך לא תומך בנגן וידאו.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        let tasks = [];
+        let collapsedSections = new Set();
+
+        function initChecklist() {
+            // Collect all tasks
+            tasks = document.querySelectorAll('.task-checkbox');
+            
+            // Load saved state
+            loadProgress();
+            
+            // Update stats
+            updateStats();
+            
+            // Update timestamp
+            updateTimestamp();
+        }
+
+        function toggleTask(checkbox) {
+            checkbox.classList.toggle('checked');
+            checkbox.parentElement.classList.toggle('completed');
+            
+            updateStats();
+            saveProgress();
+            updateTimestamp();
+        }
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(`content-${sectionId}`);
+            const toggle = document.getElementById(`toggle-${sectionId}`);
+            const header = toggle.parentElement;
+            
+            if (collapsedSections.has(sectionId)) {
+                // Expand section
+                content.classList.remove('collapsed');
+                toggle.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+                collapsedSections.delete(sectionId);
+            } else {
+                // Collapse section
+                content.classList.add('collapsed');
+                toggle.classList.add('collapsed');
+                header.classList.add('collapsed');
+                collapsedSections.add(sectionId);
+            }
+            
+            saveSectionStates();
+        }
+
+        function updateStats() {
+            const completed = document.querySelectorAll('.task-checkbox.checked').length;
+            const total = tasks.length;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('progressPercent').textContent = percentage + '%';
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function saveProgress() {
+            const taskStates = Array.from(tasks).map(task => task.classList.contains('checked'));
+            localStorage.setItem('technodc_checklist', JSON.stringify(taskStates));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('technodc_checklist');
+            if (saved) {
+                const taskStates = JSON.parse(saved);
+                taskStates.forEach((isChecked, index) => {
+                    if (index < tasks.length && isChecked) {
+                        tasks[index].classList.add('checked');
+                        tasks[index].parentElement.classList.add('completed');
+                    }
+                });
+            }
+        }
+
+        function saveSectionStates() {
+            localStorage.setItem('technodc_sections', JSON.stringify([...collapsedSections]));
+        }
+
+        function loadSectionStates() {
+            const saved = localStorage.getItem('technodc_sections');
+            if (saved) {
+                const states = JSON.parse(saved);
+                states.forEach(sectionId => {
+                    collapsedSections.add(sectionId);
+                    const content = document.getElementById(`content-${sectionId}`);
+                    const toggle = document.getElementById(`toggle-${sectionId}`);
+                    
+                    if (content && toggle) {
+                        const header = toggle.parentElement;
+                        content.classList.add('collapsed');
+                        toggle.classList.add('collapsed');
+                        header.classList.add('collapsed');
+                    }
+                });
+            }
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            const timeString = now.toLocaleString('he-IL', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('timestamp').textContent = `עודכן לאחרונה: ${timeString}`;
+        }
+
+        function resetChecklist() {
+            if (confirm('האם אתה בטוח שברצונך לאפס את כל המשימות?')) {
+                tasks.forEach(task => {
+                    task.classList.remove('checked');
+                    task.parentElement.classList.remove('completed');
+                });
+                
+                updateStats();
+                saveProgress();
+                updateTimestamp();
+            }
+        }
+
+        function exportProgress() {
+            const completed = document.querySelectorAll('.task-checkbox.checked').length;
+            const total = tasks.length;
+            const percentage = Math.round((completed / total) * 100);
+            const timestamp = new Date().toLocaleString('he-IL');
+            
+            let report = `דוח התקדמות משמרת - טכנודע\n`;
+            report += `תאריך: ${timestamp}\n`;
+            report += `התקדמות: ${completed}/${total} (${percentage}%)\n\n`;
+            
+            // Add completed tasks by section
+            const sections = [
+                { id: 'preparation', title: '🌅 הכנות טכניות לפני המשמרת' },
+                { id: 'start', title: '🎯 ניהול צוות ותחילת משמרת' },
+                { id: 'training', title: '🎓 הדרכות טכניות' },
+                { id: 'announcements', title: '📢 ניהול כריזות וזמנים' },
+                { id: 'activities', title: '🎬 ניהול פעילויות וקהל' },
+                { id: 'end', title: '🌆 סגירת משמרת' }
+            ];
+            
+            sections.forEach(section => {
+                const sectionElement = document.getElementById(`content-${section.id}`);
+                if (sectionElement) {
+                    const sectionTasks = sectionElement.querySelectorAll('.task-item');
+                    const completedInSection = sectionElement.querySelectorAll('.task-checkbox.checked').length;
+                    
+                    report += `${section.title}\n`;
+                    report += `הושלמו: ${completedInSection}/${sectionTasks.length}\n`;
+                    
+                    sectionTasks.forEach(taskItem => {
+                        const checkbox = taskItem.querySelector('.task-checkbox');
+                        const text = taskItem.querySelector('.task-text').textContent;
+                        const status = checkbox.classList.contains('checked') ? '✅' : '❌';
+                        report += `${status} ${text}\n`;
+                    });
+                    report += '\n';
+                }
+            });
+            
+            // Emergency section
+            const emergencySection = document.querySelector('.emergency-section');
+            if (emergencySection) {
+                const emergencyTasks = emergencySection.querySelectorAll('.task-item');
+                const completedEmergency = emergencySection.querySelectorAll('.task-checkbox.checked').length;
+                
+                report += `🛡️ בטיחות\n`;
+                report += `הושלמו: ${completedEmergency}/${emergencyTasks.length}\n`;
+                
+                emergencyTasks.forEach(taskItem => {
+                    const checkbox = taskItem.querySelector('.task-checkbox');
+                    const text = taskItem.querySelector('.task-text').textContent;
+                    const status = checkbox.classList.contains('checked') ? '✅' : '❌';
+                    report += `${status} ${text}\n`;
+                });
+            }
+            
+            // Create downloadable file
+            const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `דוח_משמרת_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function showVideo(videoFile, title) {
+            const popup = document.getElementById('videoPopup');
+            const videoElement = document.getElementById('videoElement');
+            const videoTitle = document.getElementById('videoTitle');
+            
+            videoTitle.textContent = title;
+            videoElement.src = videoFile;
+            popup.classList.add('show');
+            
+            // Pause video when popup closes
+            videoElement.load();
+        }
+
+        function closeVideo() {
+            const popup = document.getElementById('videoPopup');
+            const videoElement = document.getElementById('videoElement');
+            
+            popup.classList.remove('show');
+            videoElement.pause();
+            videoElement.src = '';
+        }
+
+        // Close video when clicking outside the container
+        document.getElementById('videoPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideo();
+            }
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initChecklist();
+            loadSectionStates();
+        });
+    </script>
+</body>
+</html>
