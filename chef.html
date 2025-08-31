@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שיטות הפרדה</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin: 20px auto;
+        }
+        
+        .main-title {
+            text-align: center;
+            color: #4a5568;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .scene-card {
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .scene-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .scene-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .scene-header:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+        
+        .scene-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .scene-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin: 5px 0 0 0;
+        }
+        
+        .collapse-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+        }
+        
+        .scene-header[aria-expanded="true"] .collapse-icon {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        
+        .scene-content {
+            padding: 20px;
+            background: #f8fafc;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            margin: 15px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .completion-checkbox {
+            margin-top: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .completion-checkbox input[type="checkbox"] {
+            margin-left: 10px;
+            transform: scale(1.2);
+        }
+        
+        .completion-checkbox label {
+            font-weight: 500;
+            color: #4a5568;
+            cursor: pointer;
+        }
+        
+        .completed {
+            background: #f0fff4 !important;
+            border-color: #68d391 !important;
+        }
+        
+        .completed .scene-header {
+            background: linear-gradient(135deg, #48bb78, #38a169) !important;
+        }
+        
+        .progress-bar-container {
+            margin: 20px 0;
+            background: #e2e8f0;
+            border-radius: 10px;
+            padding: 5px;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            height: 20px;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .chef-icon {
+            color: #f6ad55;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .scene-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">
+            <i class="fas fa-flask chef-icon"></i>
+            שיטות הפרדה
+            <i class="fas fa-atom chef-icon"></i>
+        </h1>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%;">
+                0% הושלם
+            </div>
+        </div>
+
+        <!-- Scene 1 -->
+        <div class="scene-card" id="scene1">
+            <div class="scene-header" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                <h3 class="scene-title">סצנה 1: דברי פתיחה והסברים</h3>
+                <p class="scene-description">הכרות עם השף סטפן וגילוי הבעיה - חומרים מעורבבים שצריך להפריד</p>
+            </div>
+            <div class="collapse" id="collapse1">
+                <div class="scene-content">
+                    <p><strong>תיאור:</strong> השף סטפן מציג את עצמו ומסביר על המשימה - להכין עוגת גבינה מושלמת. אבל הוא גילה שהתבלבל והוסיף חומרים לא נכונים! כעת הוא זקוק לעזרתכם כדי להפריד את החומרים ולקבל את המתכון הסודי של סבתא.</p>
+                    
+                    <div class="video-container">
+                        <iframe src="https://drive.google.com/file/d/1rteHPwiyD1Bg3C106v0McNHcJbmPgkbj/preview" allow="autoplay"></iframe>
+                    </div>
+                    
+                    <div class="completion-checkbox">
+                        <input type="checkbox" id="check1" onchange="updateProgress()">
+                        <label for="check1"><i class="fas fa-check-circle" style="color: #48bb78;"></i> סימנו כאן לאחר צפייה וביצוע הפעילות</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 2 -->
+        <div class="scene-card" id="scene2">
+            <div class="scene-header" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                <h3 class="scene-title">סצנה 2: הפרדת שבבי הברזל</h3>
+                <p class="scene-description">שימוש במגנט כדי להפריד שבבי ברזל מתערובת החומרים היבשים</p>
+            </div>
+            <div class="collapse" id="collapse2">
+                <div class="scene-content">
+                    <p><strong>תיאור:</strong> הפרידו את שבבי הברזל מהתערובת בעזרת כוח המגנטיות. למדו על תכונות מגנטיות של חומרים וקבלו את הספרה הראשונה לקוד הכספת מסבתא!</p>
+                    
+                    <div class="video-container">
+                        <iframe src="https://drive.google.com/file/d/17W_Ke5k88n1sljHdyJDi1YBQ2wy7I8Iy/preview" allow="autoplay"></iframe>
+                    </div>
+                    
+                    <div class="completion-checkbox">
+                        <input type="checkbox" id="check2" onchange="updateProgress()">
+                        <label for="check2"><i class="fas fa-magnet" style="color: #e53e3e;"></i> סימנו כאן לאחר ביצוע ניסוי המגנט</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 3 -->
+        <div class="scene-card" id="scene3">
+            <div class="scene-header" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                <h3 class="scene-title">סצנה 3: הפרדת הקוקוס</h3>
+                <p class="scene-description">הפרדה באמצעות תכונת הציפה - הקוקוס צף על פני המים</p>
+            </div>
+            <div class="collapse" id="collapse3">
+                <div class="scene-content">
+                    <p><strong>תיאור:</strong> גלו איך להפריד קוקוס באמצעות תכונת הציפה שלו. הקוקוס צף על פני המים בזכות צפיפותו הנמוכה. קבלו את הספרה השנייה לקוד!</p>
+                    
+                    <div class="video-container">
+                        <iframe src="https://drive.google.com/file/d/1GvXrZIMbYiLazm__HOZqaGpKUcQhGMN8/preview" allow="autoplay"></iframe>
+                    </div>
+                    
+                    <div class="completion-checkbox">
+                        <input type="checkbox" id="check3" onchange="updateProgress()">
+                        <label for="check3"><i class="fas fa-water" style="color: #3182ce;"></i> סימנו כאן לאחר ביצוע ניסוי הציפה</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 4 -->
+        <div class="scene-card" id="scene4">
+            <div class="scene-header" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                <h3 class="scene-title">סצנה 4: הפרדת החול</h3>
+                <p class="scene-description">סינון החול מהמים באמצעות נייר סינון ומשפך</p>
+            </div>
+            <div class="collapse" id="collapse4">
+                <div class="scene-content">
+                    <p><strong>תיאור:</strong> למדו על תהליך הסינון כדי להפריד חלקיקי חול מהמים. השתמשו במשפך ונייר סינון כדי לתפוס את החול ולאפשר למים לעבור. קבלו ספרה נוספת לקוד!</p>
+                    
+                    <div class="video-container">
+                        <iframe src="https://drive.google.com/file/d/1w7xXfu7AeDzVsb-Luslo8023_7Nrynyx/preview" allow="autoplay"></iframe>
+                    </div>
+                    
+                    <div class="completion-checkbox">
+                        <input type="checkbox" id="check4" onchange="updateProgress()">
+                        <label for="check4"><i class="fas fa-filter" style="color: #d69e2e;"></i> סימנו כאן לאחר ביצוע ניסוי הסינון</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 5 -->
+        <div class="scene-card" id="scene5">
+            <div class="scene-header" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                <h3 class="scene-title">סצנה 5: הפרדת המלח מהמים</h3>
+                <p class="scene-description">אידוי המים כדי להשאיר את המלח - הפרדה באמצעות חימום</p>
+            </div>
+            <div class="collapse" id="collapse5">
+                <div class="scene-content">
+                    <p><strong>תיאור:</strong> גלו איך להפריד מלח מומס מהמים באמצעות אידוי. חממו את המים עד שהם מתאדים ונשאר רק המלח. למדו על מצבי צבירה שונים של חומרים!</p>
+                    
+                    <div class="video-container">
+                        <iframe src="https://drive.google.com/file/d/1iES_UDcrF16iHkSnTOhteTH64QwqmuFa/preview" allow="autoplay"></iframe>
+                    </div>
+                    
+                    <div class="completion-checkbox">
+                        <input type="checkbox" id="check5" onchange="updateProgress()">
+                        <label for="check5"><i class="fas fa-fire" style="color: #e53e3e;"></i> סימנו כאן לאחר ביצוע ניסוי האידוי</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 6 -->
+        <div class="scene-card" id="scene6">
+            <div class="scene-header" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                <i class="fas fa-chevron-down collapse-icon"></i>
+                <h3 class="scene-title">סצנה 6: הפרדת השמן מהמים</h3>
+                <p class="scene-description">הפרדת נוזלים שלא מתערבבים - שמן ומים</p>
+            </div>
+            <div class="collapse" id="collapse6">
+                <div class="scene-content">
+                    <p><strong>תיאור:</strong> סיום המסע - למדו איך להפריד בין שני נוזלים שאינם מתערבבים. השמן והמים נשארים בשכבות נפרדות, מה שמאפשר להפרידם בקלות. השלימו את הקוד וקבלו את המתכון הסודי!</p>
+                    
+                    <div class="video-container">
+                        <iframe src="https://drive.google.com/file/d/1_S-XxCyoImM1wB2Y6ZrI0oE3Zl3Bdj5_/preview" allow="autoplay"></iframe>
+                    </div>
+                    
+                    <div class="completion-checkbox">
+                        <input type="checkbox" id="check6" onchange="updateProgress()">
+                        <label for="check6"><i class="fas fa-tint" style="color: #3182ce;"></i> סימנו כאן לאחר ביצוע ניסוי הפרדת הנוזלים</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <p style="color: #718096; font-style: italic;">
+                <i class="fas fa-graduation-cap"></i>
+                כל הכבוד! השלמתם את כל שיטות ההפרדה ועזרתם לשף סטפן!
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateProgress() {
+            const totalScenes = 6;
+            let completedScenes = 0;
+            
+            // Count completed scenes
+            for (let i = 1; i <= totalScenes; i++) {
+                const checkbox = document.getElementById(`check${i}`);
+                const sceneCard = document.getElementById(`scene${i}`);
+                
+                if (checkbox.checked) {
+                    completedScenes++;
+                    sceneCard.classList.add('completed');
+                } else {
+                    sceneCard.classList.remove('completed');
+                }
+            }
+            
+            // Update progress bar
+            const percentage = Math.round((completedScenes / totalScenes) * 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${percentage}%`;
+            progressBar.textContent = `${percentage}% הושלם (${completedScenes}/${totalScenes})`;
+            
+            // Save progress to localStorage
+            const progress = {};
+            for (let i = 1; i <= totalScenes; i++) {
+                progress[`scene${i}`] = document.getElementById(`check${i}`).checked;
+            }
+            localStorage.setItem('separationMethodsProgress', JSON.stringify(progress));
+            
+            // Show celebration message if all completed
+            if (completedScenes === totalScenes) {
+                setTimeout(() => {
+                    alert('🎉 כל הכבוד! השלמתם את כל שיטות ההפרדה! השף סטפן גאה בכם! 🧪✨');
+                }, 500);
+            }
+        }
+        
+        // Load progress from localStorage on page load
+        window.addEventListener('load', function() {
+            const savedProgress = localStorage.getItem('separationMethodsProgress');
+            if (savedProgress) {
+                const progress = JSON.parse(savedProgress);
+                for (const sceneId in progress) {
+                    const checkbox = document.getElementById(sceneId.replace('scene', 'check'));
+                    if (checkbox) {
+                        checkbox.checked = progress[sceneId];
+                    }
+                }
+                updateProgress();
+            }
+        });
+        
+        // Add smooth scrolling to scene headers
+        document.querySelectorAll('.scene-header').forEach(header => {
+            header.addEventListener('click', function() {
+                setTimeout(() => {
+                    this.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
