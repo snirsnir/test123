@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ימי הולדת עופרים תשפ"ו</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 30%, #e8f5e8 70%, #e3f2fd 100%);
+            min-height: 100vh;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ffb3ba 0%, #ffdfba 25%, #ffffba 50%, #baffc9 75%, #bae1ff 100%);
+            color: #2c3e50;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(255,255,255,0.4) 20px,
+                rgba(255,255,255,0.4) 40px
+            );
+            animation: celebrate 30s infinite linear;
+        }
+
+        @keyframes celebrate {
+            0% { transform: translateX(-40px) translateY(-40px) rotate(0deg); }
+            100% { transform: translateX(40px) translateY(40px) rotate(360deg); }
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 3em;
+            font-weight: 700;
+            text-shadow: 0 3px 6px rgba(255,255,255,0.8);
+            position: relative;
+            z-index: 1;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            background: rgba(255,255,255,0.8);
+            color: #37474f;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            margin-top: 15px;
+            display: inline-block;
+            border: 2px solid rgba(255,255,255,0.9);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .birthday-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+            background: white;
+        }
+
+        .birthday-table th {
+            background: linear-gradient(135deg, #f8bbd9 0%, #e1bee7 50%, #c5cae9 100%);
+            color: #4a148c;
+            padding: 20px 15px;
+            font-weight: 600;
+            font-size: 1.2em;
+            text-align: center;
+            border: none;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+
+        .birthday-table th:nth-child(1) {
+            width: 25%;
+        }
+
+        .birthday-table th:nth-child(2) {
+            width: 35%;
+        }
+
+        .birthday-table th:nth-child(3) {
+            width: 40%;
+        }
+
+        .birthday-table td {
+            padding: 15px;
+            border-bottom: 2px solid #f3e5f5;
+            font-size: 1em;
+            vertical-align: middle;
+            background: #fefefe;
+            text-align: center;
+        }
+
+        .birthday-table tr:hover {
+            background: linear-gradient(90deg, #fff8e1 0%, #f3e5f5 100%);
+            transform: translateX(-3px);
+            transition: all 0.3s ease;
+            box-shadow: 3px 0 15px rgba(233, 30, 99, 0.2);
+        }
+
+        .month-cell {
+            font-weight: 700;
+            color: #6a1b9a;
+            font-size: 1.2em;
+            text-align: center;
+            background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+            border-right: 4px solid #e91e63;
+            vertical-align: middle;
+        }
+
+        .child-name-cell {
+            font-weight: 600;
+            color: #1565c0;
+            font-size: 1.1em;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 2px solid rgba(33, 150, 243, 0.3);
+            border-radius: 8px;
+            margin: 2px;
+            box-shadow: 0 3px 8px rgba(33, 150, 243, 0.2);
+        }
+
+        .birth-date-cell {
+            color: #e65100;
+            font-weight: 500;
+            font-size: 1em;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid rgba(255, 152, 0, 0.3);
+            border-radius: 8px;
+            margin: 2px;
+            box-shadow: 0 3px 8px rgba(255, 152, 0, 0.2);
+        }
+
+        .empty-month {
+            text-align: center;
+            color: #9e9e9e;
+            font-style: italic;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+        }
+
+        .events-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+            padding: 30px;
+            margin: 0;
+            border-top: 3px solid #4caf50;
+        }
+
+        .events-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 25px;
+            text-decoration: underline;
+            text-decoration-color: #66bb6a;
+        }
+
+        .events-content {
+            background: rgba(255,255,255,0.9);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(76,175,80,0.2);
+            border: 2px solid rgba(76,175,80,0.3);
+        }
+
+        .event-item {
+            margin: 15px 0;
+            padding: 18px 25px;
+            background: linear-gradient(135deg, #c8e6c9 0%, #dcedc8 100%);
+            border-radius: 15px;
+            border-right: 5px solid #4caf50;
+            font-size: 1.2em;
+            line-height: 1.5;
+            color: #1b5e20;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(76,175,80,0.3);
+        }
+
+        .event-date {
+            color: #2e7d32;
+            font-weight: 700;
+            background: rgba(255,255,255,0.8);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 10px;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+
+        .program-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%);
+            padding: 30px;
+            margin: 0;
+        }
+
+        .program-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #d84315;
+            text-align: center;
+            margin-bottom: 25px;
+            text-decoration: underline;
+            text-decoration-color: #ff7043;
+        }
+
+        .program-content {
+            background: rgba(255,255,255,0.9);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 2px solid rgba(255,193,7,0.3);
+        }
+
+        .program-step {
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #fffde7 0%, #fff8e1 100%);
+            border-radius: 12px;
+            border-right: 5px solid #ffc107;
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #3e2723;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 50%, #ffe0b2 100%);
+            color: #bf360c;
+            text-align: center;
+            padding: 30px;
+            border-top: 3px solid #ff9800;
+        }
+
+        .footer-blessing {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 10px 0;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+        }
+
+        .footer-team {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-top: 15px;
+            color: #e65100;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+            margin: 0 8px;
+        }
+
+        .party-decoration {
+            position: absolute;
+            font-size: 2em;
+            animation: party 4s infinite ease-in-out;
+        }
+
+        .party-decoration:nth-child(1) {
+            top: 10px;
+            right: 20px;
+            animation-delay: 0s;
+        }
+
+        .party-decoration:nth-child(2) {
+            top: 20px;
+            left: 30px;
+            animation-delay: 1s;
+        }
+
+        .party-decoration:nth-child(3) {
+            bottom: 30px;
+            right: 40px;
+            animation-delay: 2s;
+        }
+
+        @keyframes party {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(180deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="party-decoration">🎂</div>
+            <div class="party-decoration">🎈</div>
+            <div class="party-decoration">🎉</div>
+            <h1>🎊 ימי הולדת תכנית עופרים תשפ"ו 🎊</h1>
+            <div class="subtitle">לוח תאריכי לידה של ילדי תכנית עופרים 🌟</div>
+        </div>
+        
+        <table class="birthday-table">
+            <thead>
+                <tr>
+                    <th>🗓️ חודש</th>
+                    <th>👶 שם הילד/ה</th>
+                    <th>📅 תאריך לידה</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ינואר -->
+                <tr>
+                    <td class="month-cell" rowspan="2">❄️ ינואר</td>
+                    <td class="child-name-cell">אריאל</td>
+                    <td class="birth-date-cell">7.1.17</td>
+                </tr>
+                <tr>
+                    <td class="child-name-cell">אדל מזל</td>
+                    <td class="birth-date-cell">21.1.17</td>
+                </tr>
+                
+                <!-- פברואר -->
+                <tr>
+                    <td class="month-cell">💙 פברואר</td>
+                    <td class="empty-month" colspan="2">אין ימי הולדת בחודש זה</td>
+                </tr>
+                
+                <!-- מרץ -->
+                <tr>
+                    <td class="month-cell" rowspan="3">🌸 מרץ</td>
+                    <td class="child-name-cell">לוטם</td>
+                    <td class="birth-date-cell">18.3.19</td>
+                </tr>
+                <tr>
+                    <td class="child-name-cell">הודיה</td>
+                    <td class="birth-date-cell">27.3.18</td>
+                </tr>
+                <tr>
+                    <td class="child-name-cell">עדיאל</td>
+                    <td class="birth-date-cell">28.3.19</td>
+                </tr>
+                
+                <!-- אפריל -->
+                <tr>
+                    <td class="month-cell">🌷 אפריל</td>
+                    <td class="empty-month" colspan="2">אין ימי הולדת בחודש זה</td>
+                </tr>
+                
+                <!-- מאי -->
+                <tr>
+                    <td class="month-cell">🌻 מאי</td>
+                    <td class="child-name-cell">ליה</td>
+                    <td class="birth-date-cell">1.5.18</td>
+                </tr>
+                
+                <!-- יוני -->
+                <tr>
+                    <td class="month-cell" rowspan="2">🌞 יוני</td>
+                    <td class="child-name-cell">אליה</td>
+                    <td class="birth-date-cell">16.6.17</td>
+                </tr>
+                <tr>
+                    <td class="child-name-cell">ארי דוד</td>
+                    <td class="birth-date-cell">17.6.19</td>
+                </tr>
+                
+                <!-- יולי -->
+                <tr>
+                    <td class="month-cell" rowspan="2">☀️ יולי</td>
+                    <td class="child-name-cell">אינדירה</td>
+                    <td class="birth-date-cell">4.7.17</td>
+                </tr>
+                <tr>
+                    <td class="child-name-cell">הלל ציון</td>
+                    <td class="birth-date-cell">23.7.18</td>
+                </tr>
+                
+                <!-- אוגוסט -->
+                <tr>
+                    <td class="month-cell">🌺 אוגוסט</td>
+                    <td class="child-name-cell">מיקה</td>
+                    <td class="birth-date-cell">23.8.18</td>
+                </tr>
+                
+                <!-- ספטמבר -->
+                <tr>
+                    <td class="month-cell">🍂 ספטמבר</td>
+                    <td class="child-name-cell">ינאי</td>
+                    <td class="birth-date-cell">11.9.19</td>
+                </tr>
+                
+                <!-- אוקטובר -->
+                <tr>
+                    <td class="month-cell" rowspan="2">🍁 אוקטובר</td>
+                    <td class="child-name-cell">נאור</td>
+                    <td class="birth-date-cell">20.10.16</td>
+                </tr>
+                <tr>
+                    <td class="child-name-cell">יצחק</td>
+                    <td class="birth-date-cell">27.10.18</td>
+                </tr>
+                
+                <!-- נובמבר -->
+                <tr>
+                    <td class="month-cell">🌰 נובמבר</td>
+                    <td class="empty-month" colspan="2">אין ימי הולדת בחודש זה</td>
+                </tr>
+                
+                <!-- דצמבר -->
+                <tr>
+                    <td class="month-cell" rowspan="2">❄️ דצמבר</td>
+                    <td class="child-name-cell">יהלי</td>
+                    <td class="birth-date-cell">6.12.17</td>
+                </tr>
+                <tr>
+                    <td class="child-name-cell">אור</td>
+                    <td class="birth-date-cell">25.12.16</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="events-section">
+            <h2 class="events-title">🌟 אירועים מיוחדים בתכנית עופרים 🌟</h2>
+            <div class="events-content">
+                <div class="event-item">
+                    🕯️ <strong>פעילות הורים וילדים ראשונה בחנוכה</strong>
+                    <span class="event-date">18.12.25</span>
+                </div>
+                <div class="event-item">
+                    🚌 <strong>טיול שנתי</strong>
+                    <span class="event-date">1.7.26</span>
+                </div>
+                <div class="event-item">
+                    🎊 <strong>פעילות הורים וילדים שניה ומסיבת סיום</strong>
+                    <span class="event-date">12.8.26</span>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="footer">
+            <div class="footer-blessing">
+                <span class="emoji">🌟</span>
+                מזל טוב לכל הילדים!
+                <span class="emoji">🌟</span>
+            </div>
+            <div class="footer-blessing">
+                בריאות אושר ברכה הצלחה ומלא אהבה
+            </div>
+            <div class="footer-team">
+                <span class="emoji">💕</span>
+                צוות תכנית עופרים
+                <span class="emoji">💕</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
