@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שאלון משוב על ההשתלמות הדידקטית</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-right: 4px solid #4facfe;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        .workshop-item {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .workshop-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .workshop-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .rating-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            direction: ltr;
+        }
+
+        .rating-label {
+            font-size: 0.9em;
+            color: #666;
+            min-width: 100px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+        }
+
+        .star {
+            font-size: 1.5em;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffc107;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background-color: #f0f8ff;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4facfe;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 25px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .radio-item:hover {
+            border-color: #4facfe;
+            background-color: #f0f8ff;
+        }
+
+        .radio-item input[type="radio"] {
+            accent-color: #4facfe;
+        }
+
+        .question {
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .form-content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            .rating-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>שאלון משוב על ההשתלמות הדידקטית</h1>
+            <p>אנא שתפו את חוויתכם ועזרו לנו להשתפר</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="form-content">
+            <!-- modify this form HTML and place wherever you want your form -->
+            <form id="feedbackForm" action="https://formbold.com/s/3578L" method="POST">
+                <!-- שדה מוסתר לתאריך -->
+                <input type="hidden" name="תאריך_מילוי" id="submitDate">
+                
+                <!-- חלק א' - הערכה לכל סדנא -->
+                <div class="section">
+                    <h2>חלק א' – הערכה לכל סדנא</h2>
+                    <p style="margin-bottom: 20px; color: #666;">אנא דרגו את מידת ההנאה והרלוונטיות שלכם מכל אחת מהסדנאות<br>1 = כלל לא, 5 = מאוד</p>
+                    
+                    <div class="workshop-item">
+                        <div class="workshop-title">פתיח היכרות + בעלי תפקידים</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop1">
+                                <input type="hidden" name="פתיח_היכרות_בעלי_תפקידים" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">ניהול כיתה + ניהול זמן</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop2">
+                                <input type="hidden" name="ניהול_כיתה_ניהול_זמן" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">תרגול: איך פותחים ומסיימים שיעור</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop3">
+                                <input type="hidden" name="תרגול_פתיחת_וסיום_שיעור" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">חוויית לקוח – מדוע צריך להשתפר</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop4">
+                                <input type="hidden" name="חוויית_לקוח_מדוע_להשתפר" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">KATIMBA</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop5">
+                                <input type="hidden" name="KATIMBA" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">מיומנויות חקר בהוראה</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop6">
+                                <input type="hidden" name="מיומנויות_חקר_בהוראה" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">תצפית הדרכה – על מה ולמה?</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop7">
+                                <input type="hidden" name="תצפית_הדרכה_על_מה_ולמה" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">מתכונת העבודה עם מעבדת ההכנה</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop8">
+                                <input type="hidden" name="מתכונת_העבודה_עם_מעבדת_הכנה" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">דרמה והומור בהוראה</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop9">
+                                <input type="hidden" name="דרמה_והומור_בהוראה" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="workshop-item">
+                        <div class="workshop-title">כלי הבינה המלאכותית בשימוש עובדי הטכנודע</div>
+                        <div class="rating-container">
+                            <span class="rating-label">ציון:</span>
+                            <div class="star-rating" data-name="workshop10">
+                                <input type="hidden" name="כלי_בינה_מלאכותית_עובדי_טכנודע" class="rating-input" value="">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- חלק ב' - תוספות והעדפות -->
+                <div class="section">
+                    <h2>חלק ב' – תוספות והעדפות</h2>
+                    
+                    <div class="question">
+                        <div class="question-text">1. אילו נושאים או סדנאות נוספות הייתם שמחים לקבל בהשתלמות הבאה?</div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="נושאים_נוספים[]" value="פדגוגיה חדשנית" id="topic1">
+                                <label for="topic1">פדגוגיה חדשנית</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="נושאים_נוספים[]" value="ניהול כיתה מתקדם" id="topic2">
+                                <label for="topic2">ניהול כיתה מתקדם</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="נושאים_נוספים[]" value="שימוש בטכנולוגיות חדשות בהוראה" id="topic3">
+                                <label for="topic3">שימוש בטכנולוגיות חדשות בהוראה</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="נושאים_נוספים[]" value="כלים להערכה חלופית" id="topic4">
+                                <label for="topic4">כלים להערכה חלופית</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="נושאים_נוספים[]" value="אחר" id="topic5">
+                                <label for="topic5">אחר:</label>
+                                <input type="text" class="text-input" placeholder="פרטו..." name="נושא_אחר" style="margin-right: 10px; width: 200px; margin-top: 0;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-text">2. אילו מהסדנאות שהיו השנה פחות תרמו לדעתכם, וניתן לשקול לוותר עליהן בלוחות זמנים עתידיים?</div>
+                        <textarea class="text-input textarea" name="סדנאות_פחות_רלוונטיות" placeholder="כתבו את תשובתכם כאן..."></textarea>
+                    </div>
+                </div>
+
+                <!-- חלק ג' - התרשמות כללית -->
+                <div class="section">
+                    <h2>חלק ג' – התרשמות כללית</h2>
+                    
+                    <div class="question">
+                        <div class="question-text">1. עד כמה הייתם מרוצים מההשתלמות באופן כללי? (1-5)</div>
+                        <div class="star-rating" data-name="overall_satisfaction" style="margin-top: 15px;">
+                            <input type="hidden" name="שביעות_רצון_כללית" class="rating-input" value="">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-text">2. האם הייתם ממליצים לעמיתיכם להשתתף בהשתלמות דומה?</div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="המלצה_לעמיתים" value="כן">
+                                <span>כן</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="המלצה_לעמיתים" value="לא">
+                                <span>לא</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="המלצה_לעמיתים" value="אולי">
+                                <span>אולי</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <div class="question-text">3. הצעות לשיפור:</div>
+                        <textarea class="text-input textarea" name="הצעות_לשיפור" placeholder="כתבו את הצעותיכם לשיפור..."></textarea>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">שלח משוב</button>
+                    <p style="margin-top: 15px; color: #666; font-size: 0.9em;">תודה על זמנכם! המשוב שלכם חשוב לנו מאוד</p>
+                    
+                    <div class="success-message" id="successMessage">
+                        <h3>תודה רבה!</h3>
+                        <p>המשוב נשלח בהצלחה והתקבל במערכת שלנו. אתם מוזמנים לסגור את החלון.</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // מערך לשמירת הדירוגים
+        const ratings = {};
+        
+        // התייחסות לכל כוכבי הדירוג
+        document.addEventListener('DOMContentLoaded', function() {
+            const starRatings = document.querySelectorAll('.star-rating');
+            
+            starRatings.forEach(rating => {
+                const stars = rating.querySelectorAll('.star');
+                const name = rating.getAttribute('data-name');
+                const hiddenInput = rating.querySelector('.rating-input');
+                
+                stars.forEach((star, index) => {
+                    star.addEventListener('click', function() {
+                        const value = parseInt(this.getAttribute('data-value'));
+                        ratings[name] = value;
+                        
+                        // עדכון השדה המוסתר
+                        if (hiddenInput) {
+                            hiddenInput.value = value;
+                        }
+                        
+                        // עדכון מראה הכוכבים
+                        stars.forEach((s, i) => {
+                            if (i < value) {
+                                s.classList.add('active');
+                            } else {
+                                s.classList.remove('active');
+                            }
+                        });
+                        
+                        updateProgress();
+                    });
+                    
+                    // אפקט hover
+                    star.addEventListener('mouseenter', function() {
+                        const value = parseInt(this.getAttribute('data-value'));
+                        stars.forEach((s, i) => {
+                            if (i < value) {
+                                s.style.color = '#ffc107';
+                            } else {
+                                s.style.color = '#ddd';
+                            }
+                        });
+                    });
+                });
+                
+                // החזרת הצבעים כשעוזבים
+                rating.addEventListener('mouseleave', function() {
+                    const currentValue = ratings[name] || 0;
+                    stars.forEach((s, i) => {
+                        if (i < currentValue) {
+                            s.style.color = '#ffc107';
+                        } else {
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+            });
+            
+            // מעקב אחר שינויים בטופס לעדכון סרגל ההתקדמות
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('change', updateProgress);
+                input.addEventListener('input', updateProgress);
+            });
+
+            // הגדרת תאריך נוכחי
+            document.getElementById('submitDate').value = new Date().toLocaleString('he-IL');
+        });
+        
+        // עדכון סרגל התקדמות
+        function updateProgress() {
+            const totalQuestions = 13; // 10 סדנאות + 3 שאלות כלליות
+            let answeredQuestions = 0;
+            
+            // בדיקת דירוגי הסדנאות
+            for (let i = 1; i <= 10; i++) {
+                if (ratings[`workshop${i}`]) {
+                    answeredQuestions++;
+                }
+            }
+            
+            // בדיקת שאלות כלליות
+            if (ratings['overall_satisfaction']) answeredQuestions++;
+            if (document.querySelector('input[name="המלצה_לעמיתים"]:checked')) answeredQuestions++;
+            if (document.querySelector('textarea[name="הצעות_לשיפור"]').value.trim()) answeredQuestions++;
+            
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        // טיפול בשליחת הטופס
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            // הצגת אנימציית טעינה
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'שולח...';
+            
+            // Formbold ידאג לשליחה - לא צריך לעצור את הטופס
+            // הטופס ישלח אוטומטיט ל-Formbold
+            
+            // הצגת הודעת הצלחה לאחר זמן קצר
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'block';
+                submitBtn.style.display = 'none';
+            }, 1000);
+        });
+        
+        // אנימציה חלקה לכוכבים
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                star.style.animationDelay = (index * 50) + 'ms';
+            });
+        });
+    </script>
+</body>
+</html>
