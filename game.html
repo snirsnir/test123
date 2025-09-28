@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>משחק גדלים – קטן/בינוני/גדול</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#ffffff; --ink:#0f172a; --muted:#64748b; --primary:#6366f1; --ok:#16a34a; --bad:#dc2626; --amber:#f59e0b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Heebo,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:950px;margin:24px auto;padding:16px}
+  .card{background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(2,6,23,.08);padding:20px}
+  h1{margin:0 0 8px;font-weight:800}
+  .muted{color:var(--muted)}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .row > *{flex:0 0 auto}
+  select,button,input[type="number"]{border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;font-size:16px;background:#fff}
+  button{cursor:pointer}
+  button.primary{background:var(--primary);color:#fff;border-color:transparent;font-weight:700}
+  button.ghost{background:#fff}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .pill{padding:8px 12px;border-radius:999px;background:#eef2ff;color:#3730a3;font-weight:700;display:inline-block}
+  .area{height:340px;border:2px dashed #e2e8f0;border-radius:16px;display:flex;align-items:center;justify-content:center;position:relative;background:#fafafa}
+  .stimulus{user-select:none;}
+  .stimulus .char{display:inline-block;line-height:1}
+  .size-small .char{font-size:48px}
+  .size-medium .char{font-size:96px}
+  .size-large .char{font-size:144px}
+  .feedback{position:absolute;top:10px;left:10px;font-size:22px;font-weight:800}
+  .feedback.ok{color:var(--ok)}
+  .feedback.bad{color:var(--bad)}
+  .stats{display:flex;gap:16px;flex-wrap:wrap}
+  .stat{background:#f8fafc;border-radius:12px;padding:10px 12px}
+  .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#111827;color:#fff;border-radius:6px;padding:2px 6px;font-size:14px}
+  .footer{color:var(--muted);font-size:14px;margin-top:8px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>משחק גדלים – קטן / בינוני / גדול</h1>
+      <p class="muted">הילד/ה לוחץ/ת כשמופיעה דמות בגודל המבוקש. המחשב נותן משוב מידי ✔️/✖️ ומחשב תוצאות.</p>
+
+      <div class="row" style="margin-top:6px;margin-bottom:12px">
+        <label>גודל מטרה: 
+          <select id="targetSize">
+            <option value="small">קטן</option>
+            <option value="medium" selected>בינוני</option>
+            <option value="large">גדול</option>
+          </select>
+        </label>
+        <label>מס׳ נסיונות: <input id="trials" type="number" min="5" max="200" value="24"/></label>
+        <label>משך גירוי (מ״ש): <input id="stimMs" type="number" min="300" max="5000" step="100" value="1200"/></label>
+        <label>הפסקה בין גירויים (מ״ש): <input id="isiMs" type="number" min="200" max="4000" step="100" value="700"/></label>
+        <button id="startBtn" class="primary">התחל/י משחק</button>
+        <button id="stopBtn" class="ghost">עצור</button>
+        <span class="pill">לחצן: <span class="kbd">רווח</span> או הקלקה</span>
+      </div>
+
+      <div id="arena" class="area" tabindex="0">
+        <div id="feedback" class="feedback hidden"></div>
+        <div id="stimulus" class="stimulus size-medium hidden" aria-live="polite">
+          <span class="char" id="char">🧸</span>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:14px;justify-content:space-between">
+        <div class="stats">
+          <div class="stat">נכונות: <b id="acc">0/0</b></div>
+          <div class="stat">החמצות: <b id="miss">0</b></div>
+          <div class="stat">אזעקות שווא: <b id="fa">0</b></div>
+          <div class="stat">זמן תגובה ממוצע: <b id="rt">–</b></div>
+        </div>
+        <div class="footer">טיפ: אם יש לך בזזר שמזדהה כמקלדת (כמו USB buzzer) – אפשר למפות אותו ל<span class="kbd">רווח</span>.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h2>איך זה עובד</h2>
+      <ol>
+        <li>בחר/י גודל מטרה (קטן/בינוני/גדול).</li>
+        <li>לחצ/י <b>התחל/י משחק</b>. בכל ניסיון מופיעה דמות בגודל אקראי.</li>
+        <li>אם הגודל תואם למטרה – לחצ/י <span class="kbd">רווח</span> (או הקלק/י באזור). אם לא – אל תלחצו.</li>
+        <li>תקבל/י משוב מידי ✔️/✖️. בסיום מוצגת תמצית ביצועים.</li>
+      </ol>
+    </div>
+  </div>
+
+  <audio id="sndOk">
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYBAGZmZmZm" type="audio/wav">
+  </audio>
+  <audio id="sndBad">
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYBAGZmZmZm" type="audio/wav">
+  </audio>
+
+<script>
+(() => {
+  const arena = document.getElementById('arena');
+  const stimEl = document.getElementById('stimulus');
+  const charEl = document.getElementById('char');
+  const feedback = document.getElementById('feedback');
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const targetSel = document.getElementById('targetSize');
+  const trialsInput = document.getElementById('trials');
+  const stimMsInput = document.getElementById('stimMs');
+  const isiMsInput = document.getElementById('isiMs');
+  const accEl = document.getElementById('acc');
+  const missEl = document.getElementById('miss');
+  const faEl = document.getElementById('fa');
+  const rtEl = document.getElementById('rt');
+  const sndOk = document.getElementById('sndOk');
+  const sndBad = document.getElementById('sndBad');
+
+  const CHARS = ['🧸','🦊','🐼','🐯','🦄','🐶','🐱','🐹'];
+  const SIZES = ['small','medium','large'];
+
+  let running = false, trial = 0, trials = 24;
+  let target = 'medium', stimMs = 1200, isiMs = 700;
+  let currSize = 'medium', shownAt = 0, responded = false;
+  let hits = 0, misses = 0, fas = 0, rts = [];
+  let timer1, timer2;
+
+  function resetStats(){ trial=0; hits=0; misses=0; fas=0; rts=[]; updateStats(); }
+  function updateStats(){ accEl.textContent = `${hits}/${trial}`; missEl.textContent = misses; faEl.textContent = fas; rtEl.textContent = rts.length? `${Math.round(rts.reduce((a,b)=>a+b,0)/rts.length)} מ"ש` : '–'; }
+
+  function randomPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+  function setStimSize(sz){ stimEl.classList.remove('size-small','size-medium','size-large'); stimEl.classList.add(`size-${sz}`); }
+
+  function showFeedback(ok){
+    feedback.textContent = ok? '✔️ נכון' : '✖️ טעות';
+    feedback.classList.remove('hidden','ok','bad');
+    feedback.classList.add(ok? 'ok':'bad');
+    (ok? sndOk : sndBad).currentTime=0; (ok? sndOk : sndBad).play().catch(()=>{});
+    clearTimeout(timer2);
+    timer2 = setTimeout(()=> feedback.classList.add('hidden'), 450);
+  }
+
+  function nextTrial(){
+    if(!running) return;
+    if(trial >= trials){ finish(); return; }
+    responded = false;
+    currSize = Math.random()<0.5 ? target : randomPick(SIZES); // ~50% מטרה
+    if(Math.random()<0.33) currSize = randomPick(SIZES); // עוד עירבוב קל
+    charEl.textContent = randomPick(CHARS);
+    setStimSize(currSize);
+    stimEl.classList.remove('hidden');
+    shownAt = performance.now();
+    trial++;
+    updateStats();
+    clearTimeout(timer1);
+    timer1 = setTimeout(()=>{ // סוף הגירוי
+      stimEl.classList.add('hidden');
+      if(!responded && currSize===target){ misses++; updateStats(); }
+      // ISI
+      setTimeout(nextTrial, isiMs);
+    }, stimMs);
+  }
+
+  function start(){
+    if(running) return;
+    target = targetSel.value; trials = +trialsInput.value||24; stimMs=+stimMsInput.value||1200; isiMs=+isiMsInput.value||700;
+    running = true; resetStats(); arena.focus(); nextTrial();
+  }
+  function stop(){ running=false; clearTimeout(timer1); clearTimeout(timer2); stimEl.classList.add('hidden'); }
+  function finish(){ running=false; stimEl.classList.add('hidden');
+    const total = hits+misses+fas;
+    const acc = total? Math.round((hits/(hits+misses))*100):0;
+    feedback.textContent = `סיום: דיוק ${acc}% | פגיעות ${hits} | החמצות ${misses} | אזעקות שווא ${fas}`;
+    feedback.classList.remove('hidden','bad'); feedback.classList.add('ok');
+  }
+
+  function handleResponse(){
+    if(!running || responded) return;
+    responded = true;
+    const rt = Math.max(0, Math.round(performance.now()-shownAt));
+    const isTargetNow = (currSize === target);
+    if(isTargetNow){ hits++; rts.push(rt); showFeedback(true); }
+    else { fas++; showFeedback(false); }
+    updateStats();
+  }
+
+  // Events
+  startBtn.addEventListener('click', start);
+  stopBtn.addEventListener('click', stop);
+  arena.addEventListener('click', handleResponse);
+  window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); handleResponse(); }});
+})();
+</script>
+</body>
+</html>
