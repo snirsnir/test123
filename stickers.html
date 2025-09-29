@@ -101,9 +101,11 @@
         
         .label-item.large-label {
             padding: 12mm;
-            font-size: 130%;
+            font-size: 250%;
         }
-        
+        .label-item.large-label .label-text {
+    font-size: 30pt;  /* במקום 16pt הרגיל */
+}
 .label-item.full-page {
     min-height: 250mm;
     display: flex;
@@ -395,7 +397,7 @@
             {
                 "id": "hearing",
                 "hebrew_title": "חוש השמיעה",
-                "hebrew_text": "דברו אל המיקרופון, הרימו את ראשכם ושימו לב לאונה הרקתית, האחראית על פיענוח הקולות והבנתם.",
+                "hebrew_text": "דברו אל המיקרופון, הרימו את ראשכם ושימו לב לאונה הרקתית,\nהאחראית על פיענוח הקולות והבנתם.",
                 "arabic_title": "حاسة السمع",
                 "arabic_text": "تحدث في الميكروفون، ارفع رأسك وانتبه إلى الفص الصدغي، المسؤول عن فك تشفير الأصوات وفهمها.",
                 "copies": 1
@@ -403,7 +405,7 @@
             {
                 "id": "vision",
                 "hebrew_title": "חוש הראיה",
-                "hebrew_text": "סובבו את הגלגל והתבוננו מבעד לחריץ על הכדור. הרימו את ראשכם ושימו לב לאונה העורפית, האחראית על חוש הראיה.",
+                "hebrew_text": "סובבו את הגלגל והתבוננו מבעד לחריץ על הכדור.\nהרימו את ראשכם ושימו לב לאונה העורפית, האחראית על חוש הראיה.",
                 "arabic_title": "حاسة البصر",
                 "arabic_text": "أدر العجلة وانظר من خلال الفتحة الى الكرة. ارفع رأسك وانتبه إلى الفص القذالي، المسؤول عن حاسة البصر.",
                 "copies": 1
@@ -411,7 +413,7 @@
             {
                 "id": "thinking_planning",
                 "hebrew_title": "מחשבה גבוהה ותכנון",
-                "hebrew_text": "נסו להפעיל את כל הנורות. הרימו את ראשכם ושימו לב לאונה המצחית האחראית על התכנון והמחשבה הגבוהה.",
+                "hebrew_text": "נסו להפעיל את כל הנורות.\nהרימו את ראשכם ושימו לב\nלאונה המצחית האחראית על התכנון והמחשבה הגבוהה.",
                 "arabic_title": "التفكير العالي والتخطيط",
                 "arabic_text": "حاول تشغيل جميع المصابيح. ارفع رأسك وانتبه للفص الجبهي، المسؤول عن التخطيط والتفكير العالي.",
                 "copies": 1
@@ -427,7 +429,7 @@
             {
                 "id": "fear",
                 "hebrew_title": "פחד",
-                "hebrew_text": "לחצו על הדוושה והחזיקו מספר שניות. הרימו את ראשכם ושימו לב לאיזור הפנימי במוח הקדמון, האחראי על תחושת הפחד.",
+                "hebrew_text": "לחצו על הדוושה והחזיקו מספר שניות.\nהרימו את ראשכם ושימו לב לאיזור הפנימי במוח הקדמון,\nהאחראי על תחושת הפחד.",
                 "arabic_title": "الخوف",
                 "arabic_text": "اضغط على الدواسة واستمر لبضع ثوانٍ. ارفع رأسك وانتبه للمنطقة الداخلية من الدماغ البدائي، المسؤولة عن الشعور بالخوف.",
                 "copies": 1
@@ -451,9 +453,9 @@
             {
                 "id": "reaction_time",
                 "hebrew_title": "זמן תגובה",
-                "hebrew_text": "מה לעשות? כמה מהירה התגובה?\nלאחר שלחצתם על כפתור \"התחל\", תוכלו לשמוע צליל \"ביפ\" והנורות יהבהבו בכפתורים באופן פתאומי. לחצו על הכפתור המהבהב מהר ככל שתוכלו.",
+                "hebrew_text": "מה לעשות? כמה מהירה התגובה?\nלאחר שלחצתם על כפתור \"התחל\", תוכלו לשמוע צליל \"ביפ\" והנורות יהבהבו בכפתורים באופן פתאומי.\nלחצו על הכפתור המהבהב מהר ככל שתוכלו.",
                 "arabic_title": "وقت رد الفعل",
-                "arabic_text": "ما العمل؟ ما מدى سرعة رد فعلك؟\nبعد الضغط على زر \"ابدأ\"، سوف تسمع صوت \"صفير\" وستومض الأضواء على الأزرار بشكلٍ غير متوقع. اضغط زر الوميض بأسرع ما يُمكن.",
+"arabic_text": "ما العمل؟ ما مدى سرعة رد فعلك؟\nبعد الضغط على زر \"ابدأ\"، سوف تسمع صوت \"صفير\" وستومض الأضواء على الأزرار بشكلٍ غير متوقع. اضغط زر الوميض بأسرع ما يُمكن.",
                 "copies": 1
             },
             {
@@ -472,15 +474,15 @@
                 "arabic_text": "اضغط على الزر الأخضر لتنشيط الشاشة، ثم كرّر الأصوات الصادرة باستخدام الأزرار الملائمة.",
                 "copies": 1
             },
-            {
-                "id": "bacteria_table",
-                "hebrew_title": "שולחן מתחם החיידקים",
-                "hebrew_text": "מבקרים יקרים, בתערוכה זו מצויות חותמות המכילות חומר שנראה באור אולטרה סגול. במקרים נדירים החומר נותר על היד מספר שעות ונראה גם באור הרגיל. *החומר נבדק דרמטולוגית. בברכה, צוות הטכנודע",
-                "arabic_title": "",
-                "arabic_text": "",
-                "copies": 1,
-                "large": true
-            },
+{
+    "id": "bacteria_table",
+    "hebrew_title": "",
+    "hebrew_text": "\nמבקרים יקרים,\n בתערוכה זו מצויות חותמות המכילות חומר שנראה באור אולטרה סגול.\n במקרים נדירים החומר נותר על היד מספר שעות ונראה גם באור הרגיל.\n *החומר נבדק דרמטולוגית\nבברכה, צוות הטכנודע",
+    "arabic_title": "",
+    "arabic_text": "",
+    "copies": 1,
+    "large": true
+},
             {
                 "id": "logo_transparent",
                 "type": "logo2",
@@ -533,38 +535,40 @@
                             
                             <img src="logo2.png" class="label-logo-center" alt="לוגו טכנודע">
                         `;
-                    } else {
-                        labelItem.className = label.large ? 'label-item large-label' : 'label-item';
-                        
-                        let content = `
-                            <div class="label-controls no-print">
-                                <button class="font-control-btn" onclick="changeFontSize(${labelIndex}, 'increase')" title="הגדל פונט">+</button>
-                                <button class="font-control-btn minus" onclick="changeFontSize(${labelIndex}, 'decrease')" title="הקטן פונט">-</button>
-                                <button class="logo-control-btn remove" onclick="removeLogo(${labelIndex})" title="הסר לוגו">הסר</button>
-                            </div>
-                            <img src="logo.png" class="label-logo" alt="לוגו טכנודע">
-                        `;
-                        
-                        // כותרת עברית
-                        content += `<div class="label-title">${label.hebrew_title}</div>`;
-                        
-                        // טקסט עברית
-                        if (label.hebrew_text) {
-                            content += `<div class="label-text">${label.hebrew_text}</div>`;
-                        }
-                        
-                        // כותרת ערבית
-                        if (label.arabic_title) {
-                            content += `<div class="label-title arabic-title">${label.arabic_title}</div>`;
-                        }
-                        
-                        // טקסט ערבית
-                        if (label.arabic_text) {
-                            content += `<div class="label-text arabic">${label.arabic_text}</div>`;
-                        }
-                        
-                        labelItem.innerHTML = content;
-                    }
+} else {
+    labelItem.className = label.large ? 'label-item large-label' : 'label-item';
+    
+    let content = `
+        <div class="label-controls no-print">
+            <button class="font-control-btn" onclick="changeFontSize(${labelIndex}, 'increase')" title="הגדל פונט">+</button>
+            <button class="font-control-btn minus" onclick="changeFontSize(${labelIndex}, 'decrease')" title="הקטן פונט">-</button>
+            <button class="logo-control-btn remove" onclick="removeLogo(${labelIndex})" title="הסר לוגו">הסר</button>
+        </div>
+        <img src="logo.png" class="label-logo" alt="לוגו טכנודע">
+    `;
+    
+    // כותרת עברית
+    if (label.hebrew_title) {
+        content += `<div class="label-title">${label.hebrew_title}</div>`;
+    }
+    
+    // טקסט עברית
+    if (label.hebrew_text) {
+        content += `<div class="label-text">${label.hebrew_text}</div>`;
+    }
+    
+    // כותרת ערבית
+    if (label.arabic_title) {
+        content += `<div class="label-title arabic-title">${label.arabic_title}</div>`;
+    }
+    
+    // טקסט ערבית
+    if (label.arabic_text) {
+        content += `<div class="label-text arabic">${label.arabic_text}</div>`;
+    }
+    
+    labelItem.innerHTML = content;
+}
                     
                     container.appendChild(labelItem);
                     totalCount++;
@@ -575,10 +579,11 @@
             // הוספת דפי משחקי התפתחות
 // הוספת דפי משחקי התפתחות
 // הוספת דפי משחקי התפתחות
+// הוספת דפי משחקי התפתחות
 const games = [
-    { text: "גלו לדוגמא משחקים המתאימים סביב גיל שנה", count: 1 },
-    { text: "גלו לדוגמא משחקים המתאימים סביב גיל שנתיים", count: 2 },
-    { text: "גלו לדוגמא משחקים המתאימים סביב גיל שלוש", count: 2 }
+    { text: "גלו לדוגמא משחקים המתאימים סביב גיל <span style='font-size: 72pt; color: #e74c3c; font-weight: bold;'>שנה</span>", count: 1 },
+    { text: "גלו לדוגמא משחקים המתאימים סביב גיל <span style='font-size: 72pt; color: #3498db; font-weight: bold;'>שנתיים</span>", count: 2 },
+    { text: "גלו לדוגמא משחקים המתאימים סביב גיל <span style='font-size: 72pt; color: #27ae60; font-weight: bold;'>שלוש</span>", count: 2 }
 ];
 
 games.forEach(game => {
