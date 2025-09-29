@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>הדפסת תוויות מוזיאון הרפואה</title>
     
-    <!-- טעינת פונט Noto Sans Hebrew מ-Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&display=swap" rel="stylesheet">
@@ -90,14 +89,41 @@
             transform: scale(1.2);
         }
         
-.label-item {
-    border: 2px dashed #ccc;
-    margin: 15mm 0;
-    padding: 8mm;
-    background-color: #fdfdfd;
-    page-break-inside: avoid;
-    position: relative;
-    text-align: center; /* מרכוז תוכן */
+        .label-item {
+            border: 2px dashed #ccc;
+            margin: 15mm 0;
+            padding: 9.2mm;
+            background-color: #fdfdfd;
+            page-break-inside: avoid;
+            position: relative;
+            text-align: center;
+        }
+        
+        .label-item.large-label {
+            padding: 12mm;
+            font-size: 130%;
+        }
+        
+.label-item.full-page {
+    min-height: 250mm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 48pt;
+    font-weight: 700;
+    page-break-before: always;
+}
+        
+.label-item.logo-page {
+    min-height: 220mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    page-break-before: always;
+    padding: 20mm;
+    gap: 10px;
 }
         
         .label-controls {
@@ -136,18 +162,21 @@
             background-color: #c0392b;
         }
         
-.label-title {
-    background-color: #3498db;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: 600;
-    display: inline-block; /* כדי שהמרכוז יעבוד */
-    margin-bottom: 12px;
-    margin-top: 30px;
-}
-
+        .label-title {
+            background-color: #3498db;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 24px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 12px;
+            margin-top: 30px;
+        }
+        
+        .label-title.arabic-title {
+            margin-top: 25px;
+        }
         
         .label-info {
             font-size: 11px;
@@ -155,116 +184,135 @@
             margin-bottom: 8px;
         }
         
-.label-text {
-    font-size: 11pt;
-    line-height: 1.5;
-    font-weight: 500;
-    color: #2c3e50;
-    background: white;
-    padding: 0;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    transition: font-size 0.2s ease;
-    text-align: center; /* מרכוז הטקסט */
-}
+        .label-text {
+            font-size: 16pt;
+            line-height: 1.5;
+            font-weight: 500;
+            color: #2c3e50;
+            background: white;
+            padding: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            transition: font-size 0.2s ease;
+            text-align: center;
+            margin-bottom: 20px;
+        }
         
-.arabic {
-    direction: rtl;
-    text-align: center; /* מרכוז גם לערבית */
-}
+        .arabic {
+            direction: rtl;
+            text-align: center;
+        }
         
         .label-logo {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    max-width: 80px;
-    max-height: 40px;
-    width: auto;
-    height: auto;
-    z-index: 10;
-}
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            max-width: 120px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            z-index: 10;
+        }
+        
+        .label-logo-center {
+            max-width: 200px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            display: block;
+            margin: 30px auto;
+            position: static;
+        }
+        
+        .logo-triple {
+            max-width: 250px;
+            max-height: 250px;
+            width: auto;
+            height: auto;
+        }
 
-.logo-control-btn {
-    background-color: #9b59b6;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    width: 60px;
-    height: 25px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
-    margin-left: 5px;
-    transition: background-color 0.2s;
-}
+        .logo-control-btn {
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 60px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 5px;
+            transition: background-color 0.2s;
+        }
 
-.logo-control-btn:hover {
-    background-color: #8e44ad;
-}
+        .logo-control-btn:hover {
+            background-color: #8e44ad;
+        }
 
-.logo-control-btn.remove {
-    background-color: #e67e22;
-    width: 40px;
-}
+        .logo-control-btn.remove {
+            background-color: #e67e22;
+            width: 40px;
+        }
 
-.logo-control-btn.remove:hover {
-    background-color: #d35400;
-}
-@media print {
-    body {
-        background-color: white;
-    }
-    
-    .container {
-        box-shadow: none;
-        max-width: none;
-        padding: 0;
-    }
-    
-    .header {
-        border-bottom: 1px solid #333;
-    }
-    
-    .label-item {
-        border: 1px solid #333;
-        background-color: white;
-        margin: 10mm 0;
-        text-align: center; /* מרכוז תוכן המדבקה */
-    }
-    
-    .no-print {
-        display: none !important;
-    }
-    
-    .label-controls {
-        display: none !important;
-    }
-    
-    /* הסתרת המידע הקטן בהדפסה */
-    .label-info {
-        display: none !important;
-    }
-    
-    .label-logo {
-        display: block !important;
-    }
-    
-    /* מרכוז הכותרת והטקסט בהדפסה */
-    .label-title {
-        text-align: center;
-        display: block;
-        margin: 0 auto 12px auto;
-    }
-    
-    .label-text {
-        text-align: center;
-    }
-    
-    .label-text.arabic {
-        text-align: center;
-        direction: rtl;
-    }
-}
+        .logo-control-btn.remove:hover {
+            background-color: #d35400;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: none;
+                padding: 0;
+            }
+            
+            .header {
+                border-bottom: 1px solid #333;
+            }
+            
+            .label-item {
+                border: 1px solid #333;
+                background-color: white;
+                margin: 10mm 0;
+                text-align: center;
+                padding: 9.2mm;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .label-controls {
+                display: none !important;
+            }
+            
+            .label-info {
+                display: none !important;
+            }
+            
+            .label-logo {
+                display: block !important;
+            }
+            
+            .label-title {
+                text-align: center;
+                display: inline-block;
+                margin: 0 auto 12px auto;
+                width: auto;
+            }
+            
+            .label-text {
+                text-align: center;
+            }
+            
+            .label-text.arabic {
+                text-align: center;
+                direction: rtl;
+            }
+        }
         
         .print-button {
             background-color: #27ae60;
@@ -326,353 +374,303 @@
     </div>
 
     <script>
-        // נתוני התוויות מה-JSON המעודכן
         const labelsData = [
             {
-                "שם המוצג": "נפחי נשימה",
-                "טקסט למדבקה": "הוראות הפעלה:\nנשפו לפיה את מלוא האוויר שבריאותיכם וצפו בתוצאה.",
-                "מידות המדבקה בסנטימטרים": "17x22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מדבקות עברית",
-                "עותקים": 2
+                "id": "breathing_volume",
+                "hebrew_title": "נפחי נשימה",
+                "hebrew_text": "הוראות הפעלה:\nנשפו לפיה את מלוא האוויר שבריאותיכם וצפו בתוצאה.",
+                "arabic_title": "أحجام التنفس",
+                "arabic_text": "ما العمل؟\nأخرج كل الهواء في رئتيك الى الفوهة وانظر إلى النتيجة.",
+                "copies": 1
             },
             {
-                "שם המוצג": "נפחי נשימה",
-                "טקסט למדבקה": "ما العمل؟\n أخرج كل الهواء في رئتيك الى الفوهة وانظر إلى النتيجة.",
-                "מידות המדבקה בסנטימטרים": "17x22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מדבקות ערבית",
-                "עותקים": 2
+                "id": "breathing_mechanism",
+                "hebrew_title": "מנגנון הנשימה",
+                "hebrew_text": "הוראות הפעלה:\nהניעו את הידית וצפו במתרחש.",
+                "arabic_title": "آلية التنفس",
+                "arabic_text": "ما العمل؟\nحرِّك المقبض وراقب ماذا يحدث.",
+                "copies": 1
+            },
+
+            {
+                "id": "hearing",
+                "hebrew_title": "חוש השמיעה",
+                "hebrew_text": "דברו אל המיקרופון, הרימו את ראשכם ושימו לב לאונה הרקתית, האחראית על פיענוח הקולות והבנתם.",
+                "arabic_title": "حاسة السمع",
+                "arabic_text": "تحدث في الميكروفون، ارفع رأسك وانتبه إلى الفص الصدغي، المسؤول عن فك تشفير الأصوات وفهمها.",
+                "copies": 1
             },
             {
-                "שם המוצג": "מנגנון הנשימה",
-                "טקסט למדבקה": "מנגנון הנשימה",
-                "מידות המדבקה בסנטימטרים": "5x44",
-                "גודל פונט": "7x7 cm",
-                "תיאור המדבקות": "מנגנון הנשימה כותרת גדולה",
-                "עותקים": 3
+                "id": "vision",
+                "hebrew_title": "חוש הראיה",
+                "hebrew_text": "סובבו את הגלגל והתבוננו מבעד לחריץ על הכדור. הרימו את ראשכם ושימו לב לאונה העורפית, האחראית על חוש הראיה.",
+                "arabic_title": "حاسة البصر",
+                "arabic_text": "أدر العجلة وانظר من خلال الفتحة الى الكرة. ارفع رأسك وانتبه إلى الفص القذالي، المسؤول عن حاسة البصر.",
+                "copies": 1
             },
             {
-                "שם המוצג": "מנגנון הנשימה",
-                "טקסט למדבקה": "הוראות הפעלה:\nהניעו את הידית וצפו במתרחש.",
-                "מידות המדבקה בסנטימטרים": "10.5x22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מנגנון הנשימה עברית",
-                "עותקים": 3
+                "id": "thinking_planning",
+                "hebrew_title": "מחשבה גבוהה ותכנון",
+                "hebrew_text": "נסו להפעיל את כל הנורות. הרימו את ראשכם ושימו לב לאונה המצחית האחראית על התכנון והמחשבה הגבוהה.",
+                "arabic_title": "التفكير العالي والتخطيط",
+                "arabic_text": "حاول تشغيل جميع المصابيح. ارفع رأسك وانتبه للفص الجبهي، المسؤول عن التخطيط والتفكير العالي.",
+                "copies": 1
             },
             {
-                "שם המוצג": "מנגנון הנשימה",
-                "טקסט למדבקה": "ما العمل؟\n حرِّك المقبض وراقب ماذا يحدث .",
-                "מידות המדבקה בסנטימטרים": "10.5x22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מנגנון הנשימה ערבית",
-                "עותקים": 3
+                "id": "touch",
+                "hebrew_title": "מישוש",
+                "hebrew_text": "הכניסו את ידכם ומששו. הרימו את ראשכם ושימו לב לאונה הקודקודית, האחראית על חוש המישוש.",
+                "arabic_title": "اللمس",
+                "arabic_text": "ضع يدك وتحسس. ارفع رأسك وانتبه للفص الجداري، المسؤول عن حاسة اللمس.",
+                "copies": 1
             },
             {
-                "שם המוצג": "מדבקות גנריות למוזיאון ולוגו טכנודע",
-                "טקסט למדבקה": "טכנודע [והלוגו החדש] המוזיאון הישראלי לרפואה ומדע, חדרה",
-                "מידות המדבקה בסנטימטרים": "4.5x12.5",
-                "גודל פונט": "",
-                "תיאור המדבקות": "טכנודע והלוגו החדש, המוזיאון הישראלי לרפואה ומדע, חדרה X 20 יח",
-                "עותקים": 20
+                "id": "fear",
+                "hebrew_title": "פחד",
+                "hebrew_text": "לחצו על הדוושה והחזיקו מספר שניות. הרימו את ראשכם ושימו לב לאיזור הפנימי במוח הקדמון, האחראי על תחושת הפחד.",
+                "arabic_title": "الخوف",
+                "arabic_text": "اضغط على الدواسة واستمر لبضع ثوانٍ. ارفع رأسك وانتبه للمنطقة الداخلية من الدماغ البدائي، المسؤولة عن الشعور بالخوف.",
+                "copies": 1
             },
             {
-                "שם המוצג": "חוש השמיעה",
-                "טקסט למדבקה": "חוש השמיעה- דברו אל המיקרופון, הרימו את ראשכם ושימו לב לאונה הרקתית, האחראית על פיענוח הקולות והבנתם.\n\nحاسة السمع - تحدث في الميكروفون، ارفع رأسك وانتبه إلى الفص الصدغي، المسؤول عن فك تشفير الأصوات وفهمها.",
-                "מידות המדבקה בסנטימטרים": "5x44",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מדבקות ההוראות",
-                "עותקים": 3
+                "id": "balance",
+                "hebrew_title": "שווי-משקל",
+                "hebrew_text": "נסו לאזן את המשטח ביציבות כמה שיותר זמן. הרימו את ראשכם ושימו לב למוחון המעורב בבקרה על התנועה והיציבה.",
+                "arabic_title": "التوازن",
+                "arabic_text": "حاول الحفاظ على توازن السطح بثبات لأطول فترة ممكنة. ارفع رأسك وانتبه للمخيخ المسؤول عن التحكم في الحركة والتوازن.",
+                "copies": 1
             },
             {
-                "שם המוצג": "חוש הראיה",
-                "טקסט למדבקה": "חוש הראיה- סובבו את הגלגל והתבוננו מבעד לחריץ על הכדור. הרימו את ראשכם ושימו לב לאונה העורפית, האחראית על חוש הראיה.\n\nحاسة البصر - أدر العجلة وانظر من خلال الفتحة الى الكرة. ارفع رأسك وانتبه إلى الفص القذالي، المسؤول عن حاسة البصر.",
-                "מידות המדבקה בסנטימטרים": "5x44",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מדבקות ההוראות",
-                "עותקים": 3
+                "id": "pulse_oximeter",
+                "hebrew_title": "פאלס אוקסימטר",
+                "hebrew_text": "הוראות הפעלה:\nהניחו את האצבע בתוך המתקן המודד את ריווי החמצן בדם וצפו בתוצאה.",
+                "arabic_title": "مقياس الأكسجين",
+                "arabic_text": "ما العمل؟\nضع إصبعك في الجهاز الذي يقيس تشبُّع الأكسجين في دمك وانظر إلى النتيجة.",
+                "copies": 1
             },
             {
-                "שם המוצג": "מחשבה גבוהה ותכנון",
-                "טקסט למדבקה": "נסו להפעיל את כל הנורות. הרימו את ראשכם ושימו לב לאונה המצחית האחראית על התכנון והמחשבה הגבוהה.\n\nحاول تشغيل جميع المصابيح. ارفع رأسك وانتبه للفص الجبهي، المسؤول عن التخطيط والتفكير العالي .",
-                "מידות המדבקה בסנטימטרים": "5x44",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מדבקות ההוראות",
-                "עותקים": 3
+                "id": "reaction_time",
+                "hebrew_title": "זמן תגובה",
+                "hebrew_text": "מה לעשות? כמה מהירה התגובה?\nלאחר שלחצתם על כפתור \"התחל\", תוכלו לשמוע צליל \"ביפ\" והנורות יהבהבו בכפתורים באופן פתאומי. לחצו על הכפתור המהבהב מהר ככל שתוכלו.",
+                "arabic_title": "وقت رد الفعل",
+                "arabic_text": "ما العمل؟ ما מدى سرعة رد فعلك؟\nبعد الضغط على زر \"ابدأ\"، سوف تسمع صوت \"صفير\" وستومض الأضواء على الأزرار بشكلٍ غير متوقع. اضغط زر الوميض بأسرع ما يُمكن.",
+                "copies": 1
             },
             {
-                "שם המוצג": "מישוש",
-                "טקסט למדבקה": "חוש המישוש- הכניסו את ידכם ומששו. הרימו את ראשכם ושימו לב לאונה הקודקודית, האחראית על חוש המישוש.\n\nحاسة اللمس - ضع يدك وتحسس. ارفع رأسك وانتبه للفص الجداري، المسؤول عن حاسة اللمس.",
-                "מידות המדבקה בסנטימטרים": "5x44",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מדבקות ההוראות",
-                "עותקים": 3
+                "id": "biofeedback",
+                "hebrew_title": "ביופידבק",
+                "hebrew_text": "הוראות הפעלה:\nנסה בעזרת כח המחשבה בלבד להזיז את הכדור אל עבר השחקן השני.",
+                "arabic_title": "التغذية الراجعة الحيوية",
+                "arabic_text": "التعليمات:\nحاول استخدام قوة التفكير فقط لتحريك الكرة نحو اللاعب الآخر.",
+                "copies": 1
             },
             {
-                "שם המוצג": "פחד",
-                "טקסט למדבקה": "תחושת הפחד- לחצו על הדוושה והחזיקו מספר שניות. הרימו את ראשכם ושימו לב לאיזור הפנימי במוח הקדמון, האחראי על תחושת הפחד.\n\nالشعور بالخوف - اضغط على الدواسة واستمر لبضع ثوانٍ. ارفع رأسك وانتبه للمنطقة الداخلية من الدماغ البدائي، المسؤولة عن الشعور بالخوف.",
-                "מידות המדבקה בסנטימטרים": "5x44",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מדבקות ההוראות",
-                "עותקים": 3
+                "id": "memory",
+                "hebrew_title": "כיצד המוח פועל - זכרון",
+                "hebrew_text": "לחצו על הכפתור הירוק להפעלת המוצג, ואז חזרו על הצלילים שהושמעו באמצעות הכפתורים המתאימים.",
+                "arabic_title": "كيف يعمل الدماغ - الذاكرة",
+                "arabic_text": "اضغط على الزر الأخضر لتنشيط الشاشة، ثم كرّر الأصوات الصادرة باستخدام الأزرار الملائمة.",
+                "copies": 1
             },
             {
-                "שם המוצג": "שווי-משקל",
-                "טקסט למדבקה": "שווי-משקל- נסו לאזן את המשטח ביציבות כמה שיותר זמן. הרימו את ראשכם ושימו לב למוחון המעורב בבקרה על התנועה והיציבה.\n\nالتوازن - حاول الحفاظ على توازن السطح بثبات لأطول فترة ممكنة. ارفع رأسك وانتبه للمخيخ المسؤول عن التحكم في الحركة والتوازن.",
-                "מידות המדבקה בסנטימטרים": "5x44",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "מדבקות ההוראות",
-                "עותקים": 3
+                "id": "bacteria_table",
+                "hebrew_title": "שולחן מתחם החיידקים",
+                "hebrew_text": "מבקרים יקרים, בתערוכה זו מצויות חותמות המכילות חומר שנראה באור אולטרה סגול. במקרים נדירים החומר נותר על היד מספר שעות ונראה גם באור הרגיל. *החומר נבדק דרמטולוגית. בברכה, צוות הטכנודע",
+                "arabic_title": "",
+                "arabic_text": "",
+                "copies": 1,
+                "large": true
             },
             {
-                "שם המוצג": "מדבקת סורק הלב RF",
-                "טקסט למדבקה": "ללא כיתוב",
-                "מידות המדבקה בסנטימטרים": "10x10",
-                "גודל פונט": "",
-                "תיאור המדבקות": "3 יחידות",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "פאלס אוקסימטר",
-                "טקסט למדבקה": "ללא כיתוב",
-                "מידות המדבקה בסנטימטרים": "12.5x13",
-                "גודל פונט": "",
-                "תיאור המדבקות": "מדבקת כף יד",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "פאלס אוקסימטר",
-                "טקסט למדבקה": "הוראות הפעלה:\nהניחו את האצבע בתוך המתקן המודד את ריווי החמצן בדם וצפו בתוצאה.",
-                "מידות המדבקה בסנטימטרים": "15x22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "הסבר- עברית",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "פאלס אוקסימטר",
-                "טקסט למדבקה": "ما العمل؟\n ضع إصبعك في الجهاز الذي يقيس تشبُّع الأكسجين في دمك وانظر إلى النتيجة.",
-                "מידות המדבקה בסנטימטרים": "15x22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "הסבר - ערבית",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "מראה או חלון (טבעות הפלסטיק)",
-                "טקסט למדבקה": "QR קוד של הסריקה- הערות**",
-                "מידות המדבקה בסנטימטרים": "7X5.5",
-                "גודל פונט": "",
-                "תיאור המדבקות": "מדבקת SCAN ME",
-                "עותקים": 1
-            },
-            {
-                "שם המוצג": "זמן תגובה",
-                "טקסט למדבקה": "מה לעשות?\nכמה מהירה התגובה?\nלאחר שלחצתם על כפתור \"התחל\", תוכלו לשמוע צליל \"ביפ\" והנורות יהבהבו בכפתורים באופן פתאומי. לחצו על הכפתור המהבהב מהר ככל שתוכלו. בצג יופיע זמן התגובה לו הייתם זקוקים עבור 10 כפתורים.",
-                "מידות המדבקה בסנטימטרים": "18X22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "הסבר- עברית",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "זמן תגובה",
-                "טקסט למדבקה": "ما العمل؟\n ما مدى سرعة رد فعلك؟\n بعد الضغط على زر \"ابدأ\" ، سوف تسمع صوت \"صفير\" وستومض الأضواء على الأزرار بشكلٍ غير متوقع. اضغط زر الوميض بأسرع ما يُمكن. سيُعرض على الشاشة وقت رد الفعل الذي احتجتَهُ ل 10 أزرار.",
-                "מידות המדבקה בסנטימטרים": "18X22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "הסבר - ערבית",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "משחקי התפתחות לפי גיל",
-                "טקסט למדבקה": "משחקים המתאימים לגיל שנה, משחקים המתאימים לגיל שנתיים, משחקים המתאימים לגילאי שלוש [הטקסט נראה זהה, רק לשים לב לציון הגיל המשתנה ממדבקה למדבקה]",
-                "מידות המדבקה בסנטימטרים": "28x30",
-                "גודל פונט": "",
-                "תיאור המדבקות": "",
-                "עותקים": 9
-            },
-            {
-                "שם המוצג": "ביופידבק",
-                "טקסט למדבקה": "التعليمات: حاول استخدام قوة التفكير فقط لتحريك الكرة نحو اللاعب الآخر.",
-                "מידות המדבקה בסנטימטרים": "30x22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "כיתוב בערבית",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "ביופידבק",
-                "טקסט למדבקה": "הוראות הפעלה נסה בעזרת כח המחשבה בלבד להזיז את הכדור אל עבר השחקן השני",
-                "מידות המדבקה בסנטימטרים": "30x22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "כיתוב בעברית",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "כיצד המוח פועל- זכרון",
-                "טקסט למדבקה": "כיצד המוח פועל? לחצו על הכפתור הירוק להפעלת המוצג, ואז חזרו על הצלילים שהושמעו באמצעות הכפתורים המתאימים",
-                "מידות המדבקה בסנטימטרים": "12X22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "כיתוב בעברית",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "כיצד המוח פועל- זכרון",
-                "טקסט למדבקה": "كيف يعمل الدماغ؟ اضغط على الزر الأخضر لتنشيط الشاشة، ثم كرّر الأصوات الصادرة باستخدام الأزرار الملائمة.",
-                "מידות המדבקה בסנטימטרים": "12X22",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "כיתוב בערבית",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "מדבקות לוגו חדש צבעוניות-שקופות",
-                "טקסט למדבקה": "סמל לוגו בלבד",
-                "מידות המדבקה בסנטימטרים": "18x18",
-                "גודל פונט": "",
-                "תיאור המדבקות": "שנמצאות על דלת הזכוכית בכניסה",
-                "עותקים": 6
-            },
-            {
-                "שם המוצג": "בשולחן מתחם החיידקים",
-                "טקסט למדבקה": "מבקרים יקרים, בתערוכה זו מצויות חותמות המכילות חומר שנראה באור אולטרה סגול. במקרים נדירים החומר נותר על היד מספר שעות ונראה גם באור הרגיל. *החומר נבדק דרמטולוגית. בברכה, צוות הטכנודע",
-                "מידות המדבקה בסנטימטרים": "14X28",
-                "גודל פונט": "3X3 mm",
-                "תיאור המדבקות": "כיתוב למידע על הדיו UV",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "אמבה ויטרינה חיידקים",
-                "טקסט למדבקה": "",
-                "מידות המדבקה בסנטימטרים": "",
-                "גודל פונט": "",
-                "תיאור המדבקות": "מדבקה לחלונית האמבה",
-                "עותקים": 3
-            },
-            {
-                "שם המוצג": "מוצג הDNA",
-                "טקסט למדבקה": "",
-                "מידות המדבקה בסנטימטרים": "7X5.5",
-                "גודל פונט": "",
-                "תיאור המדבקות": "מדבקת GTCA אדום ירוק כחול צהוב",
-                "עותקים": 3
+                "id": "logo_transparent",
+                "type": "logo2",
+                "hebrew_title": "מדבקות לוגו חדש צבעוניות-שקופות",
+                "copies": 6
             }
         ];
 
-        // פונקציה לשינוי גודל הדף
         function changePageSize(size) {
             const container = document.getElementById('mainContainer');
-            const style = document.querySelector('style');
-            
             if (size === 'a3') {
                 container.className = 'container a3';
-                style.innerHTML = style.innerHTML.replace('.page-a4', '.page-a3');
             } else {
                 container.className = 'container a4';
-                style.innerHTML = style.innerHTML.replace('.page-a3', '.page-a4');
             }
         }
 
-        // פונקציה לשינוי גודל פונט
         function changeFontSize(labelIndex, direction) {
-            const textElement = document.querySelector(`#label-${labelIndex} .label-text`);
-            const currentSize = parseFloat(window.getComputedStyle(textElement).fontSize);
-            
-            let newSize;
-            if (direction === 'increase') {
-                newSize = Math.min(currentSize + 1, 24); // מקסימום 24px
-            } else {
-                newSize = Math.max(currentSize - 1, 8); // מינימום 8px
-            }
-            
-            textElement.style.fontSize = newSize + 'px';
+            const textElements = document.querySelectorAll(`#label-${labelIndex} .label-text`);
+            textElements.forEach(textElement => {
+                const currentSize = parseFloat(window.getComputedStyle(textElement).fontSize);
+                let newSize;
+                if (direction === 'increase') {
+                    newSize = Math.min(currentSize + 1, 32);
+                } else {
+                    newSize = Math.max(currentSize - 1, 8);
+                }
+                textElement.style.fontSize = newSize + 'px';
+            });
         }
 
-        // טעינת התוויות לעמוד
         function loadLabels() {
             const container = document.getElementById('labelsContainer');
             const totalLabelsSpan = document.getElementById('totalLabels');
             
-            // סינון תוויות עם טקסט לא ריק
-            const validLabels = labelsData.filter(label => 
-                label["טקסט למדבקה"] && 
-                label["טקסט למדבקה"].trim() !== "" &&
-                label["טקסט למדבקה"] !== "ללא כיתוב"
-            );
+            let totalCount = 0;
+            let labelIndex = 0;
             
-            totalLabelsSpan.textContent = validLabels.length;
-            
-            validLabels.forEach((label, index) => {
-                const labelItem = document.createElement('div');
-                labelItem.className = 'label-item';
-                labelItem.id = `label-${index}`;
-                
-                const isArabic = /[\u0600-\u06FF]/.test(label["טקסט למדבקה"]);
-                const textClass = isArabic ? 'label-text arabic' : 'label-text';
-                
-                labelItem.innerHTML = `
-<div class="label-controls no-print">
-    <button class="font-control-btn" onclick="changeFontSize(${index}, 'increase')" title="הגדל פונט">+</button>
-    <button class="font-control-btn minus" onclick="changeFontSize(${index}, 'decrease')" title="הקטן פונט">-</button>
-    <button class="logo-control-btn" onclick="addLogo(${index})" title="הוסף לוגו">לוגו</button>
-</div>
-                    <div class="label-title">${label["שם המוצג"]}</div>
-                    <div class="label-info">
-                        מידות: ${label["מידות המדבקה בסנטימטרים"]} | 
-                        עותקים: ${label["עותקים"]} | 
-                        ${label["תיאור המדבקות"]}
-                    </div>
-                    <div class="${textClass}">${label["טקסט למדבקה"]}</div>
-                `;
-                
-                container.appendChild(labelItem);
+            labelsData.forEach((label) => {
+                for (let copy = 0; copy < label.copies; copy++) {
+                    const labelItem = document.createElement('div');
+                    labelItem.id = `label-${labelIndex}`;
+                    
+                    if (label.type === "logo2") {
+                        labelItem.className = 'label-item';
+                        labelItem.innerHTML = `
+                            <div class="label-controls no-print">
+                                <button class="logo-control-btn" onclick="toggleLogo2(${labelIndex})" title="הצג/הסתר לוגו">לוגו</button>
+                            </div>
+                            
+                            <img src="logo2.png" class="label-logo-center" alt="לוגו טכנודע">
+                        `;
+                    } else {
+                        labelItem.className = label.large ? 'label-item large-label' : 'label-item';
+                        
+                        let content = `
+                            <div class="label-controls no-print">
+                                <button class="font-control-btn" onclick="changeFontSize(${labelIndex}, 'increase')" title="הגדל פונט">+</button>
+                                <button class="font-control-btn minus" onclick="changeFontSize(${labelIndex}, 'decrease')" title="הקטן פונט">-</button>
+                                <button class="logo-control-btn remove" onclick="removeLogo(${labelIndex})" title="הסר לוגו">הסר</button>
+                            </div>
+                            <img src="logo.png" class="label-logo" alt="לוגו טכנודע">
+                        `;
+                        
+                        // כותרת עברית
+                        content += `<div class="label-title">${label.hebrew_title}</div>`;
+                        
+                        // טקסט עברית
+                        if (label.hebrew_text) {
+                            content += `<div class="label-text">${label.hebrew_text}</div>`;
+                        }
+                        
+                        // כותרת ערבית
+                        if (label.arabic_title) {
+                            content += `<div class="label-title arabic-title">${label.arabic_title}</div>`;
+                        }
+                        
+                        // טקסט ערבית
+                        if (label.arabic_text) {
+                            content += `<div class="label-text arabic">${label.arabic_text}</div>`;
+                        }
+                        
+                        labelItem.innerHTML = content;
+                    }
+                    
+                    container.appendChild(labelItem);
+                    totalCount++;
+                    labelIndex++;
+                }
             });
+            
+            // הוספת דפי משחקי התפתחות
+// הוספת דפי משחקי התפתחות
+// הוספת דפי משחקי התפתחות
+const games = [
+    { text: "גלו לדוגמא משחקים המתאימים סביב גיל שנה", count: 1 },
+    { text: "גלו לדוגמא משחקים המתאימים סביב גיל שנתיים", count: 2 },
+    { text: "גלו לדוגמא משחקים המתאימים סביב גיל שלוש", count: 2 }
+];
+
+games.forEach(game => {
+    for (let i = 0; i < game.count; i++) {
+        const gamePage = document.createElement('div');
+        gamePage.className = 'label-item full-page';
+        gamePage.innerHTML = `
+            <img src="logo2.png" style="max-width: 200px; max-height: 100px; margin-bottom: 40px;" alt="לוגו טכנודע">
+            ${game.text}
+            <br><br>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Human-brain-vector.svg/2048px-Human-brain-vector.svg.png" 
+                 style="max-width: 300px; max-height: 300px; margin-top: 30px;" 
+                 alt="מוח אנושי">
+        `;
+        container.appendChild(gamePage);
+        totalCount++;
+    }
+});
+            
+            // הוספת 3 דפי לוגו
+// הוספת 3 דפי לוגו
+for (let i = 0; i < 3; i++) {
+    const logoPage = document.createElement('div');
+    logoPage.className = 'label-item logo-page';
+    logoPage.style.flexDirection = 'column';
+    logoPage.innerHTML = `
+        <img src="logo.png" style="width: 100%; max-width: 800px; margin-bottom: 40px;" alt="לוגו טכנודע">
+        <img src="logo.png" style="width: 100%; max-width: 800px;" alt="לוגו טכנודע">
+        <img src="logo.png" style="width: 100%; max-width: 800px;" alt="לוגו טכנודע">
+        <img src="logo.png" style="width: 100%; max-width: 800px;" alt="לוגו טכנודע">
+    `;
+    container.appendChild(logoPage);
+    totalCount++;
+}
+            
+            totalLabelsSpan.textContent = totalCount;
         }
-        // פונקציה להוספת לוגו
-function addLogo(labelIndex) {
-    const labelElement = document.getElementById(`label-${labelIndex}`);
-    
-    // בדיקה אם כבר יש לוגו
-    if (labelElement.querySelector('.label-logo')) {
-        alert('לוגו כבר קיים במדבקה זו');
-        return;
-    }
-    
-    // יצירת אלמנט תמונה
-    const logoImg = document.createElement('img');
-    logoImg.src = 'logo.png';
-    logoImg.className = 'label-logo';
-    logoImg.alt = 'לוגו טכנודע';
-    
-    // הוספת הלוגו למדבקה
-    labelElement.appendChild(logoImg);
-    
-    // עדכון כפתור הלוגו להסרה
-    updateLogoButton(labelIndex, true);
-}
 
-// פונקציה להסרת לוגו
-function removeLogo(labelIndex) {
-    const labelElement = document.getElementById(`label-${labelIndex}`);
-    const logoElement = labelElement.querySelector('.label-logo');
-    
-    if (logoElement) {
-        logoElement.remove();
-        updateLogoButton(labelIndex, false);
-    }
-}
+        function removeLogo(labelIndex) {
+            const labelElement = document.getElementById(`label-${labelIndex}`);
+            const logoElement = labelElement.querySelector('.label-logo');
+            
+            if (logoElement) {
+                logoElement.remove();
+                updateLogoButton(labelIndex, false);
+            }
+        }
 
-// פונקציה לעדכון כפתור הלוגו
-function updateLogoButton(labelIndex, hasLogo) {
-    const logoBtn = document.querySelector(`#label-${labelIndex} .logo-control-btn`);
-    
-    if (hasLogo) {
-        logoBtn.textContent = 'הסר';
-        logoBtn.className = 'logo-control-btn remove';
-        logoBtn.onclick = () => removeLogo(labelIndex);
-    } else {
-        logoBtn.textContent = 'לוגו';
-        logoBtn.className = 'logo-control-btn';
-        logoBtn.onclick = () => addLogo(labelIndex);
-    }
-}
+        function addLogo(labelIndex) {
+            const labelElement = document.getElementById(`label-${labelIndex}`);
+            
+            if (labelElement.querySelector('.label-logo')) {
+                return;
+            }
+            
+            const logoImg = document.createElement('img');
+            logoImg.src = 'logo.png';
+            logoImg.className = 'label-logo';
+            logoImg.alt = 'לוגו טכנודע';
+            
+            labelElement.insertBefore(logoImg, labelElement.firstChild.nextSibling);
+            updateLogoButton(labelIndex, true);
+        }
 
-        // טעינה בעת טעינת העמוד
+        function updateLogoButton(labelIndex, hasLogo) {
+            const logoBtn = document.querySelector(`#label-${labelIndex} .logo-control-btn.remove`);
+            if (!logoBtn) return;
+            
+            if (hasLogo) {
+                logoBtn.textContent = 'הסר';
+                logoBtn.className = 'logo-control-btn remove';
+                logoBtn.onclick = () => removeLogo(labelIndex);
+            } else {
+                logoBtn.textContent = 'לוגו';
+                logoBtn.className = 'logo-control-btn';
+                logoBtn.onclick = () => addLogo(labelIndex);
+            }
+        }
+
+        function toggleLogo2(labelIndex) {
+            const labelElement = document.getElementById(`label-${labelIndex}`);
+            const logoElement = labelElement.querySelector('.label-logo-center');
+            
+            if (logoElement) {
+                if (logoElement.style.display === 'none') {
+                    logoElement.style.display = 'block';
+                } else {
+                    logoElement.style.display = 'none';
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', loadLabels);
     </script>
 </body>
