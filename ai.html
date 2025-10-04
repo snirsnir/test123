@@ -536,30 +536,38 @@
                         <div class="step-box">
                             <div class="step-number">3</div>
                             <h4>בניית מודל הסתברותי</h4>
-                            <p>כל המידע הזה הופך למערכת מתמטית ענקית שיודעת לחשב "מה כנראה יבוא אחר כך"</p>
+                            <p>כל המידע הזה הופך למערכת מתמטית ענקית שיודעה לחשב "מה כנראה יבוא אחר כך"</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="example-demo">
-                    <h3>דוגמה: איך AI משלים משפט</h3>
-                    <div class="demo-flow">
-                        <div class="demo-step">
-                            <strong>אתה כותב:</strong>
-                            "השמש היא..."
-                        </div>
-                        <div class="demo-arrow">→</div>
-                        <div class="demo-step">
-                            <strong>AI מנתח ומחשב:</strong>
-                            מה כנראה יבוא אחרי "השמש היא"?
-                        </div>
-                        <div class="demo-arrow">→</div>
-                        <div class="demo-step">
-                            <strong>AI מנבא:</strong>
-                            "כוכב" (85%)<br>
-                            "גדולה" (10%)<br>
-                            "צהובה" (5%)
-                        </div>
+                <div class="process-section">
+                    <h3 class="process-title">איך זה עובד כשאתה שואל שאלה?</h3>
+                    <p style="text-align: center; font-size: 1.2em; color: #4a5568; margin-bottom: 25px; font-weight: 600;">כשאתה כותב משהו, המודל:</p>
+                    
+                    <div class="example-demo" style="margin-top: 0;">
+                        <ul style="list-style: none; padding: 0; text-align: right; max-width: 900px; margin: 0 auto;">
+                            <li style="padding: 15px 0; font-size: 1.2em; position: relative; padding-right: 35px; border-bottom: 1px solid rgba(255,255,255,0.3);">
+                                <span style="position: absolute; right: 0; font-weight: bold; color: #ffd700;">•</span>
+                                מנתח את השאלה ומזהה את ההקשר
+                            </li>
+                            <li style="padding: 15px 0; font-size: 1.2em; position: relative; padding-right: 35px; border-bottom: 1px solid rgba(255,255,255,0.3);">
+                                <span style="position: absolute; right: 0; font-weight: bold; color: #ffd700;">•</span>
+                                "חושב" מילה אחר מילה: מה המשך הסביר ביותר?
+                            </li>
+                            <li style="padding: 15px 0; font-size: 1.2em; position: relative; padding-right: 35px; border-bottom: 1px solid rgba(255,255,255,0.3);">
+                                <span style="position: absolute; right: 0; font-weight: bold; color: #ffd700;">•</span>
+                                לכל מילה אפשרית יש הסתברות (למשל: "השמש היא..." → "כוכב" 85%, "גדולה" 10%, "צהובה" 5%)
+                            </li>
+                            <li style="padding: 15px 0; font-size: 1.2em; position: relative; padding-right: 35px; border-bottom: 1px solid rgba(255,255,255,0.3);">
+                                <span style="position: absolute; right: 0; font-weight: bold; color: #ffd700;">•</span>
+                                בוחר את המילה עם ההסתברות הגבוהה ביותר
+                            </li>
+                            <li style="padding: 15px 0; font-size: 1.2em; position: relative; padding-right: 35px;">
+                                <span style="position: absolute; right: 0; font-weight: bold; color: #ffd700;">•</span>
+                                ממשיך כך עד שיש תשובה שלמה
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
