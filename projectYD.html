@@ -32,6 +32,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-direction: row-reverse;
         }
 
         .logo-section {
@@ -417,20 +418,9 @@
             </p>
         </div>
 
-        <div class="stats-bar">
-            <div class="stat-item">
-                <span class="stat-number">2</span>
-                <span class="stat-label">קורסים</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">27</span>
-                <span class="stat-label">מפגשים ושיעורים</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">100%</span>
-                <span class="stat-label">למידה מעשית</span>
-            </div>
-        </div>
+        <div class="intro-card">
+            <h2 style="text-align: center; font-size: 1.8em;">להלן פירוט עבור הקורסים</h2>
+        
 
         <!-- קורס כימיה -->
         <div class="course-card">
@@ -734,13 +724,16 @@
                         </div>
                     </div>
 
-                    <div class="note-box">
-                        <strong>⚠️ הערה חשובה:</strong> התוכנית דינאמית ועשויה להשתנות במשך השנה בהתאם לקצב ההתקדמות ולצרכי התלמידים.
-                    </div>
+
                 </div>
             </div>
         </div>
+                            <div class="note-box">
+                        <strong>⚠️ הערה חשובה:</strong> התוכנית דינאמית ועשויה להשתנות במשך השנה בהתאם לקצב ההתקדמות ולצרכי התלמידים.
+                    </div>
     </div>
+    
+</div>
 
     <script>
         function toggleCourse(courseId) {
