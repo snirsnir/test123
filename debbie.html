@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כנס משפחת דבי</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Bellefair&family=Huninn&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Outfit:wght@100..900&family=Playpen+Sans+Hebrew:wght@100..800&family=Secular+One&family=Varela+Round&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Varela Round', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 319px;
+            height: 636px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px 15px 12px;
+            text-align: center;
+            color: white;
+            animation: fadeInDown 1s ease;
+        }
+
+        .title-main {
+            font-family: 'Secular One', sans-serif;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+
+        .title-sub {
+            font-family: 'Bellefair', serif;
+            font-size: 22px;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .years-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 8px;
+        }
+
+        .years-section {
+            font-family: 'Secular One', sans-serif;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .description {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 15px;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .dates {
+            font-family: 'Bellefair', serif;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .image-container {
+            padding: 18px 20px;
+            text-align: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .frame {
+            display: inline-block;
+            padding: 8px;
+            background: white;
+            border: 3px solid #2a5298;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shine 3s infinite;
+        }
+
+        .frame img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .facts-section {
+            padding: 12px 15px 20px;
+        }
+
+        .facts-title {
+            font-family: 'Secular One', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 12px;
+            text-align: center;
+            animation: fadeIn 2s ease;
+        }
+
+        .fact-item {
+            background: linear-gradient(135deg, #ffffff 0%, #e8f4f8 100%);
+            padding: 12px;
+            border-radius: 10px;
+            border-right: 4px solid #2a5298;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transition: all 0.5s ease;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .fact-item.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fact-item.hidden {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        .fact-number {
+            display: inline-block;
+            background: #2a5298;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+            margin-left: 8px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .fact-text {
+            display: inline;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shine {
+            to {
+                left: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-main">ברוכים הבאים</div>
+            <div class="title-sub">לכנס משפחת דבי לדורותיה</div>
+            <div class="years-box">
+                <div class="years-section">100 שנים</div>
+                <div class="description">לעליית המשפחה לארץ ישראל</div>
+                <div class="dates">1926 - 2026</div>
+            </div>
+        </div>
+
+        <div class="image-container">
+            <div class="frame">
+                <img src="https://i.ibb.co/Q3XC1Pnb/Gemini-Generated-Image-v636k1v636k1v636.png" alt="משפחת דבי">
+            </div>
+        </div>
+
+        <div class="facts-section">
+            <div class="facts-title">100 עובדות על משפחת דבי</div>
+            
+            <div class="fact-item active" id="fact-display">
+                <span class="fact-number" id="fact-number">1</span>
+                <span class="fact-text" id="fact-text">משפחת דבי עלתה לארץ בשנת 1926 מתוניסיה והתיישבה בירושלים העתיקה.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const facts = [
+            "משפחת דבי עלתה לארץ בשנת 1926 מתוניסיה והתיישבה בירושלים העתיקה.",
+            "הסבא הגדול היה רב מוכתר בקהילה היהודית של תוניס במשך 40 שנה.",
+            "כיום מונה המשפחה למעלה מ-200 צאצאים המתגוררים ברחבי הארץ.",
+            "המשפחה שומרת על מסורת ייחודית של ארוחות שישי משותפות מדור לדור.",
+            "בני המשפחה תרמו רבות לחינוך והקהילה, עם 15 מורים ו-3 רבנים."
+        ];
+
+        let currentIndex = 0;
+
+        function rotateFacts() {
+            const factItem = document.getElementById('fact-display');
+            const factNumber = document.getElementById('fact-number');
+            const factText = document.getElementById('fact-text');
+
+            // Fade out
+            factItem.classList.remove('active');
+            factItem.classList.add('hidden');
+
+            setTimeout(() => {
+                // Change content
+                currentIndex = (currentIndex + 1) % facts.length;
+                factNumber.textContent = currentIndex + 1;
+                factText.textContent = facts[currentIndex];
+
+                // Fade in
+                factItem.classList.remove('hidden');
+                factItem.classList.add('active');
+            }, 500);
+        }
+
+        // Rotate facts every 7 seconds
+        setInterval(rotateFacts, 7000);
+
+        // Initial display
+        document.getElementById('fact-display').classList.add('active');
+    </script>
+</body>
+</html>
