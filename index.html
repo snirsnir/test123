@@ -1,131 +1,1095 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html dir="rtl" lang="he">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>משחק זיכרון עברית-אנגלית</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .game-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .card {
-            width: 100px;
-            height: 150px;
-            background-color: #3498db;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 16px;
-            color: white;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        .card:hover {
-            transform: scale(1.05);
-        }
-        .card.flipped {
-            background-color: #2ecc71;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>גמד וענק – טכנודע 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple:       #7c3aed;
+      --purple-mid:   #a855f7;
+      --purple-light: #c4b5fd;
+      --gold:         #f59e0b;
+      --gold-light:   #fcd34d;
+      --gold-bright:  #ffd700;
+      --bg:           #04040e;
+      --bg2:          #0a0420;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Heebo', 'Arial', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      direction: rtl;
+    }
+
+    /* ─── CANVAS ─────────────────────────────────────────── */
+    #bg-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ─── NAV ────────────────────────────────────────────── */
+    #nav {
+      position: fixed; top: 0; right: 0; left: 0;
+      z-index: 90;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      gap: .5rem; padding: .75rem 1.25rem;
+      background: linear-gradient(to bottom, rgba(4,4,14,.92) 0%, transparent 100%);
+      backdrop-filter: blur(4px);
+    }
+    .nav-brand {
+      font-weight: 900; font-size: 1rem; white-space: nowrap;
+      background: linear-gradient(135deg, var(--gold-bright), var(--purple-mid));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .nav-links { display: flex; gap: .4rem; }
+
+    /* ─── BUTTONS ────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .85rem 1.8rem;
+      border: none; border-radius: 50px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      cursor: pointer;
+      transition: transform .25s, box-shadow .25s;
+      position: relative; overflow: hidden;
+      text-decoration: none;
+    }
+    .btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(255,255,255,.12);
+      opacity: 0; transition: opacity .2s;
+    }
+    .btn:hover::after { opacity: 1; }
+    .btn:hover       { transform: translateY(-3px); }
+    .btn:active      { transform: translateY(-1px); }
+
+    .btn-purple {
+      background: linear-gradient(135deg, var(--purple), var(--purple-mid));
+      color: #fff; box-shadow: 0 0 28px rgba(124,58,237,.45);
+    }
+    .btn-purple:hover { box-shadow: 0 0 52px rgba(168,85,247,.75); }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #d97706, var(--gold));
+      color: #fff; box-shadow: 0 0 28px rgba(217,119,6,.45);
+    }
+    .btn-gold:hover { box-shadow: 0 0 52px rgba(245,158,11,.75); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.28);
+      color: rgba(255,255,255,.65);
+    }
+    .btn-ghost:hover { border-color: #fff; color: #fff; }
+    .btn-sm { padding: .48rem 1.1rem; font-size: .88rem; }
+
+    /* ─── PAGES ──────────────────────────────────────────── */
+    .page {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 5rem 1.2rem 3rem;
+    }
+    .hidden { display: none !important; }
+
+    /* ─── HERO ───────────────────────────────────────────── */
+    #page-hero { text-align: center; gap: .5rem; }
+
+    .hero-emojis {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.2rem; font-size: 3.5rem; margin-bottom: .75rem;
+    }
+    .e-dwarf { animation: floatA 3.2s ease-in-out infinite; display: inline-block; }
+    .e-giant { animation: floatB 3.2s ease-in-out infinite .7s; display: inline-block; }
+
+    @keyframes floatA {
+      0%,100% { transform: translateY(0) rotate(-6deg); }
+      50%      { transform: translateY(-18px) rotate(4deg); }
+    }
+    @keyframes floatB {
+      0%,100% { transform: translateY(0) rotate(6deg); }
+      50%      { transform: translateY(-22px) rotate(-5deg); }
+    }
+
+    .hero-title {
+      font-size: clamp(3.8rem, 13vw, 7.5rem);
+      font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, var(--gold-bright) 0%, var(--purple-mid) 50%, var(--gold-bright) 100%);
+      background-size: 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .hero-sub  { font-size: 1.35rem; letter-spacing: 4px; color: rgba(255,255,255,.55); margin-top: .4rem; }
+    .hero-year { font-size: .9rem; color: rgba(255,255,255,.25); letter-spacing: 2px; margin-bottom: 1.5rem; }
+    .hero-tag  { font-size: 1.2rem; color: rgba(255,255,255,.7); margin-bottom: 2.2rem; max-width: 360px; }
+
+    .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ─── SONG PLAYER ────────────────────────────────────── */
+    .song-box {
+      position: relative;
+      width: 100%; max-width: 440px;
+      margin: .5rem 0 1.5rem;
+      border-radius: 20px;
+      padding: 3px;
+      background: linear-gradient(135deg, #ffd700, #a855f7, #ffd700, #f59e0b);
+      background-size: 300%;
+      animation: borderShimmer 3s linear infinite;
+    }
+    @keyframes borderShimmer {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+    .song-inner {
+      background: rgba(10,4,30,.95);
+      border-radius: 18px;
+      padding: 1rem 1.2rem;
+      backdrop-filter: blur(10px);
+    }
+    .song-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      margin-bottom: .2rem;
+    }
+    .song-icon { font-size: 1.4rem; animation: floatA 3s ease-in-out infinite; }
+    .song-title {
+      font-size: 1.1rem; font-weight: 900;
+      background: linear-gradient(135deg, var(--gold-bright), var(--purple-mid));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .song-rec {
+      font-size: .82rem; font-weight: 700;
+      color: var(--gold-bright);
+      margin-top: .15rem;
+      animation: recPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes recPulse {
+      0%,100% { opacity: .8; }
+      50%      { opacity: 1; text-shadow: 0 0 12px rgba(255,215,0,.8); }
+    }
+
+    /* ─── LYRICS MODAL ───────────────────────────────────── */
+    .lmodal-bg {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+    }
+    .lmodal-bg.open { opacity: 1; pointer-events: all; }
+
+    .lmodal-box {
+      background: rgba(10,4,30,.97);
+      border: 1px solid rgba(168,85,247,.4);
+      border-radius: 24px;
+      width: 100%; max-width: 560px;
+      max-height: 85vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 0 60px rgba(124,58,237,.4);
+      transform: translateY(30px);
+      transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+    }
+    .lmodal-bg.open .lmodal-box { transform: translateY(0); }
+
+    .lmodal-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.4rem .9rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      flex-shrink: 0;
+    }
+    .lmodal-title {
+      font-size: 1rem; font-weight: 900;
+      background: linear-gradient(135deg, var(--gold-bright), var(--purple-mid));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .lmodal-close {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      color: rgba(255,255,255,.7);
+      width: 32px; height: 32px; border-radius: 50%;
+      cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, color .2s;
+      flex-shrink: 0;
+    }
+    .lmodal-close:hover { background: rgba(255,255,255,.18); color: #fff; }
+
+    .lmodal-body {
+      overflow-y: auto;
+      padding: 1.2rem 1.4rem 1.5rem;
+      direction: rtl;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(168,85,247,.4) transparent;
+    }
+    .lmodal-body::-webkit-scrollbar { width: 5px; }
+    .lmodal-body::-webkit-scrollbar-thumb { background: rgba(168,85,247,.4); border-radius: 10px; }
+
+    .lstanza {
+      margin-bottom: 1.3rem;
+      font-size: .95rem; line-height: 1.85;
+      color: rgba(255,255,255,.82);
+    }
+    .lstanza-last { margin-bottom: 0; }
+
+    .lstanza-label {
+      font-size: .7rem; font-weight: 700;
+      color: var(--purple-light);
+      letter-spacing: 2px;
+      margin-bottom: .3rem;
+      text-transform: uppercase;
+    }
+    .lchorus {
+      background: rgba(124,58,237,.12);
+      border-right: 3px solid var(--purple-mid);
+      border-radius: 0 10px 10px 0;
+      padding: .75rem 1rem .75rem .75rem;
+      color: rgba(255,255,255,.9);
+    }
+    .chorus-label { color: var(--gold-bright); }
+
+    .pulse-ring {
+      animation: pulseRing 2.6s ease-in-out infinite;
+    }
+    @keyframes pulseRing {
+      0%,100% { box-shadow: 0 0 28px rgba(124,58,237,.45); }
+      50%      { box-shadow: 0 0 60px rgba(168,85,247,.85), 0 0 90px rgba(168,85,247,.3); }
+    }
+
+    /* ─── SEARCH ─────────────────────────────────────────── */
+    #page-search { gap: .5rem; text-align: center; }
+
+    .page-title {
+      font-size: clamp(1.9rem, 6vw, 3rem); font-weight: 900;
+      background: linear-gradient(135deg, var(--gold-bright), var(--purple-mid));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .page-sub { color: rgba(255,255,255,.45); font-size: 1.05rem; margin-bottom: 1.5rem; }
+
+    .search-wrap {
+      position: relative; width: 100%; max-width: 400px; margin: 0 auto;
+    }
+
+    #search-input {
+      width: 100%; padding: 1rem 1.6rem;
+      font-size: 1.1rem; font-family: 'Heebo', sans-serif;
+      background: rgba(255,255,255,.07);
+      border: 2px solid rgba(124,58,237,.4);
+      border-radius: 50px;
+      color: #fff; text-align: center; outline: none; direction: rtl;
+      transition: border-color .3s, box-shadow .3s, background .3s;
+    }
+    #search-input:focus {
+      border-color: var(--purple-mid);
+      background: rgba(255,255,255,.11);
+      box-shadow: 0 0 0 4px rgba(168,85,247,.18), 0 0 30px rgba(168,85,247,.3);
+    }
+    #search-input::placeholder { color: rgba(255,255,255,.28); }
+
+    #autocomplete {
+      position: absolute; top: calc(100% + 8px); right: 0; left: 0;
+      background: rgba(8,4,28,.97);
+      border: 1px solid rgba(124,58,237,.4);
+      border-radius: 16px; overflow: hidden; z-index: 100;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.6);
+    }
+    .ac-item {
+      padding: .8rem 1.4rem; cursor: pointer;
+      transition: background .14s;
+      text-align: right; font-size: .98rem;
+      display: flex; align-items: center; gap: .6rem;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .ac-item:last-child { border-bottom: none; }
+    .ac-item:hover, .ac-item.active { background: rgba(124,58,237,.28); }
+    .ac-role {
+      font-size: .72rem; color: rgba(255,255,255,.3);
+      margin-right: auto; white-space: nowrap;
+    }
+
+    /* ─── MAGIC OVERLAY ──────────────────────────────────── */
+    #magic-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(4,4,14,.96);
+      opacity: 0; pointer-events: none;
+      transition: opacity .35s;
+    }
+    #magic-overlay.on { opacity: 1; pointer-events: all; }
+    .magic-spin { font-size: 4rem; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── REVEAL ─────────────────────────────────────────── */
+    #page-reveal { gap: 1rem; text-align: center; }
+
+    .reveal-sparkle { font-size: .9rem; letter-spacing: 3px; color: rgba(255,255,255,.4); }
+
+    .reveal-name {
+      font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900;
+      color: var(--gold-bright);
+      text-shadow: 0 0 40px rgba(255,215,0,.5);
+      min-height: 1em;
+    }
+
+    .cards-row {
+      display: flex; gap: 2rem; justify-content: center;
+      flex-wrap: wrap; margin: .5rem 0;
+    }
+    .card-col { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+    .card-col-label { font-size: .85rem; color: rgba(255,255,255,.45); }
+
+    /* Flip card */
+    .flip-card { width: 200px; height: 280px; perspective: 1200px; cursor: pointer; }
+
+    .flip-inner {
+      width: 100%; height: 100%; position: relative;
+      transition: transform 1s cubic-bezier(.34,1.56,.64,1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+
+    .fc-front, .fc-back {
+      position: absolute; inset: 0; border-radius: 22px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 1.4rem;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    }
+
+    .fc-front {
+      background: linear-gradient(135deg, rgba(124,58,237,.22), rgba(168,85,247,.1));
+      border: 2px solid rgba(124,58,237,.45);
+    }
+    .fc-front .mystery { font-size: 4rem; animation: mPulse 2s ease-in-out infinite; }
+    @keyframes mPulse {
+      0%,100% { transform: scale(1); opacity: .65; }
+      50%      { transform: scale(1.18); opacity: 1; }
+    }
+    .fc-front .tap-hint { font-size: .78rem; color: rgba(255,255,255,.28); margin-top: .9rem; }
+
+    #card-dwarf .fc-back {
+      background: linear-gradient(145deg, #130836, #1e1165);
+      border: 2px solid #6366f1;
+      box-shadow: inset 0 0 40px rgba(99,102,241,.15);
+      transform: rotateY(180deg);
+    }
+    #card-giant .fc-back {
+      background: linear-gradient(145deg, #2c1000, #6b2900);
+      border: 2px solid var(--gold);
+      box-shadow: inset 0 0 40px rgba(245,158,11,.15);
+      transform: rotateY(180deg);
+    }
+
+    .fc-back-emoji { font-size: 2.8rem; margin-bottom: .6rem; }
+    .fc-back-type  { font-size: .7rem; color: rgba(255,255,255,.45); letter-spacing: 1px; margin-bottom: .6rem; }
+    .fc-back-name  { font-size: 1.15rem; font-weight: 900; color: #fff; text-align: center; line-height: 1.35; }
+    .fc-back-sub   { font-size: .72rem; color: rgba(255,255,255,.38); margin-top: .7rem; text-align: center; line-height: 1.5; }
+
+    .flip-hint {
+      font-size: .75rem; color: rgba(255,255,255,.3); text-align: center;
+      animation: blinkHint 2.2s ease-in-out infinite;
+    }
+    @keyframes blinkHint { 0%,100% { opacity: .25; } 50% { opacity: .8; } }
+
+    .reveal-actions { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; margin-top: .5rem; }
+
+    /* ─── CHAIN ──────────────────────────────────────────── */
+    #page-chain { justify-content: flex-start; padding-top: 5.5rem; padding-bottom: 3rem; }
+
+    .chain-wrap { width: 100%; max-width: 920px; margin: 0 auto; }
+    .chain-header { text-align: center; margin-bottom: 1.5rem; }
+    .chain-count { font-size: .9rem; color: rgba(255,255,255,.35); margin-top: .3rem; }
+
+    .chain-legend {
+      display: flex; gap: 2rem; justify-content: center;
+      font-size: .85rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: .4rem; color: rgba(255,255,255,.5); }
+
+    .chain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+      gap: .65rem;
+    }
+
+    .chain-item {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px; padding: .85rem 1.1rem;
+      display: flex; align-items: center; gap: .65rem;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .4s, transform .4s, background .2s, border-color .2s;
+    }
+    .chain-item.vis { opacity: 1; transform: none; }
+    .chain-item:hover { background: rgba(124,58,237,.1); border-color: rgba(124,58,237,.3); }
+
+    .ci-num      { font-size: .72rem; color: rgba(255,255,255,.18); min-width: 18px; text-align: center; }
+    .ci-giver    { font-weight: 700; color: var(--purple-light); font-size: .88rem; flex: 1; }
+    .ci-arrow    { flex-shrink: 0; font-size: .9rem; opacity: .4; }
+    .ci-receiver { font-weight: 700; color: var(--gold-light); font-size: .88rem; flex: 1; text-align: left; }
+
+    /* ─── CONFETTI ───────────────────────────────────────── */
+    .confetti-dot {
+      position: fixed; top: -20px;
+      pointer-events: none; z-index: 9999;
+      animation: cFall linear forwards;
+    }
+    @keyframes cFall {
+      to { top: 110vh; transform: rotate(var(--rot)) translateX(var(--drift)); }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 540px) {
+      .flip-card { width: 150px; height: 220px; }
+      .fc-front .mystery { font-size: 3rem; }
+      .fc-back-emoji { font-size: 2.2rem; }
+      .fc-back-name { font-size: .98rem; }
+      .cards-row { gap: 1rem; }
+      .chain-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 3.5rem; }
+      .btn { padding: .75rem 1.4rem; font-size: .95rem; }
+      .nav-brand { font-size: .85rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="game-container" id="gameContainer"></div>
 
-    <script>
-        const words = [
-            { english: "Hello", hebrew: "שלום" },
-            { english: "Goodbye", hebrew: "להתראות" },
-            { english: "Thank you", hebrew: "תודה" },
-            { english: "Please", hebrew: "בבקשה" },
-            { english: "Yes", hebrew: "כן" },
-            { english: "No", hebrew: "לא" }
-        ];
+<canvas id="bg-canvas"></canvas>
 
-        let flippedCards = [];
-        let matchedPairs = 0;
+<!-- Magic loading overlay -->
+<div id="magic-overlay"><div class="magic-spin">✨</div></div>
 
-        function createCard(word, language) {
-            const card = document.createElement('div');
-            card.classList.add('card');
-            card.dataset.word = word;
-            card.dataset.language = language;
-            card.addEventListener('click', flipCard);
-            return card;
-        }
+<!-- Nav -->
+<nav id="nav">
+  <div class="nav-brand">
+    <img src="logo.png" alt="טכנודע" style="height:28px;vertical-align:middle;margin-left:.4rem;filter:brightness(0) invert(1);">
+    🧌 גמד וענק · 2026
+  </div>
+  <div class="nav-links">
+    <button class="btn btn-ghost btn-sm" onclick="go('search')">🔍 חפש/י</button>
+    <button class="btn btn-ghost btn-sm" onclick="go('chain')">🔗 שרשרת</button>
+    <button class="btn btn-ghost btn-sm" onclick="go('hero')">🏠</button>
+  </div>
+</nav>
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+<!-- ══════════════ HERO ══════════════ -->
+<section class="page" id="page-hero">
+  <img src="logo.png" alt="טכנודע"
+    style="height:48px;margin-bottom:1.2rem;filter:brightness(0) invert(1);opacity:.85;">
+  <div class="hero-emojis">
+    <span class="e-dwarf">🧌</span>
+    <span style="font-size:1.8rem;opacity:.3;align-self:center;">↔</span>
+    <span class="e-giant">🏔️</span>
+  </div>
+  <h1 class="hero-title">גמד וענק</h1>
+  <div class="hero-year">2026</div>
+  <p class="hero-tag">הגיע הזמן לגלות מי פינק את מי 🎁</p>
 
-        function initializeGame() {
-            const gameContainer = document.getElementById('gameContainer');
-            const allCards = [];
+  <!-- Player -->
+  <div class="song-box">
+    <div class="song-pulse-border"></div>
+    <div class="song-inner">
+      <div class="song-header">
+        <span class="song-icon">🎵</span>
+        <div>
+          <div class="song-title">שיר הגמד והענק</div>
+          <div class="song-rec">⚡ מומלץ מאוד להאזין לפני הכל! ⚡</div>
+        </div>
+        <span class="song-icon">🎵</span>
+      </div>
+      <audio controls preload="metadata" style="width:100%;margin-top:.6rem;accent-color:#a855f7;">
+        <source src="gamad.mp4" type="video/mp4">
+      </audio>
+      <div style="text-align:center;margin-top:.75rem;">
+        <button class="btn btn-ghost btn-sm" onclick="openLyrics()" style="font-size:.85rem;gap:.35rem;">
+          📜 מילות השיר
+        </button>
+      </div>
+    </div>
+  </div>
 
-            words.forEach(wordPair => {
-                allCards.push(createCard(wordPair.english, 'english'));
-                allCards.push(createCard(wordPair.hebrew, 'hebrew'));
-            });
+  <div class="btn-group">
+    <button class="btn btn-purple pulse-ring" onclick="go('search')">🔍 גלה מי הגמד שלך</button>
+    <button class="btn btn-gold" onclick="go('chain')">🔗 ראה את כל השרשרת</button>
+  </div>
+</section>
 
-            shuffleArray(allCards);
+<!-- ══════════════ LYRICS MODAL ══════════════ -->
+<div id="lyrics-modal" class="lmodal-bg" onclick="closeLyricsOutside(event)">
+  <div class="lmodal-box">
+    <div class="lmodal-header">
+      <div class="lmodal-title">🎵 גמד וענק – טכנודע 2026 🧌🏔️</div>
+      <button class="lmodal-close" onclick="closeLyrics()">✕</button>
+    </div>
+    <div class="lmodal-body">
 
-            allCards.forEach(card => {
-                gameContainer.appendChild(card);
-            });
-        }
+<div class="lstanza"><div class="lstanza-label">בית א׳</div>
+שניר הלך בחשאי ובחר למרי בשמחה,<br>
+קרן ביילי דהן הביאה ליונה הפתעה.<br>
+אביה חשבה ימים על מה שיתאים לסיגל,<br>
+ולידור לא הפסיק לחייך – הוא קנה ליקיר ארליך.</div>
 
-        function flipCard() {
-            if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
-                this.textContent = this.dataset.word;
-                this.classList.add('flipped');
-                flippedCards.push(this);
+<div class="lstanza"><div class="lstanza-label">בית ב׳</div>
+יעל עיני בחרה בחום ובאהבה לנעמי,<br>
+מעיין שוורצר ידעה – נועם בן יעיש יאהב זאת.<br>
+ניצן פגש את דניאל "הענק הגדול מכולם" –<br>
+ודינה כחלון הביאה לחיה תוכנית בוקר חיוך גדול.</div>
 
-                if (flippedCards.length === 2) {
-                    setTimeout(checkMatch, 1000);
-                }
-            }
-        }
+<div class="lstanza lchorus"><div class="lstanza-label chorus-label">פזמון</div>
+כי כאן בטכנודע כולם נותנים –<br>
+אורית לרונית יאיר, יונה ליוכבד,<br>
+שירה לרונית שדה, יונת לשי גלס,<br>
+אריה לסיון – וכולנו שמחים! 🎁</div>
 
-        function checkMatch() {
-            const [card1, card2] = flippedCards;
-            const isMatch = words.some(wordPair => 
-                (card1.dataset.word === wordPair.english && card2.dataset.word === wordPair.hebrew) ||
-                (card1.dataset.word === wordPair.hebrew && card2.dataset.word === wordPair.english)
-            );
+<div class="lstanza"><div class="lstanza-label">בית ג׳</div>
+יעלה בחרה לבני מתנה מהלב,<br>
+ויקטוריה פשייב – גדי מדור לא ידע מה יגיע.<br>
+אורי טוניק הביא לקטמה בחיוך,<br>
+ולירון אהרן – ענת אספורטס קיבלה.</div>
 
-            if (isMatch) {
-                card1.removeEventListener('click', flipCard);
-                card2.removeEventListener('click', flipCard);
-                matchedPairs++;
+<div class="lstanza"><div class="lstanza-label">בית ד׳</div>
+בני קציר לבלה ראובינוב עם חיבוק,<br>
+ובני לבלה – כי שמחה כפולה.<br>
+נועם בן יעיש בחר לדלית בזהירות,<br>
+ושושי חפץ – קרן דהן אמרה תודה.</div>
 
-                if (matchedPairs === words.length) {
-                    alert('כל הכבוד! סיימת את המשחק!');
-                }
-            } else {
-                card1.textContent = '';
-                card2.textContent = '';
-                card1.classList.remove('flipped');
-                card2.classList.remove('flipped');
-            }
+<div class="lstanza lchorus"><div class="lstanza-label chorus-label">פזמון</div>
+כי כאן בטכנודע כולם נותנים –<br>
+אורית לרונית יאיר, יונה ליוכבד,<br>
+שירה לרונית שדה, יונת לשי גלס,<br>
+אריה לסיון – וכולנו שמחים! 🎁</div>
 
-            flippedCards = [];
-        }
+<div class="lstanza"><div class="lstanza-label">בית ה׳</div>
+לילי בלפולסקי הביאה למידן,<br>
+דרור שניידר – אורית אהרון קיבלה.<br>
+דן שליימוביץ׳ בחר לדוד אוחיון,<br>
+ועזריאל – מעיין שוורצר שמחה.</div>
 
-        initializeGame();
-    </script>
+<div class="lstanza"><div class="lstanza-label">בית ו׳</div>
+רונית יאיר הביאה לחנה בסוד,<br>
+מריה מזוס לשושי חפץ – מה שמתאים.<br>
+עפרי וייס-ליפשיץ לגילי עם 💜💜💜 ואופניים,<br>
+וגדי מדור לסמדר זכרוני – כי ככה זה!</div>
+
+<div class="lstanza lchorus"><div class="lstanza-label chorus-label">פזמון</div>
+כי כאן בטכנודע כולם נותנים –<br>
+אורית לרונית יאיר, יונה ליוכבד,<br>
+שירה לרונית שדה, יונת לשי גלס,<br>
+אריה לסיון – וכולנו שמחים! 🎁</div>
+
+<div class="lstanza"><div class="lstanza-label">בית ז׳</div>
+רחל סיון סלמון הביאה לדינה,<br>
+נעמי לביא לבלייאנייש טשומה ❤️.<br>
+יוכבד בועז בחרה לתובל בחיבה,<br>
+וסמדר זכרוני – רונאל הרזס חיכה.</div>
+
+<div class="lstanza"><div class="lstanza-label">בית ח׳</div>
+רוני פישר בחרה לגלינה בחיוך,<br>
+ענת אספורטס לשולי ששון בשמחה.<br>
+דלית דרוקר דבי לדן מהמעבדה –<br>
+ודניאל הביא לרוני פישר הפתעה.</div>
+
+<div class="lstanza lchorus"><div class="lstanza-label chorus-label">פזמון</div>
+כי כאן בטכנודע כולם נותנים –<br>
+אורית לרונית יאיר, יונה ליוכבד,<br>
+שירה לרונית שדה, יונת לשי גלס,<br>
+אריה לסיון – וכולנו שמחים! 🎁</div>
+
+<div class="lstanza"><div class="lstanza-label">בית ט׳</div>
+שי גלס לאורי טוניק – כל הכבוד!<br>
+דוד בחר לטל, ובלה ללירון 😘.<br>
+סיגל ארבל ללילי, מידן קדוש לליבי,<br>
+ולינוי יעקב – יונת נחשון קיבלה.</div>
+
+<div class="lstanza"><div class="lstanza-label">בית י׳</div>
+טל אורן לאביבה, מרי דהן לויקטוריה,<br>
+חנה אם בית ליעל עיני – בחיוך.<br>
+יקיר ארליך לחווה אם בית,<br>
+וששון שלומית לשניר – עם שמחה!</div>
+
+<div class="lstanza lstanza-last"><div class="lstanza-label">בית אחרון</div>
+אביבה הביאה לאלונה לוין בגאווה,<br>
+וגילי 😇 לאריה 🦁 – כי כך צריך.<br>
+כי בטכנודע כולנו גמד, כולנו ענק –<br>
+שרשרת אחת של אהבה, ממני אליך. 🧌🏔️</div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SEARCH ══════════════ -->
+<section class="page hidden" id="page-search">
+  <h2 class="page-title">מי אתה/את? 🔮</h2>
+  <p class="page-sub">הקלד/י את שמך וגלה/י את הסוד</p>
+  <div class="search-wrap">
+    <input
+      type="text" id="search-input"
+      placeholder="שם…" autocomplete="off"
+      oninput="onSearch()" onkeydown="onSearchKey(event)"
+    />
+    <div id="autocomplete"></div>
+  </div>
+  <div style="margin-top:1.8rem;">
+    <button class="btn btn-ghost btn-sm" onclick="go('hero')">← חזרה</button>
+  </div>
+</section>
+
+<!-- ══════════════ REVEAL ══════════════ -->
+<section class="page hidden" id="page-reveal">
+  <div class="reveal-sparkle">✨ הסוד נחשף ✨</div>
+  <div class="reveal-name" id="reveal-name"></div>
+
+  <div class="cards-row">
+    <!-- Dwarf card: who gave to this person -->
+    <div class="card-col">
+      <div class="card-col-label">מי היה הגמד שלך?</div>
+      <div class="flip-card" id="card-dwarf" onclick="flipCard('dwarf')">
+        <div class="flip-inner">
+          <div class="fc-front">
+            <div class="mystery">🎭</div>
+            <div class="tap-hint">לחץ/י לגילוי</div>
+          </div>
+          <div class="fc-back">
+            <div class="fc-back-emoji">🧌</div>
+            <div class="fc-back-type">הגמד שלך</div>
+            <div class="fc-back-name" id="reveal-dwarf-name">—</div>
+            <div class="fc-back-sub">זה/זאת שנתן/ה לך<br>את השי בסוד!</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-hint" id="hint-dwarf">הקש/י לגלות 🎴</div>
+    </div>
+
+    <!-- Giant card: who this person gave to -->
+    <div class="card-col">
+      <div class="card-col-label">למי נתת?</div>
+      <div class="flip-card" id="card-giant" onclick="flipCard('giant')">
+        <div class="flip-inner">
+          <div class="fc-front">
+            <div class="mystery">🎁</div>
+            <div class="tap-hint">לחץ/י לגילוי</div>
+          </div>
+          <div class="fc-back">
+            <div class="fc-back-emoji">🏔️</div>
+            <div class="fc-back-type">הענק שלך</div>
+            <div class="fc-back-name" id="reveal-giant-name">—</div>
+            <div class="fc-back-sub">זה/זאת שנתת/נתן<br>לו/ה את השי!</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-hint" id="hint-giant">הקש/י לגלות 🎴</div>
+    </div>
+  </div>
+
+  <div class="reveal-actions">
+    <button class="btn btn-gold btn-sm" onclick="go('chain')">גלה הכל! 🎉</button>
+    <button class="btn btn-ghost btn-sm" onclick="go('search')">← חפש/י שם אחר</button>
+  </div>
+</section>
+
+<!-- ══════════════ CHAIN ══════════════ -->
+<section class="page hidden" id="page-chain">
+  <div class="chain-wrap">
+    <div class="chain-header">
+      <h2 class="page-title">השרשרת המלאה 🔗</h2>
+      <div class="chain-count" id="chain-count"></div>
+    </div>
+    <div class="chain-legend">
+      <span class="legend-item"><span>🧌</span><span style="color:var(--purple-light)">גמד (נותן)</span></span>
+      <span class="legend-item"><span>←</span></span>
+      <span class="legend-item"><span>🏔️</span><span style="color:var(--gold-light)">ענק (מקבל)</span></span>
+    </div>
+    <div class="chain-grid" id="chain-grid"></div>
+    <div style="text-align:center;margin-top:1.8rem;">
+      <button class="btn btn-ghost btn-sm" onclick="go('hero')">← חזרה</button>
+    </div>
+  </div>
+</section>
+
+<script>
+// ═══════════════════════════════════════════════
+//  LYRICS MODAL
+// ═══════════════════════════════════════════════
+function openLyrics() {
+  document.getElementById('lyrics-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLyrics() {
+  document.getElementById('lyrics-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeLyricsOutside(e) {
+  if (e.target === document.getElementById('lyrics-modal')) closeLyrics();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLyrics(); });
+
+// ═══════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════
+const RAW = [
+  ["שניר דואני",           "מרי דהן"],
+  ["קרן ביילי דהן",        "יונה"],
+  ["אביה פרץ",             "סיגל"],
+  ["לידור פסציאנסקי",      "יקיר ארליך"],
+  ["יעל עיני",             "נעמי :) ♥"],
+  ["מעיין שוורצר",         "נועם בן יעיש"],
+  ["ניצן",                 "דניאל הענק הגדול מכולם"],
+  ["דינה כחלון בש",        "חיה תוכנית בוקר"],
+  ["אורית אהרון",          "רונית יאיר"],
+  ["יונה גבאי",            "יוכבד בועז"],   // יוכי = יוכבד (כינוי)
+  ["שירה נעמן דגאי",       "רונית שדה"],
+  ["יונת נחשון חג'ג'",    "שי גלס"],
+  ["אריה סנה",             "סיון (משרד)"],
+  ["יעלה",                "בני"],
+  ["ויקטוריה פשייב",       "גדי מדור"],
+  ["אורי טוניק בת שירות", "קטמה"],
+  ["לירון אהרן",           "ענת אספורטס"],
+  ["בני קציר",             "בלה ראובינוב"],
+  ["בני",                 "בלה"],
+  ["נועם בן יעיש",         "דלית"],
+  ["שושי חפץ",             "קרן דהן"],
+  ["לילי בלפולסקי",        "מידן"],
+  ["דרור שניידר",          "אורית אהרון"],
+  ["דן שליימוביץ'",       "דוד אוחיון"],
+  ["עזריאל",              "מעיין שוורצר"],
+  ["רונית יאיר",           "חנה"],
+  ["מריה מזוס",            "שושי חפץ"],
+  ["עפרי וייס-ליפשיץ",    "גילייייי 💜💜💜 🚲"],
+  ["גדי מדור",             "סמדר זכרוני"],
+  ["רחל סיון סלמון",       "דינה"],
+  ["נעמי לביא",            "בלייאנייש טשומה ❤️"],
+  ["יוכבד בועז",           "תובל"],
+  ["סמדר זכרוני",          "רונאל הרזס"],
+  ["רוני פישר",            "גלינה"],
+  ["ענת אספורטס",          "שולי ששון"],
+  ["דלית דרוקר דבי",      "דן (מהמעבדה)"],
+  ["דניאל",               "רוני פישר"],
+  ["שי גלס",              "אורי טוניק"],
+  ["דוד",                 "טל"],
+  ["בלה",                "לירון 😘"],
+  ["סיגל ארבל",           "לילי"],
+  ["מידן קדוש",           "ליבי"],
+  ["לינוי יעקב",          "יונת נחשון"],
+  ["טל אורן",             "אביבה"],
+  ["מרי דהן",             "ויקטוריה"],
+  ["חנה אם בית",          "יעל עיני"],
+  ["יקיר ארליך",          "חווה אם בית"],
+  ["ששון שלומית",         "שניר"],
+  ["אביבה",              "אלונה לוין"],
+  ["גילי 😇",            "אריה 🦁"],
+];
+
+// Deduplicate
+const _seen = new Set();
+const PAIRS = RAW.filter(([a,b]) => {
+  const k = a + '|' + b;
+  if (_seen.has(k)) return false;
+  _seen.add(k); return true;
+});
+
+// Strip decorations for search matching
+function strip(s) {
+  return s
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/[\u{1F000}-\u{1FFFF}]/gu, '')
+    .replace(/[💜❤️😘🚲🎁✨🎭🏔️🧌]/g, '')
+    .replace(/\s+/g, ' ').trim();
+}
+
+// Build unified name list (givers + cleaned receivers)
+const GIVERS = [...new Set(PAIRS.map(p => p[0]))];
+const RECV_CLEAN = [...new Set(PAIRS.map(p => strip(p[1])).filter(n => n.length > 1))];
+const ALL_NAMES = [...new Set([...GIVERS, ...RECV_CLEAN])];
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+let current = 'hero';
+
+function go(page) {
+  document.getElementById('page-' + current).classList.add('hidden');
+  document.getElementById('page-' + page).classList.remove('hidden');
+  current = page;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (page === 'search') {
+    const inp = document.getElementById('search-input');
+    inp.value = '';
+    document.getElementById('autocomplete').innerHTML = '';
+    setTimeout(() => inp.focus(), 150);
+  }
+  if (page === 'chain') renderChain();
+}
+
+// ═══════════════════════════════════════════════
+//  SEARCH / AUTOCOMPLETE
+// ═══════════════════════════════════════════════
+let matches = [], acIdx = -1;
+
+function norm(s) {
+  return s.replace(/[^\u05D0-\u05EA\u05F0-\u05F4a-zA-Z0-9]/g, '').toLowerCase();
+}
+
+function onSearch() {
+  const q = document.getElementById('search-input').value.trim();
+  const ac = document.getElementById('autocomplete');
+  acIdx = -1;
+  if (!q) { ac.innerHTML = ''; matches = []; return; }
+
+  const qn = norm(q);
+  matches = ALL_NAMES.filter(n => norm(n).includes(qn)).slice(0, 7);
+
+  if (!matches.length) {
+    ac.innerHTML = '<div class="ac-item" style="color:rgba(255,255,255,.3);cursor:default">לא נמצא — נסה/י שם אחר</div>';
+    return;
+  }
+
+  ac.innerHTML = matches.map((name, i) => {
+    const isGiver = GIVERS.includes(name);
+    const role = isGiver ? '🧌 גמד' : '🏔️ ענק';
+    return `<div class="ac-item" data-i="${i}"
+      onclick="pick('${esc(name)}')"
+      onmouseenter="setAcIdx(${i})">
+      <span>${name}</span>
+      <span class="ac-role">${role}</span>
+    </div>`;
+  }).join('');
+}
+
+function onSearchKey(e) {
+  const items = document.querySelectorAll('.ac-item[data-i]');
+  if      (e.key === 'ArrowDown') { acIdx = Math.min(acIdx+1, items.length-1); hlAc(items); e.preventDefault(); }
+  else if (e.key === 'ArrowUp')   { acIdx = Math.max(acIdx-1, 0);              hlAc(items); e.preventDefault(); }
+  else if (e.key === 'Enter' && acIdx >= 0 && matches[acIdx]) pick(matches[acIdx]);
+}
+
+function setAcIdx(i) { acIdx = i; hlAc(document.querySelectorAll('.ac-item[data-i]')); }
+function hlAc(items) { items.forEach((el,i) => el.classList.toggle('active', i === acIdx)); }
+function esc(s) { return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+// ═══════════════════════════════════════════════
+//  REVEAL
+// ═══════════════════════════════════════════════
+let autoTimers = [];
+
+function pick(name) {
+  document.getElementById('autocomplete').innerHTML = '';
+  document.getElementById('search-input').value = '';
+
+  const n = norm(name);
+
+  // Giant = who this person gave to (name is a giver)
+  const asGiver = PAIRS.find(([g]) => norm(g) === n || norm(g).includes(n) || n.includes(norm(g)));
+
+  // Dwarf = who gave to this person (name appears in receiver column)
+  const asReceiver = PAIRS.find(([, r]) => {
+    const nr = norm(strip(r));
+    return nr === n || nr.includes(n) || n.includes(nr);
+  });
+
+  document.getElementById('reveal-name').textContent = name;
+  document.getElementById('reveal-dwarf-name').textContent =
+    asReceiver ? asReceiver[0] : 'לא נמצא 🤔';
+  document.getElementById('reveal-giant-name').textContent =
+    asGiver ? asGiver[1] : 'לא נמצא 🤔';
+
+  // Reset
+  ['dwarf','giant'].forEach(w => {
+    document.getElementById('card-' + w).classList.remove('flipped');
+    document.getElementById('hint-' + w).style.display = '';
+  });
+
+  autoTimers.forEach(clearTimeout);
+  autoTimers = [];
+
+  showMagic(750, () => {
+    go('reveal');
+    autoTimers.push(setTimeout(() => doFlip('dwarf'), 1600));
+    autoTimers.push(setTimeout(() => {
+      doFlip('giant');
+      setTimeout(() => confetti(80), 700);
+    }, 3100));
+  });
+}
+
+function flipCard(which) {
+  if (!document.getElementById('card-' + which).classList.contains('flipped')) {
+    doFlip(which);
+    setTimeout(() => confetti(which === 'giant' ? 65 : 40), 700);
+  }
+}
+
+function doFlip(which) {
+  const card = document.getElementById('card-' + which);
+  if (card.classList.contains('flipped')) return;
+  card.classList.add('flipped');
+  document.getElementById('hint-' + which).style.display = 'none';
+}
+
+function revealBoth() {
+  const dF = document.getElementById('card-dwarf').classList.contains('flipped');
+  const gF = document.getElementById('card-giant').classList.contains('flipped');
+  if (!dF) {
+    doFlip('dwarf');
+    setTimeout(() => { doFlip('giant'); setTimeout(() => confetti(100), 700); }, 600);
+  } else if (!gF) {
+    doFlip('giant'); setTimeout(() => confetti(80), 700);
+  } else {
+    confetti(100);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  CHAIN
+// ═══════════════════════════════════════════════
+let chainDone = false;
+
+function renderChain() {
+  if (chainDone) return;
+  chainDone = true;
+
+  document.getElementById('chain-count').textContent = PAIRS.length + ' זוגות';
+  const grid = document.getElementById('chain-grid');
+  grid.innerHTML = '';
+
+  PAIRS.forEach(([giver, receiver], i) => {
+    const el = document.createElement('div');
+    el.className = 'chain-item';
+    el.innerHTML =
+      `<span class="ci-num">${i+1}</span>` +
+      `<span class="ci-giver">🧌 ${giver}</span>` +
+      `<span class="ci-arrow">←</span>` +
+      `<span class="ci-receiver">🏔️ ${receiver}</span>`;
+    grid.appendChild(el);
+    setTimeout(() => el.classList.add('vis'), 60 + i * 45);
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════
+const COLORS = ['#ffd700','#a855f7','#f59e0b','#6366f1','#ec4899','#10b981','#38bdf8','#fff'];
+
+function confetti(n = 60) {
+  for (let i = 0; i < n; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-dot';
+    const size  = 6 + Math.random() * 11;
+    const drift = (Math.random() - .5) * 240;
+    const rot   = Math.random() * 720;
+    el.style.cssText = `
+      left:${Math.random()*100}vw;
+      width:${size}px; height:${size}px;
+      background:${COLORS[Math.floor(Math.random()*COLORS.length)]};
+      border-radius:${Math.random() > .45 ? '50%' : '3px'};
+      --drift:${drift}px; --rot:${rot}deg;
+      animation-duration:${1.6 + Math.random()*2.6}s;
+      animation-delay:${Math.random()*.6}s;
+    `;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  MAGIC OVERLAY
+// ═══════════════════════════════════════════════
+function showMagic(ms, cb) {
+  const ov = document.getElementById('magic-overlay');
+  ov.classList.add('on');
+  setTimeout(() => { cb(); ov.classList.remove('on'); }, ms);
+}
+
+// ═══════════════════════════════════════════════
+//  PARTICLE / NEBULA BACKGROUND
+// ═══════════════════════════════════════════════
+const CANVAS = document.getElementById('bg-canvas');
+const CTX    = CANVAS.getContext('2d');
+let W, H, STARS = [], T = 0;
+
+const NEBULAS = [
+  { px:.2,  py:.35, r:.38, col:'rgba(110,30,200,.07)' },
+  { px:.78, py:.6,  r:.3,  col:'rgba(200,110,20,.05)' },
+  { px:.5,  py:.12, r:.28, col:'rgba(30,60,200,.06)'  },
+  { px:.15, py:.75, r:.25, col:'rgba(180,30,100,.05)' },
+];
+
+function initCanvas() {
+  W = CANVAS.width  = window.innerWidth;
+  H = CANVAS.height = window.innerHeight;
+  STARS = Array.from({length: 210}, () => ({
+    x:  Math.random() * W,
+    y:  Math.random() * H,
+    r:  .25 + Math.random() * 1.7,
+    vy: .04  + Math.random() * .18,
+    op: Math.random(),
+    dop:(Math.random() - .5) * .009,
+    hue: Math.random() > .9 ? (Math.random() > .5 ? 270 : 42) : -1,
+  }));
+}
+
+function drawFrame() {
+  CTX.clearRect(0, 0, W, H);
+
+  // bg
+  const bg = CTX.createRadialGradient(W*.5, H*.5, 0, W*.5, H*.5, W*.85);
+  bg.addColorStop(0, '#0c0428');
+  bg.addColorStop(1, '#04040e');
+  CTX.fillStyle = bg; CTX.fillRect(0, 0, W, H);
+
+  // nebulas
+  T += .002;
+  NEBULAS.forEach((n, i) => {
+    const pulse = 1 + Math.sin(T + i * 1.7) * .07;
+    const g = CTX.createRadialGradient(n.px*W, n.py*H, 0, n.px*W, n.py*H, n.r*W*pulse);
+    g.addColorStop(0, n.col); g.addColorStop(1, 'transparent');
+    CTX.fillStyle = g; CTX.fillRect(0, 0, W, H);
+  });
+
+  // stars
+  STARS.forEach(s => {
+    s.op += s.dop;
+    if (s.op > 1 || s.op < 0) { s.dop *= -1; s.op = Math.max(0, Math.min(1, s.op)); }
+    s.y -= s.vy;
+    if (s.y < -4) { s.y = H + 4; s.x = Math.random() * W; }
+
+    CTX.beginPath();
+    CTX.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    CTX.fillStyle = s.hue < 0
+      ? `rgba(255,255,255,${s.op * .88})`
+      : s.hue === 270
+        ? `hsla(270,75%,72%,${s.op*.65})`
+        : `hsla(42,90%,68%,${s.op*.65})`;
+    CTX.fill();
+  });
+
+  requestAnimationFrame(drawFrame);
+}
+
+window.addEventListener('resize', initCanvas);
+initCanvas();
+drawFrame();
+</script>
 </body>
 </html>
