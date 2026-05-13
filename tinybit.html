@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tiny:bit — רובוט חכם למיקרוביט</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Varela+Round&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1a1a6e;
+      --blue:   #0066cc;
+      --purple: #7c3aed;
+      --gold:   #ffd700;
+      --green:  #10b981;
+      --red:    #ef4444;
+      --orange: #f59e0b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Varela Round', 'Arial Rounded MT Bold', Arial, sans-serif;
+      background: #f4f8ff;
+      color: #222;
+      direction: rtl;
+    }
+
+    /* ── NAV ───────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(26,26,110,.96);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 10px 16px;
+    }
+
+    nav a {
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+      font-size: .82rem;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background .2s, color .2s;
+      white-space: nowrap;
+    }
+
+    nav a:hover { background: var(--gold); color: var(--navy); }
+
+    /* ── HEADER ────────────────────────────────────────── */
+    header {
+      background: linear-gradient(150deg, #0a0a50 0%, #1a1a6e 40%, #0055aa 100%);
+      color: #fff;
+      text-align: center;
+      padding: 64px 20px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0,150,255,.25) 0%, transparent 70%);
+    }
+
+    .header-inner { position: relative; z-index: 1; }
+
+    .badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: bold;
+      font-size: .88rem;
+      border-radius: 20px;
+      padding: 5px 18px;
+      margin-bottom: 18px;
+    }
+
+    header h1 {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: 3px;
+      text-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+    header h1 span { color: var(--gold); }
+
+    header p.subtitle {
+      margin-top: 18px;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      opacity: .88;
+      max-width: 640px;
+      margin-inline: auto;
+    }
+
+    .header-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 26px;
+    }
+    .header-tags span {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: .88rem;
+      color: #fff;
+    }
+
+    /* ── SECTION BASE ──────────────────────────────────── */
+    section { padding: 64px 20px; }
+
+    .container { max-width: 1080px; margin: 0 auto; }
+
+    .sec-title {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .sec-sub {
+      text-align: center;
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 40px;
+    }
+
+    .divider {
+      width: 70px;
+      height: 5px;
+      border-radius: 3px;
+      margin: 12px auto 36px;
+    }
+
+    /* ── HERO (product overview) ───────────────────────── */
+    #overview { background: #fff; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    @media (max-width: 700px) { .hero-grid { grid-template-columns: 1fr; } }
+
+    .robot-wrap {
+      background: linear-gradient(135deg, #e8f4ff, #f0f0ff);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,80,.1);
+    }
+
+    .robot-wrap svg { width: 100%; max-width: 300px; height: auto; }
+
+    .robot-caption { color: #888; font-size: .85rem; margin-top: 12px; }
+
+    .hero-text h2 { font-family: 'Fredoka One', sans-serif; font-size: 1.9rem; color: var(--navy); margin-bottom: 16px; }
+    .hero-text p { font-size: 1rem; line-height: 1.85; color: #444; margin-bottom: 14px; }
+    .hero-text p strong { color: var(--navy); }
+
+    /* ── FEATURE CARDS ─────────────────────────────────── */
+    #features { background: linear-gradient(150deg, #0f1b6e 0%, #0055bb 100%); }
+
+    #features .sec-title { color: #fff; }
+    #features .divider { background: var(--gold); }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .feat-card {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 18px;
+      padding: 28px 18px;
+      text-align: center;
+      color: #fff;
+      transition: transform .25s, background .25s;
+    }
+    .feat-card:hover { transform: translateY(-6px); background: rgba(255,255,255,.18); }
+    .feat-card .ico { font-size: 2.6rem; margin-bottom: 12px; }
+    .feat-card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .feat-card p { font-size: .85rem; opacity: .8; line-height: 1.55; }
+
+    /* ── BOX CONTENTS ──────────────────────────────────── */
+    #inbox { background: #fafbff; }
+    #inbox .sec-title { color: var(--navy); }
+    #inbox .divider { background: var(--blue); }
+
+    .inbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 16px;
+    }
+    .inbox-item {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 14px;
+      text-align: center;
+      box-shadow: 0 3px 14px rgba(0,0,80,.08);
+      border-bottom: 4px solid var(--blue);
+      transition: transform .2s;
+    }
+    .inbox-item:hover { transform: scale(1.04); }
+    .inbox-item .ico { font-size: 2.2rem; margin-bottom: 10px; }
+    .inbox-item p { font-size: .9rem; color: #333; font-weight: bold; }
+    .inbox-item small { font-size: .78rem; color: #888; display: block; margin-top: 4px; }
+
+    /* ── SPECS ─────────────────────────────────────────── */
+    #specs { background: #fff; }
+    #specs .sec-title { color: var(--navy); }
+    #specs .divider { background: var(--navy); }
+
+    .specs-table {
+      max-width: 720px;
+      margin: 0 auto;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0,0,80,.1);
+    }
+    .spec-row { display: flex; border-bottom: 1px solid #e8f0ff; }
+    .spec-row:last-child { border: none; }
+    .spec-row:nth-child(even) { background: #f5f9ff; }
+    .spec-key {
+      background: linear-gradient(90deg, var(--navy), var(--blue));
+      color: #fff;
+      font-weight: bold;
+      padding: 15px 20px;
+      width: 42%;
+      font-size: .92rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .spec-val { padding: 15px 20px; font-size: .92rem; color: #333; display: flex; align-items: center; }
+
+    /* ── COURSES ────────────────────────────────────────── */
+    #courses { background: #f0f4ff; }
+    #courses .sec-title { color: var(--navy); }
+    #courses .divider { background: var(--purple); }
+
+    /* Tab bar */
+    .course-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .ctab {
+      background: #fff;
+      border: 2px solid #c5d5ff;
+      border-radius: 24px;
+      padding: 10px 24px;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: bold;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .ctab.active, .ctab:hover {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Chapter accordion */
+    .chapter {
+      background: #fff;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 3px 14px rgba(0,0,80,.07);
+      overflow: hidden;
+    }
+
+    .chapter-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 24px;
+      cursor: pointer;
+      user-select: none;
+      transition: background .2s;
+    }
+    .chapter-header:hover { background: #f5f8ff; }
+
+    .ch-num {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .ch-info { flex: 1; }
+    .ch-info h3 { font-size: 1.1rem; color: var(--navy); }
+    .ch-info p { font-size: .85rem; color: #888; margin-top: 3px; }
+
+    .ch-arrow {
+      font-size: 1.2rem;
+      transition: transform .25s;
+      color: #aaa;
+    }
+    .chapter.open .ch-arrow { transform: rotate(180deg); }
+
+    .chapter-body {
+      display: none;
+      padding: 0 24px 20px;
+    }
+    .chapter.open .chapter-body { display: block; }
+
+    .lesson-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+
+    .lesson-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #f8faff;
+      border: 1px solid #dde8ff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      transition: background .2s, transform .2s;
+    }
+    .lesson-item:hover { background: #eef3ff; transform: translateX(-4px); }
+
+    .l-num {
+      background: var(--blue);
+      color: #fff;
+      border-radius: 8px;
+      min-width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: .85rem;
+      flex-shrink: 0;
+    }
+
+    .l-text h4 { font-size: .97rem; color: #1a1a6e; }
+    .l-text p  { font-size: .82rem; color: #666; margin-top: 3px; line-height: 1.5; }
+
+    /* Python tab colours */
+    #tab-python .ch-num  { background: var(--purple); }
+    #tab-python .l-num   { background: var(--purple); }
+    #tab-python .l-text h4 { color: var(--purple); }
+    #tab-python .lesson-item { background: #fdf6ff; border-color: #e4d4ff; }
+    #tab-python .lesson-item:hover { background: #f3e8ff; }
+
+    /* Interaction tab colours */
+    #tab-interact .ch-num { background: #0891b2; }
+    #tab-interact .l-num  { background: #0891b2; }
+    #tab-interact .l-text h4 { color: #0891b2; }
+    #tab-interact .lesson-item { background: #f0fafb; border-color: #b5e4ef; }
+    #tab-interact .lesson-item:hover { background: #e0f5f9; }
+
+    /* ── PROGRAMMING LANGS ─────────────────────────────── */
+    #programming { background: linear-gradient(150deg, #0f2027, #203a43, #2c5364); }
+    #programming .sec-title { color: #fff; }
+    #programming .divider { background: #00e5ff; }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px;
+    }
+
+    .lang-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 22px;
+      padding: 36px 28px;
+      text-align: center;
+      color: #fff;
+      transition: transform .25s, background .25s;
+    }
+    .lang-card:hover { transform: translateY(-8px); background: rgba(255,255,255,.14); }
+    .lang-card .ico { font-size: 3.5rem; margin-bottom: 18px; }
+    .lang-card h3 { font-size: 1.5rem; color: var(--gold); margin-bottom: 12px; }
+    .lang-card p { font-size: .95rem; line-height: 1.75; opacity: .85; }
+    .lang-card .age { display: inline-block; margin-top: 18px; background: var(--gold); color: var(--navy); border-radius: 20px; padding: 5px 18px; font-weight: bold; font-size: .85rem; }
+
+    /* ── CTA ───────────────────────────────────────────── */
+    #cta {
+      background: linear-gradient(135deg, #ff6b6b, #ffd93d 40%, #6bcb77 70%, #4d96ff);
+      background-size: 300% 300%;
+      animation: grad 7s ease infinite;
+      text-align: center;
+    }
+    @keyframes grad { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+    #cta h2 { font-family: 'Fredoka One', sans-serif; font-size: clamp(1.8rem, 5vw, 3rem); color: #fff; text-shadow: 0 3px 10px rgba(0,0,0,.25); margin-bottom: 14px; }
+    #cta p  { font-size: 1.1rem; color: rgba(255,255,255,.93); margin-bottom: 32px; }
+
+    .cta-btn {
+      display: inline-block;
+      background: #fff;
+      color: var(--navy);
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 1.25rem;
+      padding: 16px 44px;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 6px 22px rgba(0,0,0,.2);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .cta-btn:hover { transform: scale(1.07); box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+
+    /* ── FOOTER ────────────────────────────────────────── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.65);
+      text-align: center;
+      padding: 28px 20px;
+      font-size: .88rem;
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    /* ── FLOATING ROBOT ────────────────────────────────── */
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      font-size: 2.6rem;
+      animation: bob 3.2s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,.35));
+      cursor: default;
+      z-index: 200;
+    }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+    /* ── BACK TO TOP ───────────────────────────────────── */
+    .back-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,.25);
+      z-index: 200;
+      transition: background .2s;
+    }
+    .back-top:hover { background: var(--navy); }
+
+    @media (max-width: 500px) {
+      .spec-key { width: 48%; font-size: .82rem; padding: 12px 12px; }
+      .spec-val { padding: 12px 12px; font-size: .82rem; }
+    }
+
+    /* ── LESSON CLICK HINT ─────────────────────────────── */
+    .lesson-item { cursor: pointer; }
+    .lesson-item .open-hint {
+      font-size: .75rem; color: var(--blue); font-weight: bold;
+      margin-top: 4px; display: inline-block;
+    }
+    .lesson-item:hover .open-hint { text-decoration: underline; }
+
+    /* ── MODAL ─────────────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(10,10,50,.65); backdrop-filter: blur(5px);
+      z-index: 500; overflow-y: auto; padding: 24px 16px;
+    }
+    .modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+    .modal-box {
+      background: #fff; border-radius: 24px; max-width: 740px; width: 100%;
+      margin: auto; padding: 36px 32px 40px; position: relative;
+      box-shadow: 0 24px 64px rgba(0,0,0,.35);
+      animation: modalIn .25s ease;
+    }
+    @keyframes modalIn { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-close-btn {
+      position: absolute; top: 16px; left: 16px;
+      background: #f0f0f0; border: none; border-radius: 50%;
+      width: 38px; height: 38px; font-size: 1.1rem;
+      cursor: pointer; transition: background .2s;
+    }
+    .modal-close-btn:hover { background: #e0e0e0; }
+    .modal-title { font-family: 'Fredoka One', sans-serif; font-size: 1.8rem; color: var(--navy); margin-bottom: 6px; }
+    .modal-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+    .modal-tag {
+      background: #e8f0ff; color: var(--navy); border-radius: 16px;
+      padding: 4px 12px; font-size: .82rem; font-weight: bold;
+    }
+    .modal-section { margin-bottom: 22px; }
+    .modal-section h3 { font-size: 1.05rem; color: var(--navy); margin-bottom: 10px; border-bottom: 2px solid #e8f0ff; padding-bottom: 6px; }
+    .modal-section p, .modal-section li { font-size: .95rem; line-height: 1.75; color: #333; }
+    .modal-section ul { padding-right: 20px; }
+    .modal-section ol { padding-right: 20px; }
+    .modal-section li { margin-bottom: 6px; }
+    .modal-section code { background: #f0f4ff; border-radius: 4px; padding: 2px 6px; font-size: .88rem; color: var(--purple); }
+    .modal-tip { background: #fffbeb; border: 2px solid #fcd34d; border-radius: 12px; padding: 12px 16px; font-size: .9rem; color: #78350f; }
+    .modal-note { background: #eff6ff; border: 2px solid #93c5fd; border-radius: 12px; padding: 12px 16px; font-size: .9rem; color: #1e3a8a; margin-top: 12px; }
+
+    /* ── MAKECODE BLOCKS ───────────────────────────────── */
+    .mk-wrap { background: #1e1e2e; border-radius: 14px; padding: 18px 20px; margin: 10px 0; font-family: 'Courier New', monospace; }
+    .mk-group { margin-bottom: 14px; }
+    .mk-group:last-child { margin-bottom: 0; }
+    .mk-hdr { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px 8px 0 0; padding: 6px 14px; font-size: .82rem; font-weight: bold; color: #fff; margin-bottom: 2px; }
+    .mk-body { border-radius: 0 8px 8px 8px; padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; }
+    .mk-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+    .mk-i1 { padding-right: 16px; }
+    .mk-i2 { padding-right: 32px; }
+    .mk-i3 { padding-right: 48px; }
+    .b { display: inline-flex; align-items: center; gap: 3px; border-radius: 6px; padding: 4px 10px; font-size: .8rem; font-weight: bold; color: #fff; white-space: nowrap; }
+    .b-blue  { background: #4C97FF; }
+    .b-green { background: #059669; }
+    .b-teal  { background: #0891b2; }
+    .b-red   { background: #e04070; }
+    .b-orange{ background: #ff8c1a; border-radius: 20px; color: #fff; }
+    .b-purple{ background: #9333ea; }
+    .b-gray  { background: #64748b; }
+    .b-yellow{ background: #ca8a04; color: #fff; }
+    .b-cond  { background: #ffab19; color: #333; }
+    .b-show  { background: #5c81ff; }
+    .b-val   { background: rgba(255,255,255,.2); border-radius: 20px; padding: 2px 8px; font-size: .78rem; }
+    .mk-hdr.blue  { background: #4C97FF; }
+    .mk-hdr.orange{ background: #ffab19; color: #333; }
+    .mk-body.blue  { background: rgba(76,151,255,.15); }
+    .mk-body.orange{ background: rgba(255,171,25,.12); }
+
+    /* Python code */
+    .py-wrap { background: #1e1e2e; border-radius: 14px; padding: 18px 20px; margin: 10px 0; overflow-x: auto; }
+    .py-wrap pre { margin: 0; font-size: .82rem; line-height: 1.7; color: #cdd6f4; }
+    .py-kw { color: #cba6f7; }
+    .py-fn { color: #89b4fa; }
+    .py-str{ color: #a6e3a1; }
+    .py-num{ color: #fab387; }
+    .py-cm { color: #6c7086; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<!-- Floating mascot -->
+<div class="fab" title="Tiny:bit">🤖</div>
+<button class="back-top" onclick="scrollTo({top:0,behavior:'smooth'})" title="חזרה למעלה">▲</button>
+
+<!-- ══════════════════ NAV ══════════════════════════════ -->
+<nav>
+  <a href="#overview">🚗 מבט כללי</a>
+  <a href="#features">✨ יכולות</a>
+  <a href="#inbox">📦 בקופסה</a>
+  <a href="#specs">📋 מפרט</a>
+  <a href="#courses">📚 קורסים</a>
+  <a href="#programming">💻 תכנות</a>
+</nav>
+
+<!-- ══════════════════ HEADER ══════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="badge">⭐ מומלץ לגילאי 8 ומעלה · Yahboom</div>
+    <h1>Tiny<span>:bit</span></h1>
+    <p class="subtitle">רובוט-מכונית חכמה לילדים · לומדים לתכנת בצורה כייפית ואמיתית!</p>
+    <div class="header-tags">
+      <span>🧩 MakeCode</span>
+      <span>🐍 Python</span>
+      <span>📡 חיישן אולטרסוני</span>
+      <span>🔴 אינפרא-אדום</span>
+      <span>🎵 מוזיקה</span>
+      <span>💡 LED</span>
+      <span>📱 אפליקציה</span>
+      <span>🧱 תואם לגו</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════ OVERVIEW ════════════════════════ -->
+<section id="overview">
+  <div class="container">
+    <h2 class="sec-title" style="color:var(--navy)">🚗 מה זה Tiny:bit?</h2>
+    <div class="divider" style="background:var(--blue)"></div>
+    <div class="hero-grid">
+
+      <!-- SVG illustration -->
+      <div class="robot-wrap">
+        <svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- Car body -->
+          <rect x="40" y="95" width="240" height="130" rx="20" fill="#1a1a6e"/>
+          <rect x="58" y="110" width="204" height="100" rx="14" fill="#0066cc"/>
+          <!-- micro:bit screen area -->
+          <rect x="90" y="120" width="140" height="80" rx="10" fill="#050520"/>
+          <!-- 5x5 LED grid -->
+          <g fill="#ff3300">
+            <circle cx="108" cy="134" r="5"/><circle cx="126" cy="134" r="5"/>
+            <circle cx="144" cy="134" r="5" fill="#ff8800"/>
+            <circle cx="162" cy="134" r="5"/><circle cx="180" cy="134" r="5"/>
+
+            <circle cx="108" cy="150" r="5"/><circle cx="126" cy="150" r="5"/>
+            <circle cx="144" cy="150" r="5" fill="#ffdd00"/>
+            <circle cx="162" cy="150" r="5"/><circle cx="180" cy="150" r="5"/>
+
+            <circle cx="108" cy="166" r="5" fill="#ff8800"/>
+            <circle cx="126" cy="166" r="5" fill="#ff8800"/>
+            <circle cx="144" cy="166" r="5" fill="#ffffff"/>
+            <circle cx="162" cy="166" r="5" fill="#ff8800"/>
+            <circle cx="180" cy="166" r="5" fill="#ff8800"/>
+          </g>
+          <!-- Wheels -->
+          <ellipse cx="90"  cy="228" rx="28" ry="28" fill="#222"/>
+          <ellipse cx="90"  cy="228" rx="16" ry="16" fill="#555"/>
+          <ellipse cx="230" cy="228" rx="28" ry="28" fill="#222"/>
+          <ellipse cx="230" cy="228" rx="16" ry="16" fill="#555"/>
+          <!-- Ultrasonic eyes -->
+          <rect x="110" y="82" width="24" height="16" rx="5" fill="#ffd700"/>
+          <rect x="186" y="82" width="24" height="16" rx="5" fill="#ffd700"/>
+          <circle cx="122" cy="90" r="6" fill="#1a1a6e"/>
+          <circle cx="198" cy="90" r="6" fill="#1a1a6e"/>
+          <!-- Antenna -->
+          <line x1="160" y1="95" x2="160" y2="54" stroke="#aaa" stroke-width="3"/>
+          <circle cx="160" cy="48" r="9" fill="#ef4444"/>
+          <!-- Front IR sensors -->
+          <rect x="68"  cy="220" x="68" y="218" width="16" height="9" rx="3" fill="#00e5ff"/>
+          <rect x="236" y="218" width="16" height="9" rx="3" fill="#00e5ff"/>
+          <!-- Alligator clips (rear) -->
+          <rect x="58"  y="105" width="10" height="7" rx="2" fill="#ef4444"/>
+          <rect x="76"  y="105" width="10" height="7" rx="2" fill="#ffd700"/>
+          <rect x="234" y="105" width="10" height="7" rx="2" fill="#10b981"/>
+          <rect x="252" y="105" width="10" height="7" rx="2" fill="#4d96ff"/>
+          <!-- Bluetooth symbol -->
+          <text x="146" y="206" font-size="14" fill="#00cfff" font-family="Arial">⚡</text>
+        </svg>
+        <p class="robot-caption">🔵 איור מייצג של הרובוט Tiny:bit</p>
+      </div>
+
+      <div class="hero-text">
+        <h2>רובוט חכם · תכנות אמיתי · כיף אמיתי!</h2>
+        <p>
+          <strong>Tiny:bit</strong> הוא רובוט-מכונית קטן וחכם שנבנה סביב לוח
+          <strong>BBC micro:bit</strong> — לוח מיקרו-מחשב פופולרי בחינוך ברחבי העולם.
+        </p>
+        <p>
+          הרובוט מגיע עם מגוון <strong>חיישנים מובנים</strong>: אולטרסוני, אינפרא-אדום,
+          מעקב קו, קול, LED וחיישן נוסף. אפשר לתכנת אותו דרך
+          <strong>MakeCode</strong> (גרור ושחרר, ללא ניסיון) או <strong>Python</strong>
+          (שפת תכנות אמיתית).
+        </p>
+        <p>
+          גודלו הקטן (105×105×45 מ"מ) מאפשר לו לנסוע ולהסתובב בחופשיות, ו-4 פורטי
+          קליפס בגבו מאפשרים הוספת חיישנים נוספים. גם <strong>תואם לאבני לגו!</strong>
+        </p>
+        <p>
+          מתאים לגילאים <strong>8+</strong> ומעלה ומגיע עם קורס שלם של שיעורים מודרכים —
+          מהצעד הראשון ועד פרויקטים מורכבים ומגניבים.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FEATURES ════════════════════════ -->
+<section id="features">
+  <div class="container">
+    <h2 class="sec-title">✨ מה Tiny:bit יודע לעשות?</h2>
+    <div class="divider" style="background:var(--gold)"></div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="ico">🚧</div>
+        <h3>הימנעות ממכשולים</h3>
+        <p>חיישן האולטרסוני מזהה מכשולים מלפנים ומסיט את הרובוט אוטומטית</p>
+      </div>
+      <div class="feat-card">
+        <div class="ico">🔍</div>
+        <h3>מעקב אחרי קו</h3>
+        <p>שני חיישרי מעקב בתחתית גורמים לרובוט לעקוב בדיוק אחרי קו שחור</p>
+      </div>
+      <div class="feat-card">
+        <div class="ico">🎵</div>
+        <h3>נגינת מוזיקה</h3>
+        <p>באזר מובנה מנגן מנגינות ואפקטים — תכנתו כל שיר שתרצו</p>
+      </div>
+      <div class="feat-card">
+        <div class="ico">💡</div>
+        <h3>תאורת LED</h3>
+        <p>LED קדמיים ואחוריים בצבעים שניתן לשלוט בהם בתכנות</p>
+      </div>
+      <div class="feat-card">
+        <div class="ico">🎮</div>
+        <h3>שלט רחוק</h3>
+        <p>שלטו מרחוק דרך שלט אינפרא-אדום, ג'ויסטיק, אפליקציה אנדרואיד / iOS</p>
+      </div>
+      <div class="feat-card">
+        <div class="ico">🔊</div>
+        <h3>שליטה בקול</h3>
+        <p>חיישן קול מגיב לרמת הרעש — מחאו כפיים ותראו מה קורה!</p>
+      </div>
+      <div class="feat-card">
+        <div class="ico">🧱</div>
+        <h3>תואם לגו</h3>
+        <p>חיבורים תואמי לגו — הוסיפו אבני בנייה ועצבו את הרובוט שלכם</p>
+      </div>
+      <div class="feat-card">
+        <div class="ico">🐊</div>
+        <h3>קליפסי הרחבה</h3>
+        <p>4 פורטי קליפס בגב לחיבור חיישנים ורכיבים חיצוניים נוספים</p>
+      </div>
+      <div class="feat-card">
+        <div class="ico">📱</div>
+        <h3>אפליקציה</h3>
+        <p>אפליקציה ייחודית ל-Android ו-iOS לשליטה אלחוטית על הרובוט</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ IN THE BOX ══════════════════════ -->
+<section id="inbox">
+  <div class="container">
+    <h2 class="sec-title" style="color:var(--navy)">📦 מה יש בקופסה?</h2>
+    <div class="divider" style="background:var(--blue)"></div>
+    <div class="inbox-grid">
+      <div class="inbox-item">
+        <div class="ico">🚗</div>
+        <p>שלדת הרובוט</p>
+        <small>מורכבת מראש</small>
+      </div>
+      <div class="inbox-item">
+        <div class="ico">🔋</div>
+        <p>סוללת ליתיום נטענת</p>
+        <small>כ-3 שעות שימוש</small>
+      </div>
+      <div class="inbox-item">
+        <div class="ico">🔌</div>
+        <p>כבל Micro USB</p>
+        <small>לטעינה ותכנות</small>
+      </div>
+      <div class="inbox-item">
+        <div class="ico">🧠</div>
+        <p>לוח BBC micro:bit</p>
+        <small>V1.5 / V2 (אופציונלי)</small>
+      </div>
+      <div class="inbox-item">
+        <div class="ico">🎮</div>
+        <p>שלט ג'ויסטיק</p>
+        <small>אופציונלי</small>
+      </div>
+      <div class="inbox-item">
+        <div class="ico">📡</div>
+        <p>חיישן אולטרסוני</p>
+        <small>מורכב על הרובוט</small>
+      </div>
+      <div class="inbox-item">
+        <div class="ico">🔴</div>
+        <p>שלט אינפרא-אדום</p>
+        <small>כלול בקיט</small>
+      </div>
+      <div class="inbox-item">
+        <div class="ico">📖</div>
+        <p>מדריך למשתמש</p>
+        <small>עם קישורים לשיעורים</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ SPECS ════════════════════════════ -->
+<section id="specs">
+  <div class="container">
+    <h2 class="sec-title" style="color:var(--navy)">📋 מפרט טכני</h2>
+    <div class="divider" style="background:var(--navy)"></div>
+    <div class="specs-table">
+      <div class="spec-row"><div class="spec-key">📏 גודל</div><div class="spec-val">105 × 105 × 45 מ"מ</div></div>
+      <div class="spec-row"><div class="spec-key">🧠 לוח שליטה</div><div class="spec-val">BBC micro:bit V1.5 / V2</div></div>
+      <div class="spec-row"><div class="spec-key">⚙️ מנועים</div><div class="spec-val">מנועי TT × 2</div></div>
+      <div class="spec-row"><div class="spec-key">🔋 סוללה</div><div class="spec-val">ליתיום נטענת · ~3 שעות</div></div>
+      <div class="spec-row"><div class="spec-key">🔌 טעינה</div><div class="spec-val">Micro USB (מחשב / מטען)</div></div>
+      <div class="spec-row"><div class="spec-key">📡 חיישנים</div><div class="spec-val">אולטרסוני · IR · קול · מעקב קו</div></div>
+      <div class="spec-row"><div class="spec-key">💡 תאורה</div><div class="spec-val">LED קדמי + אחורי + מסך micro:bit 5×5</div></div>
+      <div class="spec-row"><div class="spec-key">🎮 שיטות שליטה</div><div class="spec-val">אפליקציה / שלט IR / ג'ויסטיק Bluetooth</div></div>
+      <div class="spec-row"><div class="spec-key">🔗 הרחבות</div><div class="spec-val">4 פורטי קליפס אנגי-טייגר</div></div>
+      <div class="spec-row"><div class="spec-key">🧱 תאימות</div><div class="spec-val">תואם אבני בנייה (לגו ודומיו)</div></div>
+      <div class="spec-row"><div class="spec-key">💻 תכנות</div><div class="spec-val">MakeCode (בלוקים) + Python (מיקרו-Python)</div></div>
+      <div class="spec-row"><div class="spec-key">👦 גיל מומלץ</div><div class="spec-val">8 ומעלה</div></div>
+      <div class="spec-row"><div class="spec-key">📧 תמיכה</div><div class="spec-val">support@yahboom.com</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ COURSES ══════════════════════════ -->
+<section id="courses">
+  <div class="container">
+    <h2 class="sec-title" style="color:var(--navy)">📚 הקורסים המלאים</h2>
+    <div class="divider" style="background:var(--purple)"></div>
+    <p class="sec-sub">בחרו קורס ופרוסו כל פרק כדי לראות את השיעורים שבפנים</p>
+
+    <!-- Tab bar -->
+    <div class="course-tabs">
+      <button class="ctab active" onclick="openTab('makecode',this)">🧩 MakeCode</button>
+      <button class="ctab" onclick="openTab('python',this)">🐍 Python</button>
+      <button class="ctab" onclick="openTab('interact',this)">📱 אינטראקציה ושלט</button>
+    </div>
+
+    <!-- ── MakeCode Tab ── -->
+    <div id="tab-makecode" class="tab-panel active">
+
+      <!-- Chapter 1 -->
+      <div class="chapter open">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">1</div>
+          <div class="ch-info"><h3>🚀 ניסיון ראשון — First Trial</h3><p>היכרות עם הרובוט והפעלה ראשונה</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('mc-1-1')"><div class="l-num">1</div><div class="l-text"><h4>🤝 הכרה עם Tiny:bit</h4><p>הדלקה ראשונה, הרכבה ובדיקה שהכול עובד</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Chapter 2 -->
+      <div class="chapter">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">2</div>
+          <div class="ch-info"><h3>🛠️ הכנה לפני השיעור — Preparation</h3><p>הורדת תוכנות, חיבור לוח, הכנת סביבת העבודה</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('mc-2-1')"><div class="l-num">1</div><div class="l-text"><h4>💾 הורדת MakeCode</h4><p>כניסה לעורך MakeCode ויצירת פרויקט ראשון</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-2-2')"><div class="l-num">2</div><div class="l-text"><h4>🔌 חיבור ה-micro:bit</h4><p>חיבור לוח ה-micro:bit למחשב והעלאת קוד</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-2-3')"><div class="l-num">3</div><div class="l-text"><h4>📦 הוספת חבילת Tiny:bit</h4><p>הוספת הבלוקים המיוחדים של Tiny:bit לעורך MakeCode</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Chapter 3 -->
+      <div class="chapter">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">3</div>
+          <div class="ch-info"><h3>💡 אורות ה-Tiny:bit — Light of Tiny:bit</h3><p>5 שיעורים על תכנות נורות LED ואפקטי תאורה</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('mc-3-1')"><div class="l-num">1</div><div class="l-text"><h4>💡 נורת LED</h4><p>הדלקה וכיבוי בסיסי של נורות ה-LED הקדמיות והאחוריות</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-3-2')"><div class="l-num">2</div><div class="l-text"><h4>🔦 אור חיפוש RGB</h4><p>שימוש בנורת RGB ליצירת אפקט פנס מסתובב</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-3-2')"><div class="l-num">3</div><div class="l-text"><h4>🌈 החלפת צבעי RGB</h4><p>מעבר חלק בין צבעים שונים — יצירת שלל צבעים</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-3-2')"><div class="l-num">4</div><div class="l-text"><h4>🔄 החלפת אורות LED</h4><p>הדלקה חלופית של LED שמאל/ימין, יצירת אפקט אור נע</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-3-5')"><div class="l-num">5</div><div class="l-text"><h4>😮‍💨 אור נשימה</h4><p>אפקט "נשימה" — עוצמת האור עולה ויורדת לאט כמו נשימה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Chapter 4 -->
+      <div class="chapter">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">4</div>
+          <div class="ch-info"><h3>🎵 שירה עם Tiny:bit — Singing with Tiny:bit</h3><p>2 שיעורים על מוזיקה וסנכרון אורות</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('mc-4-1')"><div class="l-num">1</div><div class="l-text"><h4>🎶 נגינת מוזיקה מובנית</h4><p>הפעלת מנגינות מוכנות מראש הכלולות ב-micro:bit</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-4-2')"><div class="l-num">2</div><div class="l-text"><h4>🎄 שיר חג המולד עם אורות</h4><p>מנגינת Merry Christmas בסנכרון עם אפקטי LED צבעוניים</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Chapter 5 -->
+      <div class="chapter">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">5</div>
+          <div class="ch-info"><h3>🏎️ נסיעה עם Tiny:bit — Running with Tiny:bit</h3><p>5 שיעורים על שליטה בתנועת הרובוט</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('mc-5-1')"><div class="l-num">1</div><div class="l-text"><h4>➡️ קדימה! (Advance)</h4><p>נסיעה ישירה קדימה — פקודת התנועה הבסיסית ביותר</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-5-2')"><div class="l-num">2</div><div class="l-text"><h4>🚗 נסיעת מכונית (CarRun)</h4><p>נסיעה קדימה, אחורה ופניות שמאל/ימין</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-5-3')"><div class="l-num">3</div><div class="l-text"><h4>⚡ שליטה במהירות</h4><p>שינוי מהירות הנסיעה בין איטי למהיר בתכנות</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-5-4')"><div class="l-num">4</div><div class="l-text"><h4>🕺 רקדן (Dancer)</h4><p>רצף תנועות עם מוזיקה ואורות — הרובוט ריוקד!</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-5-5')"><div class="l-num">5</div><div class="l-text"><h4>🗺️ תכנון מסלול</h4><p>תכנות מסלול מורכב מראש — הרובוט עוקב אחרי הנתיב שנבחר</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Chapter 6 -->
+      <div class="chapter">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">6</div>
+          <div class="ch-info"><h3>🎮 משחקים עם Tiny:bit — Playing with Tiny:bit</h3><p>15 שיעורי פרויקטים מגניבים עם חיישנים</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('mc-6-1')"><div class="l-num">1</div><div class="l-text"><h4>📐 מודד מרחקים</h4><p>קריאת ערכי חיישן האולטרסוני והצגת המרחק על מסך ה-micro:bit</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-2')"><div class="l-num">2</div><div class="l-text"><h4>🔆 שליטה באור לפי מרחק</h4><p>ככל שמתקרבים לרובוט — האור משנה צבע/עוצמה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-3')"><div class="l-num">3</div><div class="l-text"><h4>🚧 הימנעות ממכשולים</h4><p>הרובוט מזהה מכשולים ומסיט את עצמו אוטומטית</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-4')"><div class="l-num">4</div><div class="l-text"><h4>🤚 יד קסומה</h4><p>הרובוט "חש" יד מתקרבת ומגיב בצלילים ואורות</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-5')"><div class="l-num">5</div><div class="l-text"><h4>📡 מכ"ם</h4><p>הרובוט סורק את הסביבה ומציג מפת מכשולים חיה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-6')"><div class="l-num">6</div><div class="l-text"><h4>🎹 פסנתר שחור</h4><p>חיישני מעקב הקו הופכים לפסנתר — נגינה עם הגוף!</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-7')"><div class="l-num">7</div><div class="l-text"><h4>🔍 מעקב קו</h4><p>הרובוט עוקב בדיוק אחרי קו שחור כמו רכבת על מסילה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-8')"><div class="l-num">8</div><div class="l-text"><h4>🔊 שליטה באור בקול</h4><p>מחיאות כפיים = שינוי צבע ה-LED — כיף לראות!</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-9')"><div class="l-num">9</div><div class="l-text"><h4>😳 פחדן (Coward)</h4><p>הרובוט "מתבייש" ובורח כשמישהו מתקרב אליו יותר מדי</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-10')"><div class="l-num">10</div><div class="l-text"><h4>🎵 קצב מוזיקלי</h4><p>תכנות רצף מוזיקלי עם אפקטי LED מסונכרנים</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-11')"><div class="l-num">11</div><div class="l-text"><h4>👂 מאזין (Listener)</h4><p>הרובוט מציג על מסכו את רמת הרעש בסביבה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-12')"><div class="l-num">12</div><div class="l-text"><h4>🌊 רעידה בנגיעה</h4><p>נגעו בלוח ה-micro:bit — הרובוט רועד ומגיב!</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-13')"><div class="l-num">13</div><div class="l-text"><h4>🌀 סביבון</h4><p>לחצו כפתור — הרובוט מסתובב כמו סביבון!</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-14')"><div class="l-num">14</div><div class="l-text"><h4>🐸 קפצופיה (Frog Beating)</h4><p>קצב, צלילים ותנועות קפיצה בדפוס המחקה תנועת צפרדע</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-6-15')"><div class="l-num">15</div><div class="l-text"><h4>🗺️ מכונית ההרפתקאות</h4><p>סיור אוטונומי — הרובוט מנווט לבד בין מכשולים ואתגרים</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /tab-makecode -->
+
+    <!-- ── Python Tab ── -->
+    <div id="tab-python" class="tab-panel">
+
+      <!-- Basic Course -->
+      <div class="chapter open">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">א</div>
+          <div class="ch-info"><h3>🐍 קורס בסיסי Python — Basic Course</h3><p>13 שיעורים: מהצעד הראשון ועד שליטה בחיישנים</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('py-b-1')"><div class="l-num">1</div><div class="l-text"><h4>👋 שלום עולם! (Hello World)</h4><p>השורה הראשונה של Python — הצגת טקסט על מסך ה-micro:bit</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-2')"><div class="l-num">2</div><div class="l-text"><h4>🖼️ הצגת תמונה מובנית</h4><p>הצגת אחת מהתמונות המוכנות מראש: לב, חיוך, חץ ועוד</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-2')"><div class="l-num">3</div><div class="l-text"><h4>🎨 תמונה מותאמת אישית</h4><p>עיצוב תמונת LED בעצמכם בקוד Python ושליחתה למסך</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-2')"><div class="l-num">4</div><div class="l-text"><h4>🎬 אנימציה מותאמת</h4><p>יצירת סדרת תמונות שמתחלפות ויוצרות אנימציה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-5')"><div class="l-num">5</div><div class="l-text"><h4>🎮 משחק כפתורים</h4><p>כתיבת משחק פשוט עם כפתורי A ו-B של ה-micro:bit</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-6')"><div class="l-num">6</div><div class="l-text"><h4>🎶 נגינת מוזיקה מובנית</h4><p>הפעלת שירים מוכנים הכלולים ב-micro:bit בפקודת Python</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-7')"><div class="l-num">7</div><div class="l-text"><h4>💡 פנסי המכונית</h4><p>שליטה בנורות LED הקדמיות — צבע, בהירות, אנימציה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-8')"><div class="l-num">8</div><div class="l-text"><h4>⚙️ הנעת מנוע</h4><p>שליחת פקודות Python למנועים — קדימה, אחורה, פנייה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-9')"><div class="l-num">9</div><div class="l-text"><h4>🔍 מעקב קו</h4><p>קריאת ערכי חיישני המעקב ויישום אלגוריתם לעקיבה אחרי קו</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-9')"><div class="l-num">10</div><div class="l-text"><h4>🎤 חיישן קול</h4><p>קריאת רמת הרעש מהחיישן ובניית תגובות לפי עוצמת הצליל</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-11')"><div class="l-num">11</div><div class="l-text"><h4>📡 אולטרסוני</h4><p>מדידת מרחקים בקוד Python ובניית לוגיקת הימנעות</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-7-1')"><div class="l-num">12</div><div class="l-text"><h4>🔴 שלט אינפרא-אדום</h4><p>קבלת פקודות משלט IR ותרגומן לתנועות הרובוט</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-7')"><div class="l-num">13</div><div class="l-text"><h4>🌈 נורות LED</h4><p>שליטה מלאה ב-LED RGB — יצירת אפקטי תאורה מרהיבים</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Robot Course -->
+      <div class="chapter">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">ב</div>
+          <div class="ch-info"><h3>🤖 קורס רובוט Python — Robot Course</h3><p>11 שיעורים: פרויקטים מתקדמים עם שליטה מלאה</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('py-b-8')"><div class="l-num">1</div><div class="l-text"><h4>➡️ קדימה (Advance)</h4><p>נסיעה ישירה קדימה — יישום ב-Python עם שליטה מלאה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-8')"><div class="l-num">2</div><div class="l-text"><h4>🚗 נסיעת מכונית (CarRun)</h4><p>תכנות תנועה מלאה: קדימה, אחורה, שמאל, ימין</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-8')"><div class="l-num">3</div><div class="l-text"><h4>⚡ שליטה במהירות</h4><p>שינוי דינמי של מהירות הנסיעה בזמן אמת</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-r-4')"><div class="l-num">4</div><div class="l-text"><h4>🗺️ תכנון מסלול</h4><p>כתיבת מסלול מורכב מראש — הרובוט מבצע אותו בדיוק</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-11')"><div class="l-num">5</div><div class="l-text"><h4>🔆 שליטה באור לפי מרחק</h4><p>שינוי LED בהתאם לקרבת חפצים שמזוהים על ידי האולטרסוני</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-r-6')"><div class="l-num">6</div><div class="l-text"><h4>🚧 הימנעות אולטרסונית</h4><p>אלגוריתם הימנעות ממכשולים כתוב ב-Python מאפס</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-9')"><div class="l-num">7</div><div class="l-text"><h4>🔍 מעקב קו</h4><p>מימוש מלא של מעקב קו בשפת Python</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-9')"><div class="l-num">8</div><div class="l-text"><h4>🔊 שליטה באור בקול</h4><p>הפעלת תאורה ותנועה בהתאם לרמת הרעש מהחיישן</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('py-b-11')"><div class="l-num">9</div><div class="l-text"><h4>👂 מאזין (Listener)</h4><p>הרובוט מציג גרף רעש חי ומגיב לסביבה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-7-1')"><div class="l-num">10</div><div class="l-text"><h4>🔴 שלט אינפרא-אדום</h4><p>שליטה מלאה על הרובוט דרך שלט IR בקוד Python</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-7-4')"><div class="l-num">11</div><div class="l-text"><h4>🕹️ שלט ג'ויסטיק</h4><p>חיבור שלט ג'ויסטיק Bluetooth ושליטה ידנית בזמן אמת</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /tab-python -->
+
+    <!-- ── Interact Tab ── -->
+    <div id="tab-interact" class="tab-panel">
+
+      <div class="chapter open">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">7</div>
+          <div class="ch-info"><h3>📱 אינטראקציה עם Tiny:bit — Interacting with Tiny:bit</h3><p>5 שיטות שליטה שונות — מרחוק, אפליקציה ועוד</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item" onclick="openLesson('mc-7-1')"><div class="l-num">1</div><div class="l-text"><h4>🔴 שלט אינפרא-אדום (IR Control)</h4><p>תכנות קבלת פקודות משלט IR ושיוכן לתנועות הרובוט</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-7-2')"><div class="l-num">2</div><div class="l-text"><h4>🤖 שליטה באפליקציה Android</h4><p>הורדת אפליקציית Yahboom ל-Android וחיבור Bluetooth לרובוט</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-7-3')"><div class="l-num">3</div><div class="l-text"><h4>🍎 שליטה באפליקציה iOS (אייפון)</h4><p>הורדת אפליקציית Yahboom ל-iPhone/iPad וחיבור Bluetooth</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-7-4')"><div class="l-num">4</div><div class="l-text"><h4>🕹️ שלט ג'ויסטיק (אופציונלי)</h4><p>חיבור ג'ויסטיק אלחוטי ייעודי לשליטה כמו במשחקי וידאו</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+            <li class="lesson-item" onclick="openLesson('mc-7-2')"><div class="l-num">5</div><div class="l-text"><h4>📷 שליטה במצלמה WiFi (Tiny:bit Plus)</h4><p>שיעור לגרסת Plus בלבד — שליטה ממשק WiFi עם מצלמה חיה</p><span class="open-hint">📖 לחץ לפתיחת המדריך</span></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="chapter">
+        <div class="chapter-header" onclick="toggleChapter(this)">
+          <div class="ch-num">8</div>
+          <div class="ch-info"><h3>🔋 טעינה וסוללה — Charging & Battery</h3><p>מידע חשוב על טעינה נכונה ותחזוקת הסוללה</p></div>
+          <span class="ch-arrow">▼</span>
+        </div>
+        <div class="chapter-body">
+          <ul class="lesson-list">
+            <li class="lesson-item"><div class="l-num">1</div><div class="l-text"><h4>🔌 איך לטעון נכון</h4><p>חיבור כבל Micro-USB למחשב או מטען, זמן טעינה ואינדיקטורים</p></div></li>
+            <li class="lesson-item"><div class="l-num">2</div><div class="l-text"><h4>⏱️ זמן שימוש</h4><p>הסוללה מחזיקה כ-3 שעות שימוש רציף בתנועה מלאה</p></div></li>
+            <li class="lesson-item"><div class="l-num">3</div><div class="l-text"><h4>🛡️ טיפול בסוללה</h4><p>הנחיות לשמירה על הסוללה לאורך זמן — מה מותר ומה אסור</p></div></li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /tab-interact -->
+
+  </div>
+</section>
+
+<!-- ══════════════════ PROGRAMMING ══════════════════════ -->
+<section id="programming">
+  <div class="container">
+    <h2 class="sec-title">👩‍💻 שפות התכנות</h2>
+    <div class="divider" style="background:#00e5ff"></div>
+    <div class="lang-grid">
+      <div class="lang-card">
+        <div class="ico">🧩</div>
+        <h3>MakeCode</h3>
+        <p>
+          תכנות <strong>ויזואלי</strong> — גרור ושחרר בלוקים צבעוניים כמו פאזל.
+          עובד ישירות בדפדפן ב-<strong>makecode.microbit.org</strong>,
+          ללא התקנה. מושלם למתחילים — רואים תוצאות תוך דקות!
+        </p>
+        <span class="age">⭐ מגיל 8+</span>
+      </div>
+      <div class="lang-card">
+        <div class="ico">🐍</div>
+        <h3>Python (MicroPython)</h3>
+        <p>
+          שפת תכנות <strong>אמיתית</strong> שנמצאת בשימוש בתעשייה!
+          כותבים קוד טקסטואלי, לומדים תחביר, פונקציות ולולאות.
+          Python היא אחת השפות הנפוצות בעולם ב-AI, מדע הנתונים ועוד.
+        </p>
+        <span class="age">⭐ מגיל 10+</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CTA ══════════════════════════════ -->
+<section id="cta">
+  <div class="container">
+    <h2>🚀 מוכנים להתחיל?</h2>
+    <p>כל הקורסים, הקבצים והקוד זמינים חינם — רק תתחברו ותתחילו!</p>
+    <a href="https://www.yahboom.net/study/Tiny_bit" target="_blank" class="cta-btn">
+      🌐 לאתר הרשמי של Yahboom
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ════════════════════════════ -->
+<footer>
+  <p>
+    עמוד זה הוא תרגום חינוכי לעברית של
+    <a href="https://www.yahboom.net/study/Tiny_bit" target="_blank">yahboom.net/study/Tiny_bit</a>
+    — מיועד לילדים ישראלים שלומדים רובוטיקה ותכנות.
+  </p>
+  <p style="margin-top:8px">תמיכה: <a href="mailto:support@yahboom.com">support@yahboom.com</a></p>
+</footer>
+
+<script>
+  // Tab switching
+  function openTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.ctab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Accordion chapters
+  function toggleChapter(header) {
+    const ch = header.closest('.chapter');
+    ch.classList.toggle('open');
+  }
+</script>
+
+<!-- ══════════ MODAL ══════════ -->
+<div class="modal-overlay" id="lessonModal" onclick="handleOverlayClick(event)">
+  <div class="modal-box" id="modalBox">
+    <button class="modal-close-btn" onclick="closeLesson()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+/* ─── helpers ─── */
+function mk(cls,txt){ return `<span class="b ${cls}">${txt}</span>`; }
+const blue=s=>mk('b-blue',s), green=s=>mk('b-green',s), teal=s=>mk('b-teal',s),
+      red=s=>mk('b-red',s), orng=s=>mk('b-orange',s), gray=s=>mk('b-gray',s),
+      purp=s=>mk('b-purple',s), cond=s=>mk('b-cond',s), show=s=>mk('b-show',s),
+      val=s=>mk('b-val',s);
+
+function row(...items){ return `<div class="mk-row">${items.join('')}</div>`; }
+function i1(...items){ return `<div class="mk-row mk-i1">${items.join('')}</div>`; }
+function i2(...items){ return `<div class="mk-row mk-i2">${items.join('')}</div>`; }
+function i3(...items){ return `<div class="mk-row mk-i3">${items.join('')}</div>`; }
+
+function group(hdrCls, hdrTxt, bodyCls, ...rows){
+  return `<div class="mk-group">
+    <div class="mk-hdr ${hdrCls}">${hdrTxt}</div>
+    <div class="mk-body ${bodyCls}">${rows.join('\n')}</div>
+  </div>`;
+}
+
+function mkWrap(...groups){ return `<div class="mk-wrap">${groups.join('\n')}</div>`; }
+
+function pyWrap(code){ return `<div class="py-wrap"><pre>${code}</pre></div>`; }
+
+function kw(s){return `<span class="py-kw">${s}</span>`;}
+function fn(s){return `<span class="py-fn">${s}</span>`;}
+function st(s){return `<span class="py-str">${s}</span>`;}
+function nm(s){return `<span class="py-num">${s}</span>`;}
+function cm(s){return `<span class="py-cm"># ${s}</span>`;}
+
+/* ─── lesson renderer ─── */
+function renderLesson(d){
+  const tags = [
+    d.chapter ? `<span class="modal-tag">📁 ${d.chapter}</span>` : '',
+    `<span class="modal-tag">⏱️ ${d.time||'~20 דקות'}</span>`,
+    `<span class="modal-tag">🔧 ${d.lang||'MakeCode'}</span>`,
+    d.diff ? `<span class="modal-tag">${d.diff}</span>` : '',
+  ].join('');
+
+  const comps = d.components
+    ? `<div class="modal-section"><h3>🔧 מה צריך?</h3><ul>${d.components.map(c=>`<li>${c}</li>`).join('')}</ul></div>`
+    : '';
+
+  const steps = d.steps
+    ? `<div class="modal-section"><h3>📝 שלבים</h3><ol>${d.steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>`
+    : '';
+
+  const codeSection = d.code
+    ? `<div class="modal-section"><h3>📋 הקוד</h3>${d.code}</div>`
+    : '';
+
+  const tip  = d.tip  ? `<div class="modal-tip">💡 <strong>טיפ:</strong> ${d.tip}</div>` : '';
+  const note = d.note ? `<div class="modal-note">📌 <strong>שימו לב:</strong> ${d.note}</div>` : '';
+
+  return `
+    <h2 class="modal-title">${d.emoji||'📖'} ${d.title}</h2>
+    <div class="modal-meta">${tags}</div>
+    <div class="modal-section"><h3>🎯 מטרה</h3><p>${d.goal}</p></div>
+    ${comps}
+    ${steps}
+    ${codeSection}
+    <div class="modal-section"><h3>✅ מה קורה?</h3><p>${d.result}</p></div>
+    ${tip}${note}`;
+}
+
+/* ─── lesson data ─── */
+const LESSONS = {
+
+/* ══ CHAPTER 1 — FIRST TRIAL ══ */
+'mc-1-1': {
+  emoji:'🤝', title:'הכרה עם Tiny:bit', chapter:'פרק 1 — ניסיון ראשון', lang:'MakeCode', time:'15 דקות', diff:'⭐ קל',
+  goal:'הכרות ראשונה עם הרובוט — מה הוא, מה יש בקופסה, ואיך מדליקים אותו לראשונה.',
+  components:['🤖 רובוט Tiny:bit','🔋 סוללת ליתיום','🔌 כבל Micro USB','🧠 לוח BBC micro:bit'],
+  steps:[
+    'הוציאו את כל הרכיבים מהקופסה ובדקו שהכול שלם',
+    'הכניסו את לוח ה-<strong>micro:bit</strong> לחריץ שבגוף הרובוט',
+    'חברו את כבל ה-USB בין הרובוט למחשב לטעינה',
+    'החליקו את מתג ההפעלה ל-<strong>ON</strong>',
+    'ה-LED על לוח ה-micro:bit אמורים להאיר — הרובוט עובד!',
+    'לחצו כפתור A או B על ה-micro:bit ובדקו תגובה',
+  ],
+  result:'הרובוט דולק ומוכן לתכנות! ה-micro:bit מציג אנימציה ברירת מחדל.',
+  tip:'אם לא מתדלק — ודאו שהסוללה טעונה ושה-micro:bit נכנס עד הסוף לחריץ.',
+  note:'הטעינה המלאה אורכת כ-2 שעות. אפשר לתכנת גם בזמן טעינה.'
+},
+
+/* ══ CHAPTER 2 — PREPARATION ══ */
+'mc-2-1': {
+  emoji:'💾', title:'הורדת MakeCode', chapter:'פרק 2 — הכנה לפני השיעור', lang:'MakeCode', time:'10 דקות', diff:'⭐ קל',
+  goal:'נכנסים לעורך MakeCode ופותחים פרויקט חדש — בלי שום התקנה!',
+  steps:[
+    'פתחו דפדפן (Chrome / Edge מומלצים) ולכו ל: <code>makecode.microbit.org</code>',
+    'לחצו <strong>"New Project"</strong> (פרויקט חדש)',
+    'תנו לפרויקט שם — למשל: <strong>"ניסיון ראשון"</strong>',
+    'תראו את העורך עם שני בלוקים: <strong>on start</strong> ו-<strong>forever</strong>',
+    'בצד שמאל יש את קטגוריות הבלוקים: Basic, Logic, Loops...',
+    'בצד ימין — סימולטור של ה-micro:bit לבדיקה ללא הרובוט!',
+  ],
+  result:'עורך MakeCode פתוח ומוכן. אפשר להתחיל לגרור בלוקים!',
+  tip:'לחצו על הסימולטור בצד ימין כדי לבדוק את הקוד לפני שמורידים לרובוט.',
+  note:'MakeCode עובד ישירות בדפדפן — לא צריך להוריד שום תוכנה!'
+},
+
+'mc-2-2': {
+  emoji:'🔌', title:'חיבור ה-micro:bit', chapter:'פרק 2 — הכנה לפני השיעור', lang:'MakeCode', time:'10 דקות', diff:'⭐ קל',
+  goal:'מחברים את לוח ה-micro:bit למחשב ומעלים אליו קוד בפעם הראשונה.',
+  steps:[
+    'חברו כבל Micro USB בין ה-micro:bit למחשב',
+    'ה-micro:bit יופיע כ-<strong>כונן USB</strong> בשם MICROBIT',
+    'בעורך MakeCode לחצו כפתור <strong>"Download"</strong> (⬇️)',
+    'קובץ <code>.hex</code> יורד למחשב',
+    'גררו (או העתיקו) את הקובץ לכונן MICROBIT',
+    'ה-LED הכתום על גב ה-micro:bit מהבהב בזמן ההעלאה',
+    'כשה-LED נעצר — הקוד עלה! הרובוט מריץ אותו מיד.',
+  ],
+  result:'הקוד שכתבתם רץ על הרובוט! כל שינוי = הורדה מחדש.',
+  tip:'ב-Chrome אפשר לחבר ישירות עם WebUSB — לחצו "Pair device" ב-MakeCode.',
+  note:'אם הכונן לא מופיע — נסו כבל USB אחר (חלק מכבלי USB הם לטעינה בלבד, לא להעברת נתונים).'
+},
+
+'mc-2-3': {
+  emoji:'📦', title:'הוספת חבילת Tiny:bit', chapter:'פרק 2 — הכנה לפני השיעור', lang:'MakeCode', time:'5 דקות', diff:'⭐ קל',
+  goal:'מוסיפים את חבילת הבלוקים המיוחדת של Tiny:bit לעורך MakeCode.',
+  steps:[
+    'בעורך MakeCode לחצו על <strong>"Extensions"</strong> (הרחבות) — בתחתית רשימת הקטגוריות',
+    'בתיבת החיפוש הקלידו: <code>tinybit</code>',
+    'תופיע חבילה בשם <strong>"Tinybit"</strong> — לחצו עליה',
+    'חכו שניה... הבלוקים נטענים',
+    'בתפריט הצד יופיעו קטגוריות חדשות: <strong>CarCtrl</strong>, <strong>RGB</strong>, <strong>Sensor</strong>',
+    'כעת אפשר להשתמש בכל בלוקי הרובוט!',
+  ],
+  result:'הבלוקים של Tiny:bit זמינים! CarCtrl לנסיעה, RGB לאורות, Sensor לחיישנים.',
+  tip:'החבילה נשמרת לפרויקט — לא צריך להוסיף אותה שוב בפרויקטים עתידיים אם תעתיקו.',
+  note:'אם החיפוש לא מוצא — נסו לחפש את ה-URL: <code>github.com/lzty634158/yahboom</code>'
+},
+
+/* ══ CHAPTER 3 — LIGHT ══ */
+'mc-3-1': {
+  emoji:'💡', title:'נורת LED', chapter:'פרק 3 — אורות', lang:'MakeCode', time:'15 דקות', diff:'⭐ קל',
+  goal:'מדליקים את נורות ה-LED של הרובוט בצבע לבן. זה הצעד הראשון שלנו עם האורות!',
+  components:['🤖 רובוט Tiny:bit','💻 מחשב עם דפדפן','🔌 כבל USB'],
+  steps:[
+    'פתחו <strong>makecode.microbit.org</strong> וצרו פרויקט חדש',
+    'לחצו <strong>Extensions</strong> → חפשו <code>tinybit</code> → הוסיפו',
+    'בלוק <strong>on start</strong>: גררו "show icon" ובחרו ✶',
+    'בלוק <strong>forever</strong>: גררו "RGB Car Program show color" → בחרו <strong>white</strong>',
+    'מתחתיו הוסיפו "RGB Car Program show"',
+    'לחצו ⬇️ Download → גררו לתיקיית ה-micro:bit',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(show('📺 הצג סמל ✶'))
+    ),
+    group('blue','🔄 חזור תמיד','blue',
+      row(teal('💡 RGB Car Program — הצג צבע: לבן')),
+      row(teal('💡 RGB Car Program — הצג'))
+    )
+  ),
+  result:'מיד עם הפעלת הרובוט — כל נורות ה-LED יאירו בלבן. אחלה!',
+  tip:'נסו לשנות "white" ל-"red" ותקבלו אורות אדומים!'
+},
+
+'mc-3-2': {
+  emoji:'🔦', title:'אור חיפוש RGB', chapter:'פרק 3 — אורות', lang:'MakeCode', time:'20 דקות', diff:'⭐ קל',
+  goal:'יוצרים אפקט אור חיפוש — הנורות מחכות ואז מאירות בצבע מלא.',
+  steps:[
+    'בלוק <strong>on start</strong>: הצג סמל',
+    'בלוק <strong>forever</strong>: גררו "RGB Car Big value" → בחרו צבע (כגון אדום)',
+    'הוסיפו "RGB Car Program show"',
+    'הוסיפו pause 500ms',
+    'הוסיפו "RGB Car Big value OFF"',
+    'הוסיפו pause 500ms',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(teal('🔴 RGB Car Big — הדלק: אדום')),
+      row(teal('💡 RGB Car Program — הצג')),
+      row(gray('⏱️ המתן 500 מ"ש')),
+      row(teal('⚫ RGB Car Big — כבה')),
+      row(gray('⏱️ המתן 500 מ"ש'))
+    )
+  ),
+  result:'הנורות מהבהבות בצבע שבחרתם — כמו אור משטרה!',
+  tip:'שנו את הצבע בכל פעם: אדום → כחול → ירוק לאפקט מגניב!'
+},
+
+'mc-3-5': {
+  emoji:'😮‍💨', title:'אור נשימה', chapter:'פרק 3 — אורות', lang:'MakeCode', time:'20 דקות', diff:'⭐⭐ בינוני',
+  goal:'האור עולה ויורד לאט כמו נשימה — אפקט רגוע ויפה.',
+  steps:[
+    'צרו משתנה בשם <code>brightness</code> עם ערך 0',
+    'בלוק forever: שנו brightness ב-+5 כל פעם',
+    'אם brightness >= 255 — אפסו ל-0',
+    'הגדירו RGB לפי brightness: R=brightness, G=0, B=0',
+    'הוסיפו pause 30ms',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(red('📦 שנה'), val('בהירות'), red('+5')),
+      row(cond('❓ אם'), val('בהירות'), cond('≥ 255'), cond('אז')),
+      i1(red('📦 קבע'), val('בהירות'), red('← 0')),
+      row(teal('💡 RGB Car Big2 — R=בהירות, G=0, B=0')),
+      row(gray('⏱️ המתן 30 מ"ש'))
+    )
+  ),
+  result:'הנורות מאירות ומתעממות לאט — כמו לב שפועם!',
+},
+
+/* ══ CHAPTER 4 — MUSIC ══ */
+'mc-4-1': {
+  emoji:'🎵', title:'נגינת מוזיקה מובנית', chapter:'פרק 4 — שירה', lang:'MakeCode', time:'15 דקות', diff:'⭐ קל',
+  goal:'הרובוט מנגן מנגינה מוכנה מראש עם הפעלה. המנגינה "Ode to Joy"!',
+  components:['🤖 Tiny:bit','💻 מחשב','🔌 USB','🔋 סוללה מחוברת'],
+  steps:[
+    'בלוק <strong>on start</strong>: גררו "show icon" → בחרו סמל',
+    'גררו "start melody" מתפריט Music',
+    'בחרו <strong>ode</strong> (אוד לשמחה)',
+    'הגדירו repeating: <strong>once</strong> (פעם אחת)',
+    'הורידו ל-micro:bit',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(show('📺 הצג סמל')),
+      row(purp('🎵 נגן מנגינה: ode — פעם אחת'))
+    )
+  ),
+  result:'ברגע שמדליקים את הרובוט — הוא מנגן את "Ode to Joy"!',
+  tip:'נסו מנגינות אחרות: <code>nyan</code>, <code>birthday</code>, <code>imperial march</code>!'
+},
+
+'mc-4-2': {
+  emoji:'🎄', title:'שיר חג + אורות', chapter:'פרק 4 — שירה', lang:'MakeCode', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'הרובוט מנגן ומבריק בצבעים בו-זמנית — אפקט מסיבה!',
+  steps:[
+    'בלוק <strong>on start</strong>: הצג סמל + כבה LED',
+    'בלוק forever: הפעל מנגינה ב-background',
+    'תוך כדי: שנו צבע LED כל 500ms',
+    'חזרו על מחזור ירוק→אדום→לבן',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(show('📺 הצג סמל ✶')),
+      row(purp('🎵 נגן מנגינה: merry christmas — לנצח'))
+    ),
+    group('blue','🔄 חזור תמיד','blue',
+      row(teal('🟢 RGB — ירוק')), row(teal('💡 הצג')), row(gray('⏱️ 500ms')),
+      row(teal('🔴 RGB — אדום')), row(teal('💡 הצג')), row(gray('⏱️ 500ms')),
+      row(teal('⚪ RGB — לבן')),  row(teal('💡 הצג')), row(gray('⏱️ 500ms'))
+    )
+  ),
+  result:'הרובוט מנגן ומהבהב בצבעי חג — מסיבה אמיתית!',
+},
+
+/* ══ CHAPTER 5 — RUNNING ══ */
+'mc-5-1': {
+  emoji:'➡️', title:'קדימה! (Advance)', chapter:'פרק 5 — נסיעה', lang:'MakeCode', time:'10 דקות', diff:'⭐ קל',
+  goal:'הצעד הראשון: גורמים לרובוט לנסוע קדימה ללא הפסקה.',
+  components:['🤖 Tiny:bit','💻 מחשב','📏 מקום פתוח לנסיעה'],
+  steps:[
+    'פתחו MakeCode + הוסיפו חבילת tinybit',
+    'בלוק <strong>forever</strong>: גררו "CarCtrl Run"',
+    'זה הכל! הורידו ל-micro:bit',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(green('🏎️ CarCtrl — נסע קדימה'))
+    )
+  ),
+  result:'הרובוט נוסע קדימה ללא הפסקה! שימו אותו על הרצפה.',
+  tip:'כדי לעצור — לחצו כפתור A וגררו "CarCtrl Stop" ל-"on button A pressed"'
+},
+
+'mc-5-2': {
+  emoji:'🚗', title:'נסיעת מכונית (CarRun)', chapter:'פרק 5 — נסיעה', lang:'MakeCode', time:'20 דקות', diff:'⭐ קל',
+  goal:'הרובוט נוסע בתנועה מלאה: קדימה, עצירה, אחורה, ופנייה.',
+  steps:[
+    'בלוק forever: קדימה 2 שניות',
+    'עצור 0.5 שנייה',
+    'אחורה 1 שנייה',
+    'פנה שמאל 0.5 שנייה',
+    'פנה ימין 0.5 שנייה',
+    'עצור',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(green('➡️ CarCtrlSpeed — קדימה, מהירות 80')), row(gray('⏱️ 2000ms')),
+      row(green('⏹️ CarCtrlSpeed — עצור')),              row(gray('⏱️ 500ms')),
+      row(green('⬅️ CarCtrlSpeed — אחורה, מהירות 80')), row(gray('⏱️ 1000ms')),
+      row(green('↩️ CarCtrlSpeed — סיבוב שמאל, 80')),   row(gray('⏱️ 500ms')),
+      row(green('↪️ CarCtrlSpeed — סיבוב ימין, 80')),   row(gray('⏱️ 500ms')),
+      row(green('⏹️ עצור'))
+    )
+  ),
+  result:'הרובוט מבצע רצף תנועות — כאילו הוא רוקד!',
+},
+
+'mc-5-3': {
+  emoji:'⚡', title:'שליטה במהירות', chapter:'פרק 5 — נסיעה', lang:'MakeCode', time:'20 דקות', diff:'⭐ קל',
+  goal:'לומדים להגדיר מהירויות שונות — איטי, בינוני, מהיר.',
+  steps:[
+    'גררו "CarCtrlSpeed Run speed X" (במקום CarCtrl Run)',
+    'שנו מהירות ל-<strong>40</strong> — איטי',
+    'pause 2000ms',
+    'שנו מהירות ל-<strong>80</strong> — בינוני',
+    'pause 2000ms',
+    'שנו מהירות ל-<strong>100</strong> — מהיר!',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(green('🐢 CarCtrlSpeed — קדימה, מהירות 40')), row(gray('⏱️ 2000ms')),
+      row(green('🚗 CarCtrlSpeed — קדימה, מהירות 80')), row(gray('⏱️ 2000ms')),
+      row(green('🚀 CarCtrlSpeed — קדימה, מהירות 100')),row(gray('⏱️ 2000ms'))
+    )
+  ),
+  result:'הרובוט מאט ומאיץ — תרגישו את ההבדל!',
+  note:'מהירות 0 = עצירה. מהירות 100 = מקסימום. ערכים בין 40-80 הם הכי יציבים.'
+},
+
+'mc-5-4': {
+  emoji:'🕺', title:'רקדן (Dancer)', chapter:'פרק 5 — נסיעה', lang:'MakeCode', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'הרובוט "רוקד" — מסתובב, נע, ומנגן בסנכרון!',
+  steps:[
+    'הפעילו מנגינה ב-background',
+    'בלוק forever: תכנתו סדרת תנועות עם pause ביניהן',
+    'שלבו סיבובים, נסיעות ועצירות',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(purp('🎵 נגן מנגינה: dadadum — חזרה')),
+    ),
+    group('blue','🔄 חזור תמיד','blue',
+      row(green('↩️ סיבוב שמאל 100')), row(gray('⏱️ 300ms')),
+      row(green('↪️ סיבוב ימין 100')), row(gray('⏱️ 300ms')),
+      row(green('➡️ קדימה 80')),       row(gray('⏱️ 500ms')),
+      row(green('⬅️ אחורה 80')),       row(gray('⏱️ 500ms')),
+      row(green('⏹️ עצור')),           row(gray('⏱️ 1000ms'))
+    )
+  ),
+  result:'הרובוט רוקד לצלילי המוזיקה!',
+},
+
+'mc-5-5': {
+  emoji:'🗺️', title:'תכנון מסלול', chapter:'פרק 5 — נסיעה', lang:'MakeCode', time:'30 דקות', diff:'⭐⭐ בינוני',
+  goal:'תכנתו מסלול מורכב מראש — ריבוע, משולש, או כל צורה שתרצו!',
+  steps:[
+    'בלוק <strong>on start</strong> (לא forever!)',
+    'תכנתו: קדימה 2 שניות → פנה ימין 0.4 שניות → חזור 4 פעמים',
+    'הרובוט יסיים את המסלול ויעצור',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(blue('🔁 חזור 4 פעמים')),
+      i1(green('➡️ קדימה, מהירות 70')), i1(gray('⏱️ 1500ms')),
+      i1(green('↪️ סיבוב ימין 80')),    i1(gray('⏱️ 400ms')),
+      row(green('⏹️ עצור'))
+    )
+  ),
+  result:'הרובוט מסיים ריבוע מושלם! שנו את הזמנים לצורות שונות.',
+  tip:'זמן פנייה של 400ms ≈ 90°. לריבוע שלם חזרו 4 פעמים.'
+},
+
+/* ══ CHAPTER 6 — PLAYING ══ */
+'mc-6-1': {
+  emoji:'📐', title:'מודד מרחקים', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'20 דקות', diff:'⭐ קל',
+  goal:'הרובוט מודד כל הזמן את המרחק לחפצים לפניו ומציג על מסכו.',
+  steps:[
+    'צרו משתנה <code>dsitance</code>',
+    'בלוק forever: קבעו dsitance ← ultrasonic return distance(cm)',
+    'הוסיפו "show number dsitance"',
+    'הוסיפו pause 200ms',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(red('📦 קבע'), val('מרחק'), red('←'), teal('📡 אולטרסוני — מרחק (ס"מ)')),
+      row(show('📺 הצג מספר'), val('מרחק')),
+      row(gray('⏱️ 200ms'))
+    )
+  ),
+  result:'המסך מציג מספרים בס"מ. התקרבו לקיר ותראו את המספרים יורדים!',
+  tip:'נסו להניח חפצים שונים ולמדוד את המרחק — לכלי מדידה ממשי!'
+},
+
+'mc-6-2': {
+  emoji:'🔆', title:'שליטה באור לפי מרחק', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'LED מחליף צבע לפי המרחק: כחול כשקרוב, ירוק כשבינוני, כבוי כשרחוק.',
+  steps:[
+    'ב-on start: כבו LED ← "RGB Car Big value OFF"',
+    'forever: קבעו dsitance מאולטרסוני',
+    'if dsitance ≤ 5: RGB Big2 value1=0 value2=0 value3=255 (כחול)',
+    'else if 5 < dsitance < 15: value1=0 value2=255 value3=0 (ירוק)',
+    'else: RGB Car Big value OFF',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(teal('⚫ RGB Car Big — כבה')),
+      row(teal('🔄 RGB Car Program — נקה')),
+      row(teal('💡 RGB Car Program — הצג'))
+    ),
+    group('blue','🔄 חזור תמיד','blue',
+      row(red('📦 מרחק ←'), teal('📡 אולטרסוני')),
+      row(cond('❓ אם'), val('מרחק ≤ 5')),
+      i1(teal('🔵 RGB Big2: R=0, G=0, B=255 (כחול)')),
+      row(cond('אחרת אם'), val('מרחק > 5'), cond('וגם'), val('מרחק < 15')),
+      i1(teal('🟢 RGB Big2: R=0, G=255, B=0 (ירוק)')),
+      row(cond('אחרת')),
+      i1(teal('⚫ RGB Car Big — כבה'))
+    )
+  ),
+  result:'כחול = מאוד קרוב! ירוק = קרוב. כבוי = רחוק. ניסוי מדהים!',
+},
+
+'mc-6-3': {
+  emoji:'🚧', title:'הימנעות ממכשולים', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'הרובוט נוסע קדימה ומתחמק לבד ממכשולים. פרויקט הכי מרשים!',
+  components:['🤖 Tiny:bit','💻 מחשב','🔌 USB','📦 כמה חפצים לסידור כמכשולים'],
+  steps:[
+    'forever: קבעו dsitance מאולטרסוני',
+    'if dsitance < 15: אחורה 200ms → סיבוב ימין 200ms',
+    'else: נסיעה קדימה',
+    'הורידו ל-micro:bit ושחררו על הרצפה עם מכשולים!',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(red('📦 מרחק ←'), teal('📡 אולטרסוני (ס"מ)')),
+      row(cond('❓ אם'), val('מרחק < 15'), cond('אז')),
+      i1(green('⬅️ CarCtrlSpeed — אחורה, מהירות 80')),
+      i1(gray('⏱️ 200ms')),
+      i1(green('↪️ CarCtrlSpeed — סיבוב ימין, מהירות 100')),
+      i1(gray('⏱️ 200ms')),
+      row(cond('אחרת')),
+      i1(green('➡️ CarCtrlSpeed — קדימה, מהירות 80'))
+    )
+  ),
+  result:'הרובוט נוסע בחופשיות ומתחמק מכל מכשול! כמו מכונית אוטונומית.',
+  tip:'שנו 15 ל-20 להגבה מוקדמת יותר. הרובוט "יראה" מרחוק יותר.',
+  note:'ודאו שיש לפחות 40 ס"מ מקום פנוי לרוץ בו!'
+},
+
+'mc-6-4': {
+  emoji:'🤚', title:'יד קסומה (Magic Hand)', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'30 דקות', diff:'⭐⭐ בינוני',
+  goal:'הרובוט "רגיש" לידיכם — ככל שמקרבים יד, הוא מאיר בכחול וסוגת אחורה!',
+  steps:[
+    'on start: כבו LED, נקו, הציגו',
+    'forever (LED): מרחק ≤ 5 → כחול; 5-15 → ירוק; אחרת → כבוי',
+    'forever (תנועה): מרחק ≤ 5 → אחורה; 5-15 → קדימה; אחרת → עצור',
+    'forever (מסך): מרחק ≤ 5 → חץ למעלה; 5-15 → חץ למטה; אחרת → נקה',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(show('📺 הצג סמל')),
+      row(teal('⚫ RGB Big — כבה')), row(teal('🔄 נקה')), row(teal('💡 הצג'))
+    ),
+    group('blue','🔄 חזור תמיד (תנועה)','blue',
+      row(red('📦 מרחק ←'), teal('📡 אולטרסוני')),
+      row(cond('אם'), val('מרחק ≤ 5')),
+      i1(green('⬅️ אחורה, מהירות 60')),
+      row(cond('אחרת אם'), val('5 < מרחק < 15')),
+      i1(green('➡️ קדימה, מהירות 60')),
+      row(cond('אחרת')),
+      i1(green('⏹️ עצור'))
+    ),
+    group('blue','🔄 חזור תמיד (LED)','blue',
+      row(cond('אם'), val('מרחק ≤ 5')),
+      i1(teal('🔵 RGB: R=0, G=0, B=255')),
+      row(cond('אחרת אם'), val('5 < מרחק < 15')),
+      i1(teal('🟢 RGB: R=0, G=255, B=0')),
+      row(cond('אחרת')),
+      i1(teal('⚫ כבה'))
+    )
+  ),
+  result:'יד קרובה = רובוט בורח ומאיר כחול. יד בינוני = רץ לקראתה בירוק!',
+},
+
+'mc-6-5': {
+  emoji:'📡', title:'מכ"ם (Radar Detector)', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'30 דקות', diff:'⭐⭐⭐ מאתגר',
+  goal:'הרובוט פועל כמכ"ם אמיתי: מוציא צלילים, מציג ומתחמק ממכשולים בו-זמנית!',
+  steps:[
+    'ב-forever ראשון: אם מרחק < 15 → הצג LED מלא; אחרת → הצג חץ דרום',
+    'forever שני: אם < 15 → נגן High B; אחרת → נגן Middle B',
+    'forever שלישי: הימנעות — עצור+אחורה+סיבוב אם < 15',
+    'forever רביעי: LED אדום אם < 15, ירוק אחרת',
+  ],
+  code: mkWrap(
+    group('blue','🔄 תנועה','blue',
+      row(red('📦 מרחק ←'), teal('📡 אולטרסוני')),
+      row(cond('אם'), val('מרחק < 15')),
+      i1(green('⏹️ CarCtrl1 — עצור')),
+      i1(green('⬅️ אחורה, מהירות 60')), i1(gray('⏱️ 200ms')),
+      i1(green('↪️ סיבוב ימין, מהירות 60')), i1(gray('⏱️ 400ms')),
+      row(cond('אחרת')),
+      i1(green('➡️ קדימה speed1=53 speed2=55'))
+    ),
+    group('blue','🔄 קול','blue',
+      row(cond('אם'), val('מרחק < 15')),
+      i1(purp('🎵 נגן High B — 1 beat')), i1(gray('⏱️ 100ms')),
+      row(cond('אחרת')),
+      i1(purp('🎵 נגן Middle B — 1 beat')), i1(gray('⏱️ 400ms'))
+    ),
+    group('blue','🔄 LED','blue',
+      row(cond('אם'), val('מרחק < 15')),
+      i1(teal('🔴 RGB Car Big — אדום')),
+      row(cond('אחרת')),
+      i1(teal('🟢 RGB Car Big — ירוק'))
+    )
+  ),
+  result:'מכ"ם אמיתי! מאיר אדום ומצפצף כשיש מכשול, ירוק ושקט כשהדרך פנויה.',
+  note:'שלושה בלוקי "forever" רצים בו-זמנית ב-MakeCode — זה תכנות מקבילי!'
+},
+
+'mc-6-6': {
+  emoji:'🎹', title:'פסנתר שחור', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'35 דקות', diff:'⭐⭐⭐ מאתגר',
+  goal:'חיישני מעקב הקו הופכים למקשי פסנתר — נגינה עם הגוף!',
+  steps:[
+    'שימו את הרובוט על ניר לבן עם פסים שחורים (רצועות נייר שחור)',
+    'forever: בדקו מצב חיישן שמאל וימין',
+    'שניהם שחורים → נגן תו C',
+    'שמאל שחור בלבד → תו D',
+    'ימין שחור בלבד → תו E',
+    'שניהם לבנים → עצור',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(cond('אם'), teal('חיישן שמאל=שחור'), cond('וגם'), teal('חיישן ימין=שחור')),
+      i1(purp('🎵 נגן תו: C, שניה')), i1(show('📺 הצג "C"')),
+      row(cond('אחרת אם'), teal('חיישן שמאל=שחור')),
+      i1(purp('🎵 נגן תו: D, שניה')), i1(show('📺 הצג "D"')),
+      row(cond('אחרת אם'), teal('חיישן ימין=שחור')),
+      i1(purp('🎵 נגן תו: E, שניה')), i1(show('📺 הצג "E"')),
+      row(cond('אחרת')),
+      i1(show('📺 הצג חץ דרום'))
+    )
+  ),
+  result:'העבירו את הרובוט מעל פסים שחורים שונים ותשמעו תווים שונים!',
+  tip:'הדפיסו נייר עם מספר פסים שחורים — כל פס = תו אחר. צרו מנגינה!',
+  note:'חשוב: בצעו בחדר מוצל. אור שמש ישפיע על חיישן האינפרא-אדום!'
+},
+
+'mc-6-7': {
+  emoji:'🔍', title:'מעקב קו (Tracking)', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'הרובוט עוקב בדיוק אחרי קו שחור על ניר לבן — כמו רכבת על מסילה!',
+  components:['🤖 Tiny:bit','💻 מחשב','📄 נייר לבן A3','🖊️ טוש שחור רחב'],
+  steps:[
+    'צירו קו שחור עקום על ניר לבן (לא פינות חדות!)',
+    'on start: הצג סמל',
+    'forever: בדקו 4 מצבים של שני חיישנים',
+    'שניהם לבן → קדימה 70',
+    'שמאל שחור, ימין לבן → סיבוב שמאל',
+    'שמאל לבן, ימין שחור → סיבוב ימין',
+    'שניהם שחור → עצור',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(show('📺 הצג סמל ✶'))
+    ),
+    group('blue','🔄 חזור תמיד','blue',
+      row(cond('אם'), teal('שמאל=לבן'), cond('וגם'), teal('ימין=לבן')),
+      i1(green('➡️ CarCtrlSpeed — קדימה, מהירות 70')),
+      row(cond('אחרת אם'), teal('שמאל=שחור'), cond('וגם'), teal('ימין=לבן')),
+      i1(green('↩️ סיבוב שמאל, מהירות 70')),
+      row(cond('אחרת אם'), teal('שמאל=לבן'), cond('וגם'), teal('ימין=שחור')),
+      i1(green('↪️ סיבוב ימין, מהירות 70')),
+      row(cond('אחרת')),
+      i1(green('⏹️ עצור, מהירות 0'))
+    )
+  ),
+  result:'הרובוט עוקב אחרי הקו בדיוק מרשים! ינסה לחזור לקו גם כשיוצא ממנו.',
+  note:'הקו צריך להיות לפחות 2-3 ס"מ רחב. עקומות עדינות עובדות טוב יותר מפינות חדות.'
+},
+
+'mc-6-8': {
+  emoji:'🔊', title:'שליטה באור בקול', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'מחאו כפיים — הרובוט מגיב עם צבעים אקראיים ומציג סמלים שונים!',
+  steps:[
+    'on start: כבו LED ונקו',
+    'forever: אם Voice Sensor > 100',
+    'בחרו מספר אקראי 0-5 → item',
+    'הגדירו RGB בצבעים אקראיים לחלוטין',
+    'הציגו סמל לפי ערך item (0→לב, 1→חיוך, 2→יהלום...)',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(teal('⚫ RGB Big — כבה')), row(teal('🔄 נקה')), row(teal('💡 הצג'))
+    ),
+    group('blue','🔄 חזור תמיד','blue',
+      row(cond('אם'), purp('🎤 Voice Sensor > 100')),
+      i1(red('📦 item ← מספר אקראי 0-5')),
+      i1(teal('🌈 RGB Big2: R=אקראי(0-255), G=אקראי(0-255), B=אקראי(0-255)')),
+      i1(teal('💡 RGB Car Program — צבעים אקראיים')),
+      i1(show('📺 הצג סמל לפי item (0→❤, 1→😀, 2→✶...)')),
+    )
+  ),
+  result:'כל מחיאת כפיים → צבע ופרצוף אחר! כל פעם הפתעה!',
+  tip:'נסו לשנות 100 ל-50 — הרובוט יגיב גם לרעשים עדינים יותר.',
+},
+
+'mc-6-9': {
+  emoji:'😳', title:'פחדן (Coward)', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'הרובוט "מפחד" מרעשים חזקים — מתרוצץ ובורח כשצועקים עליו!',
+  steps:[
+    'on start: הצג סמל שקט + כבה LED',
+    'forever: אם Voice Sensor > 35',
+    'הצג פרצוף מפחד',
+    'חזור 8 פעמים: סיבוב שמאל 50ms → סיבוב ימין 50ms',
+    'נסע אחורה 60 במשך שנייה',
+    'עצור; אחרת → הצג פרצוף רגוע',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בהפעלה','blue',
+      row(show('📺 הצג סמל שקט')),
+      row(teal('⚫ RGB Big — כבה')), row(teal('🔄 נקה')), row(teal('💡 הצג'))
+    ),
+    group('blue','🔄 חזור תמיד','blue',
+      row(cond('אם'), purp('🎤 Voice Sensor > 35')),
+      i1(show('😨 הצג פרצוף מפחד')),
+      i1(blue('🔁 חזור 8 פעמים')),
+      i2(green('↩️ סיבוב שמאל, מהירות 50')), i2(gray('⏱️ 50ms')),
+      i2(green('↪️ סיבוב ימין, מהירות 50')),  i2(gray('⏱️ 50ms')),
+      i1(green('⬅️ אחורה, מהירות 60')), i1(gray('⏱️ 1000ms')),
+      i1(green('⏹️ עצור')),
+      row(cond('אחרת')),
+      i1(show('😌 הצג פרצוף רגוע'))
+    )
+  ),
+  result:'צעקו "בו!" — הרובוט מזדזד ובורח אחורה. מצחיק ומרשים!',
+  tip:'שנו 35 ל-20 לרגישות גבוהה יותר — יגיב לכל רחש.',
+},
+
+'mc-6-10': {
+  emoji:'🎵', title:'קצב מוזיקלי', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'30 דקות', diff:'⭐⭐ בינוני',
+  goal:'תכנתו מנגינה משלכם תו אחר תו עם אפקטי LED מסונכרנים.',
+  steps:[
+    'בלוק forever: נגנו סדרת תווים',
+    'בין כל תו — שנו צבע LED',
+    'הוסיפו pause קצר בין תווים',
+    'נסו: C→D→E→F→G (סולם דו)',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(purp('🎵 תו: C, רבע'), row(teal('🔴 RGB — אדום')), gray('⏱️ 300ms')),
+      row(purp('🎵 תו: D, רבע'), row(teal('🟠 RGB — כתום')), gray('⏱️ 300ms')),
+      row(purp('🎵 תו: E, רבע'), row(teal('🟡 RGB — צהוב')), gray('⏱️ 300ms')),
+      row(purp('🎵 תו: F, רבע'), row(teal('🟢 RGB — ירוק')), gray('⏱️ 300ms')),
+      row(purp('🎵 תו: G, חצי'), row(teal('🔵 RGB — כחול')), gray('⏱️ 600ms'))
+    )
+  ),
+  result:'הרובוט מנגן את הסולם שתכנתתם עם שינוי צבע לכל תו!',
+  tip:'MakeCode מכיל את כל הסולם המוזיקלי — C D E F G A B + octaves!'
+},
+
+'mc-6-11': {
+  emoji:'👂', title:'מאזין (Listener)', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'20 דקות', diff:'⭐ קל',
+  goal:'הרובוט מציג על מסכו בר-גרף חי של רמת הרעש בחדר.',
+  steps:[
+    'forever: קראו Voice Sensor',
+    'הציגו על מסך micro:bit עם "show bar graph"',
+    'הגדירו max ל-300',
+    'pause 100ms',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(show('📊 הצג גרף — ערך: Voice Sensor, מקס: 300')),
+      row(gray('⏱️ 100ms'))
+    )
+  ),
+  result:'המסך מציג כמה נורות דולקות לפי רמת הרעש. שקט = 1 נורה, רעש חזק = כל 25!',
+  tip:'הציבו ליד רמקול ותראו איך הגרף קופץ לפי הקצב!'
+},
+
+'mc-6-12': {
+  emoji:'🌊', title:'רעידה בנגיעה', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'20 דקות', diff:'⭐ קל',
+  goal:'נגעו בלוחית ה-micro:bit — הרובוט יזדזד ויסתובב!',
+  steps:[
+    'בלוק "on pin P0 pressed" (מפתחות הקדמיים של micro:bit)',
+    'repeat 6: סיבוב שמאל 50ms → ימין 50ms',
+    'בלוק forever: הצג סמל רגוע',
+  ],
+  code: mkWrap(
+    group('blue','🔵 בנגיעה ב-P0','blue',
+      row(show('😮 הצג פרצוף מופתע')),
+      row(blue('🔁 חזור 6 פעמים')),
+      i1(green('↩️ סיבוב שמאל, מהירות 80')), i1(gray('⏱️ 50ms')),
+      i1(green('↪️ סיבוב ימין, מהירות 80')),  i1(gray('⏱️ 50ms')),
+      row(green('⏹️ עצור')),
+      row(show('😌 הצג רגוע'))
+    )
+  ),
+  result:'געו בנקודות הזהב של ה-micro:bit — הרובוט קופץ!',
+  note:'נקודות P0,P1,P2 הן 3 הנקודות הגדולות בתחתית ה-micro:bit.'
+},
+
+'mc-6-13': {
+  emoji:'🌀', title:'סביבון (Spinning Top)', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'15 דקות', diff:'⭐ קל',
+  goal:'לחצו כפתור A — הרובוט מסתובב כמו סביבון!',
+  steps:[
+    '"on button A pressed": CarCtrlSpeed SpinLeft 100 (ללא pause)',
+    '"on button B pressed": CarCtrlSpeed SpinRight 100',
+    'forever: show icon',
+  ],
+  code: mkWrap(
+    group('blue','🔵 כפתור A נלחץ','blue',
+      row(green('↩️ CarCtrlSpeed — סיבוב שמאל, מהירות 100'))
+    ),
+    group('blue','🔵 כפתור B נלחץ','blue',
+      row(green('↪️ CarCtrlSpeed — סיבוב ימין, מהירות 100'))
+    ),
+    group('blue','🔵 כפתורים A+B יחד','blue',
+      row(green('⏹️ עצור'))
+    )
+  ),
+  result:'A = מסתובב שמאל, B = מסתובב ימין, A+B = עצור. בדיוק כמו סביבון!',
+},
+
+'mc-6-14': {
+  emoji:'🐸', title:'קפצופיה (Frog Beating)', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'30 דקות', diff:'⭐⭐ בינוני',
+  goal:'הרובוט מבצע דפוס תנועה קצבי שמדמה קפיצות צפרדע!',
+  steps:[
+    'forever: קדימה מהיר 200ms',
+    'עצור 100ms',
+    'אחורה מהיר 150ms',
+    'עצור 100ms',
+    'סיבוב קצר 100ms',
+    'חזרו — זה "קפיצה" אחת',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(green('➡️ קדימה, מהירות 100')), row(gray('⏱️ 200ms')),
+      row(green('⏹️ עצור')),             row(gray('⏱️ 100ms')),
+      row(green('⬅️ אחורה, מהירות 80')), row(gray('⏱️ 150ms')),
+      row(green('⏹️ עצור')),             row(gray('⏱️ 100ms')),
+      row(green('↩️ סיבוב שמאל 100')),   row(gray('⏱️ 100ms'))
+    )
+  ),
+  result:'הרובוט קופץ-קופץ-קופץ! בדיוק כמו צפרדע שמחה.',
+  tip:'שלבו עם נגינת צפרדע: <code>start melody jump repeating forever</code>'
+},
+
+'mc-6-15': {
+  emoji:'🗺️', title:'מכונית ההרפתקאות', chapter:'פרק 6 — משחקים', lang:'MakeCode', time:'35 דקות', diff:'⭐⭐⭐ מאתגר',
+  goal:'הפרויקט הגדול: הרובוט סורק, מנגן, עוקב קו — הכול ביחד!',
+  steps:[
+    'שלבו Ultrasonic + Line Sensor ביחד',
+    'אם יש מכשול לפנים (< 15) → חמקו',
+    'אחרת → עקבו אחרי קו שחור',
+    'הוסיפו LED ומוזיקה לאפקט',
+  ],
+  code: mkWrap(
+    group('blue','🔄 חזור תמיד','blue',
+      row(red('📦 מרחק ←'), teal('📡 אולטרסוני')),
+      row(cond('אם'), val('מרחק < 12')),
+      i1(green('⬅️ אחורה 80')), i1(gray('⏱️ 200ms')),
+      i1(green('↪️ סיבוב ימין 100')), i1(gray('⏱️ 200ms')),
+      row(cond('אחרת')),
+      i1(cond('אם'), teal('שמאל=לבן וימין=לבן')), i2(green('➡️ קדימה 70')),
+      i1(cond('אחרת אם'), teal('שמאל=שחור')), i2(green('↩️ שמאל 70')),
+      i1(cond('אחרת אם'), teal('ימין=שחור')), i2(green('↪️ ימין 70')),
+      i1(cond('אחרת')), i2(green('⏹️ עצור'))
+    )
+  ),
+  result:'הרובוט עוקב אחרי הקו ואם נתקל במכשול — מתחמק ממנו!',
+  note:'זה הפרויקט המורכב ביותר — שלב את כל מה שלמדתם!'
+},
+
+/* ══ CHAPTER 7 — INTERACTION ══ */
+'mc-7-1': {
+  emoji:'🔴', title:'שלט אינפרא-אדום', chapter:'פרק 7 — אינטראקציה', lang:'MakeCode', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'שלטו על הרובוט מרחוק עם שלט IR שכלול בקיט!',
+  components:['🤖 Tiny:bit','🔴 שלט IR','💻 מחשב'],
+  steps:[
+    'on IR "Button Up received": CarCtrl Run',
+    'on IR "Button Down received": CarCtrl Back',
+    'on IR "Button Left": SpinLeft',
+    'on IR "Button Right": SpinRight',
+    'on IR "Button OK": Stop',
+  ],
+  code: mkWrap(
+    group('blue','📡 כפתור ↑ בשלט IR','blue', row(green('➡️ קדימה'))),
+    group('blue','📡 כפתור ↓ בשלט IR','blue', row(green('⬅️ אחורה'))),
+    group('blue','📡 כפתור ← בשלט IR','blue', row(green('↩️ סיבוב שמאל'))),
+    group('blue','📡 כפתור → בשלט IR','blue', row(green('↪️ סיבוב ימין'))),
+    group('blue','📡 כפתור OK בשלט IR','blue', row(green('⏹️ עצור')))
+  ),
+  result:'שלטו על הרובוט מהכורסא! מרחק שליטה עד ~5 מטר.',
+  note:'כוונו את השלט לכיוון החיישן האינפרא-אדום שבחזית הרובוט.'
+},
+
+'mc-7-2': {
+  emoji:'🤖', title:'שליטה באפליקציה Android', chapter:'פרק 7 — אינטראקציה', lang:'אפליקציה', time:'20 דקות', diff:'⭐ קל',
+  goal:'חברו את הטלפון לרובוט דרך Bluetooth ושלטו עם אפליקציה!',
+  steps:[
+    'הורידו <strong>Yahboom Car</strong> מ-Google Play',
+    'הפעילו Bluetooth בטלפון',
+    'פתחו האפליקציה → חפשו Tiny:bit → התחברו',
+    'השתמשו בג\'ויסטיק שבמסך לשליטה',
+    'שחקו עם מצבי "Tracking" ו-"Obstacle Avoidance" מובנים!',
+  ],
+  code:`<div class="modal-note">אפליקציה זו אינה דורשת קידוד נוסף — הקוד כבר טעון! פשוט הורידו, חברו ושחקו.</div>`,
+  result:'שליטה מלאה מהנייד: סטיק, מצבים אוטומטיים, בקרת LED!',
+  tip:'מצב "Follow" — הרובוט עוקב אחרי הטלפון שלכם!'
+},
+
+'mc-7-3': {
+  emoji:'🍎', title:'שליטה באפליקציה iOS', chapter:'פרק 7 — אינטראקציה', lang:'אפליקציה', time:'20 דקות', diff:'⭐ קל',
+  goal:'אותו דבר כמו Android — אבל לאייפון ואייפד!',
+  steps:[
+    'הורידו <strong>Yahboom Car</strong> מ-App Store',
+    'הפעילו Bluetooth',
+    'פתחו → חפשו Tiny:bit → התחברו',
+    'בקרו עם ג\'ויסטיק על המסך',
+  ],
+  code:`<div class="modal-note">ממשק זהה ל-Android. נדרש iPhone עם Bluetooth 4.0+</div>`,
+  result:'שליטה מלאה מהאייפון!',
+},
+
+'mc-7-4': {
+  emoji:'🕹️', title:'שלט ג\'ויסטיק', chapter:'פרק 7 — אינטראקציה', lang:'MakeCode', time:'30 דקות', diff:'⭐⭐⭐ מאתגר',
+  goal:'חיברו שלט ג\'ויסטיק אלחוטי ייעודי לשליטה ממשית!',
+  steps:[
+    'הג\'ויסטיק הוא micro:bit נוסף עם ידיות',
+    'צד השלט: שלחו נתוני ג\'ויסטיק דרך radio',
+    'צד הרובוט: קבלו radio → המירו לפקודות נסיעה',
+    'מהירות + כיוון = שליטה אנלוגית!',
+  ],
+  code: mkWrap(
+    group('blue','📡 ב-micro:bit של השלט','blue',
+      row(blue('🔁 forever')),
+      i1(blue('📻 שלח radio: X=joystick_x, Y=joystick_y'))
+    ),
+    group('blue','📡 ב-micro:bit של הרובוט','blue',
+      row(blue('📻 כשמגיע radio')),
+      i1(green('🚗 חשב מהירות לפי X וY')),
+      i1(green('⚙️ הפעל מנועים'))
+    )
+  ),
+  result:'שליטה חלקה כמו משחק וידאו אמיתי!',
+  note:'שלט הג\'ויסטיק הוא אביזר אופציונלי — בדקו שיש לכם אותו.'
+},
+
+/* ══ PYTHON BASIC ══ */
+'py-b-1': {
+  emoji:'👋', title:'שלום עולם!', chapter:'Python — קורס בסיסי', lang:'Python', time:'15 דקות', diff:'⭐ קל',
+  goal:'השורה הראשונה בחיים ב-Python! הציגו טקסט על מסך ה-micro:bit.',
+  components:['🤖 Tiny:bit + micro:bit','💻 מחשב עם Mu Editor'],
+  steps:[
+    'הורידו <strong>Mu Editor</strong> — עורך Python למיקרוביט',
+    'בחרו מצב "BBC micro:bit"',
+    'כתבו את הקוד',
+    'לחצו "Flash" להעלאה ל-micro:bit',
+  ],
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+
+${cm('הצג טקסט גולל על המסך')}
+${fn('display')}.${fn('scroll')}(${st('"שלום עולם!"')})
+
+${cm('אחר כך הצג תמונת לב')}
+${fn('display')}.${fn('show')}(Image.HEART)`
+  ),
+  result:'המסך גולל "Hello World!" ואז מציג לב. ברוכים הבאים לעולם Python!',
+  tip:'שנו את הטקסט לשמכם: <code>display.scroll("Dana")</code>'
+},
+
+'py-b-2': {
+  emoji:'🖼️', title:'תמונות מובנות', chapter:'Python — קורס בסיסי', lang:'Python', time:'15 דקות', diff:'⭐ קל',
+  goal:'הציגו תמונות מוכנות מראש שכלולות ב-micro:bit.',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+${kw('import')} music
+
+${cm('רשימת תמונות')}
+images = [
+    Image.HAPPY,
+    Image.SAD,
+    Image.HEART,
+    Image.DIAMOND,
+    Image.ARROW_N,
+    Image.SKULL
+]
+
+${kw('while')} ${nm('True')}:
+    ${kw('for')} img ${kw('in')} images:
+        ${fn('display')}.${fn('show')}(img)
+        ${fn('sleep')}(${nm('800')})`
+  ),
+  result:'הרובוט מציג רצף תמונות — פנים שמחות, עצובות, לב, יהלום, חץ, גולגולת!',
+  tip:'יש עשרות תמונות מובנות! נסו <code>Image.DUCK</code>, <code>Image.COW</code>, <code>Image.GIRAFFE</code>'
+},
+
+'py-b-5': {
+  emoji:'🎮', title:'משחק כפתורים', chapter:'Python — קורס בסיסי', lang:'Python', time:'20 דקות', diff:'⭐⭐ בינוני',
+  goal:'כתבו משחק: לחצו A להוסיף נקודה, B להפחית. הציגו ניקוד!',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+
+score = ${nm('0')}
+${fn('display')}.${fn('show')}(score)
+
+${kw('while')} ${nm('True')}:
+    ${kw('if')} button_a.was_pressed():
+        score += ${nm('1')}
+        ${fn('display')}.${fn('show')}(score)
+    ${kw('if')} button_b.was_pressed():
+        score -= ${nm('1')}
+        ${fn('display')}.${fn('show')}(score)
+    ${fn('sleep')}(${nm('50')})`
+  ),
+  result:'לחיצת A → +1, לחיצת B → -1. הניקוד מתעדכן על המסך!',
+},
+
+'py-b-6': {
+  emoji:'🎶', title:'נגינת מוזיקה Python', chapter:'Python — קורס בסיסי', lang:'Python', time:'20 דקות', diff:'⭐ קל',
+  goal:'הפעילו מנגינה מוכנה דרך Python — ב-2 שורות קוד!',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+${kw('import')} music
+
+${cm('נגן מנגינה מובנית')}
+music.${fn('play')}(music.ODE)
+
+${cm('או ניגון תו בודד')}
+music.${fn('pitch')}(${nm('440')}, duration=${nm('500')})  ${cm('תו A, 500ms')}
+
+${cm('ניגון מנגינה ידנית')}
+tune = [${st('"C4:4"')}, ${st('"D4:4"')}, ${st('"E4:4"')}, ${st('"F4:4"')}, ${st('"G4:8"')}]
+music.${fn('play')}(tune)`
+  ),
+  result:'הרובוט מנגן מנגינה! גם תווים בודדים וגם מנגינות שלמות.',
+},
+
+'py-b-7': {
+  emoji:'💡', title:'פנסי המכונית', chapter:'Python — קורס בסיסי', lang:'Python', time:'20 דקות', diff:'⭐ קל',
+  goal:'שלטו בנורות ה-LED הקדמיות דרך Python.',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+${kw('from')} tinybit ${kw('import')} *
+
+${cm('הדלק כל ה-LED בלבן')}
+RGB_Car_Program_Color(${nm('255')}, ${nm('255')}, ${nm('255')})
+RGB_Car_Program_Show()
+${fn('sleep')}(${nm('1000')})
+
+${cm('מחזור צבעים')}
+colors = [
+    (${nm('255')},${nm('0')},${nm('0')}),
+    (${nm('0')},${nm('255')},${nm('0')}),
+    (${nm('0')},${nm('0')},${nm('255')})
+]
+
+${kw('while')} ${nm('True')}:
+    ${kw('for')} r,g,b ${kw('in')} colors:
+        RGB_Big_Value(r, g, b)
+        RGB_Car_Program_Show()
+        ${fn('sleep')}(${nm('500')})`
+  ),
+  result:'הנורות מחליפות צבע — אדום, ירוק, כחול — בלולאה אינסופית!',
+},
+
+'py-b-8': {
+  emoji:'⚙️', title:'הנעת מנוע', chapter:'Python — קורס בסיסי', lang:'Python', time:'20 דקות', diff:'⭐ קל',
+  goal:'שלחו פקודות Python למנועים — קדימה, אחורה ופנייה.',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+${kw('from')} tinybit ${kw('import')} *
+
+${cm('קדימה במהירות 70, שנייה')}
+CarCtrlSpeed(${st('"Run"')}, ${nm('70')})
+${fn('sleep')}(${nm('1000')})
+
+${cm('עצור')}
+CarCtrlSpeed(${st('"Stop"')}, ${nm('0')})
+${fn('sleep')}(${nm('500')})
+
+${cm('אחורה')}
+CarCtrlSpeed(${st('"Back"')}, ${nm('60')})
+${fn('sleep')}(${nm('1000')})
+
+${cm('סיבוב שמאל')}
+CarCtrlSpeed(${st('"SpinLeft"')}, ${nm('80')})
+${fn('sleep')}(${nm('500')})
+
+CarCtrlSpeed(${st('"Stop"')}, ${nm('0')})`
+  ),
+  result:'הרובוט מבצע את רצף התנועות שכתבתם!',
+},
+
+'py-b-9': {
+  emoji:'🔍', title:'מעקב קו — Python', chapter:'Python — קורס בסיסי', lang:'Python', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'הרובוט עוקב אחרי קו שחור בשפת Python!',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+${kw('from')} tinybit ${kw('import')} *
+
+${kw('while')} ${nm('True')}:
+    left  = Line_Sensor_State(${st('"Left"')})
+    right = Line_Sensor_State(${st('"Right"')})
+
+    ${kw('if')} left == ${st('"White"')} ${kw('and')} right == ${st('"White"')}:
+        CarCtrlSpeed(${st('"Run"')}, ${nm('70')})
+    ${kw('elif')} left == ${st('"Black"')} ${kw('and')} right == ${st('"White"')}:
+        CarCtrlSpeed(${st('"SpinLeft"')}, ${nm('70')})
+    ${kw('elif')} left == ${st('"White"')} ${kw('and')} right == ${st('"Black"')}:
+        CarCtrlSpeed(${st('"SpinRight"')}, ${nm('70')})
+    ${kw('else')}:
+        CarCtrlSpeed(${st('"Stop"')}, ${nm('0')})`
+  ),
+  result:'אותו עיקרון כמו MakeCode — אבל עכשיו בקוד Python אמיתי!',
+  note:'החיישנים מחזירים "White" (לבן) או "Black" (שחור).'
+},
+
+'py-b-11': {
+  emoji:'📡', title:'אולטרסוני Python', chapter:'Python — קורס בסיסי', lang:'Python', time:'20 דקות', diff:'⭐ קל',
+  goal:'מדדו מרחקים ובנו הימנעות ממכשולים בפייתון.',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+${kw('from')} tinybit ${kw('import')} *
+
+${kw('while')} ${nm('True')}:
+    dist = Ultrasonic_Distance()
+
+    ${cm('הצג מרחק על מסך')}
+    display.${fn('show')}(str(int(dist)))
+
+    ${kw('if')} dist < ${nm('15')}:
+        ${cm('מכשול! אחורה + סיבוב')}
+        CarCtrlSpeed(${st('"Back"')}, ${nm('70')})
+        ${fn('sleep')}(${nm('300')})
+        CarCtrlSpeed(${st('"SpinRight"')}, ${nm('80')})
+        ${fn('sleep')}(${nm('300')})
+    ${kw('else')}:
+        CarCtrlSpeed(${st('"Run"')}, ${nm('70')})
+
+    ${fn('sleep')}(${nm('50')})`
+  ),
+  result:'הרובוט נוסע ומתחמק ממכשולים — בקוד Python שכתבתם!',
+},
+
+/* ══ PYTHON ROBOT ══ */
+'py-r-4': {
+  emoji:'🗺️', title:'תכנון מסלול — Python', chapter:'Python — קורס רובוט', lang:'Python', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'תכנתו מסלול מדויק — ריבוע, משולש, כל צורה שתרצו!',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+${kw('from')} tinybit ${kw('import')} *
+
+${kw('def')} ${fn('move')}(direction, speed, duration):
+    CarCtrlSpeed(direction, speed)
+    ${fn('sleep')}(duration)
+    CarCtrlSpeed(${st('"Stop"')}, ${nm('0')})
+
+${cm('מסלול ריבוע')}
+${kw('for')} _ ${kw('in')} range(${nm('4')}):
+    ${fn('move')}(${st('"Run"')}, ${nm('70')}, ${nm('1500')})
+    ${fn('move')}(${st('"SpinRight"')}, ${nm('80')}, ${nm('400')})`
+  ),
+  result:'הרובוט עושה ריבוע מושלם! שנו range(4) ל-range(3) לקבלת משולש.',
+},
+
+'py-r-6': {
+  emoji:'🚧', title:'הימנעות Python — מתקדם', chapter:'Python — קורס רובוט', lang:'Python', time:'25 דקות', diff:'⭐⭐ בינוני',
+  goal:'הימנעות ממכשולים עם לוגיקה חכמה — בדיקת שמאל וימין!',
+  code: pyWrap(
+    `${kw('from')} microbit ${kw('import')} *
+${kw('from')} tinybit ${kw('import')} *
+${kw('import')} random
+
+${kw('while')} ${nm('True')}:
+    dist = Ultrasonic_Distance()
+
+    ${kw('if')} dist < ${nm('15')}:
+        CarCtrlSpeed(${st('"Stop"')}, ${nm('0')})
+        ${fn('sleep')}(${nm('200')})
+        CarCtrlSpeed(${st('"Back"')}, ${nm('60')})
+        ${fn('sleep')}(${nm('400')})
+        ${cm('סיבוב אקראי — שמאל או ימין')}
+        turn = random.${fn('choice')}([${st('"SpinLeft"')}, ${st('"SpinRight"')}])
+        CarCtrlSpeed(turn, ${nm('80')})
+        ${fn('sleep')}(${nm('400')})
+    ${kw('else')}:
+        CarCtrlSpeed(${st('"Run"')}, ${nm('70')})
+
+    ${fn('sleep')}(${nm('50')})`
+  ),
+  result:'הרובוט חכם יותר — מחליט לסוב שמאל או ימין באופן אקראי!',
+  tip:'זה מונע מהרובוט להיתקע בפינה!'
+}
+
+}; // end LESSONS
+
+/* ─── open / close modal ─── */
+function openLesson(id){
+  const data = LESSONS[id];
+  if(!data){ return; }
+  document.getElementById('modalContent').innerHTML = renderLesson(data);
+  document.getElementById('lessonModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modalBox').scrollTop = 0;
+}
+
+function closeLesson(){
+  document.getElementById('lessonModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e){
+  if(e.target === document.getElementById('lessonModal')) closeLesson();
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeLesson(); });
+</script>
+</body>
+</html>
