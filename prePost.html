@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>השוואת משובים פרה-פוסט | תשפ"ו</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.header{background:linear-gradient(135deg,#1e293b,#0f172a);padding:2rem;text-align:center;border-bottom:1px solid #334155}
+.header h1{font-size:2rem;font-weight:800;color:#f8fafc;margin-bottom:.4rem}
+.header p{color:#94a3b8;font-size:.95rem}
+#home{display:block}
+#detail{display:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;padding:2rem;max-width:1400px;margin:0 auto}
+.card{background:#1e293b;border-radius:1rem;padding:1.5rem;cursor:pointer;transition:transform .2s,box-shadow .2s;border:1px solid #334155;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.card::before{content:'';position:absolute;top:0;right:0;left:0;height:4px;background:var(--c)}
+.card-icon{font-size:2.5rem;margin-bottom:.75rem}
+.card-title{font-size:1.25rem;font-weight:700;color:#f8fafc;margin-bottom:.25rem}
+.card-desc{font-size:.83rem;color:#94a3b8;margin-bottom:1rem;line-height:1.5}
+.card-stats{display:flex;gap:.75rem;margin-bottom:1rem}
+.stat{background:#0f172a;border-radius:.5rem;padding:.5rem .75rem;flex:1;text-align:center}
+.stat-lbl{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.stat-val{font-size:1.15rem;font-weight:700;color:#f8fafc}
+.card-imp{background:#0f172a;border-radius:.5rem;padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem}
+.imp-arrow{font-size:1.3rem;font-weight:800}
+.imp-txt{font-size:.82rem;color:#94a3b8}
+.pos{color:#34d399}.neg{color:#f87171}.neu{color:#94a3b8}
+/* Detail */
+.det-hdr{background:#1e293b;padding:1.25rem 2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid #334155;position:sticky;top:0;z-index:10}
+.back-btn{background:#334155;border:none;color:#e2e8f0;padding:.5rem 1.1rem;border-radius:.5rem;cursor:pointer;font-size:.9rem;font-family:inherit;transition:background .2s;white-space:nowrap}
+.back-btn:hover{background:#475569}
+.det-title{font-size:1.4rem;font-weight:800;color:#f8fafc;display:flex;align-items:center;gap:.6rem}
+.det-body{max-width:1200px;margin:0 auto;padding:2rem}
+.sum-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.sum-card{background:#1e293b;border-radius:.75rem;padding:1rem 1.25rem;border:1px solid #334155}
+.sum-card h3{font-size:.72rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem}
+.sum-big{font-size:1.8rem;font-weight:800;color:#f8fafc}
+.sum-sub{font-size:.78rem;color:#94a3b8;margin-top:.15rem}
+.sec-title{font-size:.82rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #334155}
+.ov-wrap{background:#1e293b;border-radius:1rem;padding:1.5rem;margin-bottom:2rem;border:1px solid #334155}
+.ov-chart{position:relative;height:280px}
+.q-list{display:grid;gap:1.5rem}
+.q-card{background:#1e293b;border-radius:1rem;padding:1.5rem;border:1px solid #334155}
+.q-num{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem}
+.q-text{font-size:1rem;font-weight:600;color:#f8fafc;margin-bottom:.9rem;line-height:1.5}
+.correct-badge{display:inline-flex;align-items:center;gap:.3rem;background:#064e3b;color:#34d399;padding:.25rem .85rem;border-radius:2rem;font-size:.78rem;font-weight:600;margin-bottom:1rem}
+.q-chart-box{position:relative}
+.pct-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem}
+.pct-card{background:#0f172a;border-radius:.5rem;padding:.75rem 1rem;text-align:center}
+.pct-lbl{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.pct-val{font-size:1.6rem;font-weight:800}
+.pct-blue{color:#60a5fa}
+.pct-green{color:#34d399}
+.delta{font-size:.85rem;font-weight:600}
+@media(max-width:700px){.sum-row{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 השוואת משובים פרה-פוסט | תשפ"ו</h1>
+  <p>ידע תלמידים בתחילת השנה (פרה) מול סוף השנה (פוסט) — בחרו נושא לסקירה מפורטת</p>
+</div>
+
+<div id="home">
+  <div class="grid" id="topicGrid"></div>
+</div>
+
+<div id="detail">
+  <div class="det-hdr">
+    <button class="back-btn" onclick="showHome()">← חזרה</button>
+    <div class="det-title" id="detTitle"></div>
+  </div>
+  <div class="det-body">
+    <div class="sum-row" id="sumRow"></div>
+    <div class="sec-title">סקירה כללית — אחוז תשובות נכונות לפי שאלה</div>
+    <div class="ov-wrap"><div class="ov-chart"><canvas id="ovCanvas"></canvas></div></div>
+    <div class="sec-title">פירוט לפי שאלה</div>
+    <div class="q-list" id="qList"></div>
+  </div>
+</div>
+
+<script>
+const T = [
+  {
+    name:'אשנב למדע', icon:'🔭', color:'#4F46E5',
+    desc:'מדעי הטבע: מרכז כובד, אנרגיה ומגנטיות',
+    preN:13, postN:12, preDate:'דצמ׳ 2025', postDate:'מאי 2026',
+    qs:[
+      {t:'מהו מרכז כובד?',
+       opts:['המקום הכי נמוך','המקום הכי גבוה','נקודה באמצע','נקודה בה נמצאת רוב המסה','הנקודה הרחוקה ביותר'],
+       ok:3, pre:[3,1,3,3,3], post:[3,0,0,7,2]},
+      {t:'מה נכון לגבי אנרגיה?',
+       opts:['יש רק 2 סוגים','לא יכולה לעבור בין גופים','לא יכולה לשנות צורה','יכולה לשנות צורה ולעבור'],
+       ok:3, pre:[5,4,3,1], post:[7,1,3,1]},
+      {t:'מה מייצר חשמל בתחנת הכח?',
+       opts:['תנועת המגנט בסליל','הסליל','הקיטור','הפחם'],
+       ok:0, pre:[5,3,3,2], post:[7,2,1,2]},
+      {t:'מה מונע ממצנח ליפול?',
+       opts:['שטח פנים בלבד','שטח פנים + התנגדות אוויר','התנגדות אוויר בלבד','החומר שממנו עשוי'],
+       ok:1, pre:[6,2,4,1], post:[5,3,4,0]},
+      {t:'אילו חלקי מגנט נמשכים זה לזה?',
+       opts:['קטבים זהים','כל הקטבים','קטבים אדומים בלבד','קטבים מנוגדים'],
+       ok:3, pre:[5,1,4,3], post:[6,3,1,2]}
+    ]
+  },
+  {
+    name:'בינה בענן', icon:'☁️', color:'#7C3AED',
+    desc:'טכנולוגיה: ענן, בינה מלאכותית וכלי גוגל',
+    preN:13, postN:7, preDate:'דצמ׳ 2025', postDate:'מאי 2026',
+    qs:[
+      {t:'מה מיוחד בעבודה בענן?',
+       opts:['שיתוף מסמכים מכל מחשב','מיועד למשחקי מחשב','ענן לכניסה לתיקיות','נשמר רק במחשב אישי'],
+       ok:0, pre:[9,1,1,2], post:[5,0,0,2]},
+      {t:'מהי בינה מלאכותית?',
+       opts:['מחשב שמבצע משימות חשיבה','משחק מחשב לחשיבה','שם לכל מה שקשור למחשבים','מכשיר אינטרנט אלחוטי'],
+       ok:0, pre:[8,2,2,1], post:[6,1,0,0]},
+      {t:'מה זה גוגל פורמס?',
+       opts:['כלי ליצירת שאלונים ואיסוף תשובות','תוכנה לניהול קבצים','כלי ליצירת קבצים גדולים','כלי ליצירת תמונות'],
+       ok:0, pre:[4,3,4,1], post:[7,0,0,0]},
+      {t:'מה זה "טקסט לתמונה"?',
+       opts:['בוט להפיכת מילים לתמונה','תמונה הניתנת לתיאור','תמונה של מילה','טקסט שנכתב בגוגל פורמס'],
+       ok:0, pre:[5,2,1,5], post:[6,0,0,1]},
+      {t:'הבדל בין גוגל סליידס לגוגל דוקס?',
+       opts:['סליידס=מצגות, דוקס=מסמכים','סליידס=אקסל, דוקס=מצגות','סליידס=גולשים, דוקס=דוקטורים'],
+       ok:0, pre:[7,5,1], post:[6,1,0]}
+    ]
+  },
+  {
+    name:'המעבדה הקסומה', icon:'🧪', color:'#DB2777',
+    desc:'כימיה: חומצות, בסיסים, תערובות ופולימרים',
+    preN:13, postN:13, preDate:'דצמ׳ 2025', postDate:'מאי 2026',
+    qs:[
+      {t:'איזה חומר הוא חומצה?',
+       opts:['לימון','סודה לשתייה','קמח'],
+       ok:0, pre:[7,5,1], post:[9,4,0]},
+      {t:'מהו בסיס?',
+       opts:['מר כמו סבון — הפוך מחומצה','מופק ממיץ לימון','חומר כימי ייחודי','חומר בבסיס כל החומרים'],
+       ok:0, pre:[4,4,4,1], post:[6,1,4,2]},
+      {t:'מהי תערובת?',
+       opts:['2+ חומרים ללא קשר כימי','קשר כימי בין חומרים','ערבוב מתכות יקרות','חומר טהור'],
+       ok:0, pre:[6,3,3,1], post:[9,2,2,0]},
+      {t:'מה עושה אינדיקטור?',
+       opts:['מזהה חומרים ע"י שינוי צבע','מקשר בין 2 חומרים','גורם ליציאת אלקטרונים','הופך חומר טהור לתערובת'],
+       ok:0, pre:[4,3,4,2], post:[5,0,8,0]},
+      {t:'מהי פולימר?',
+       opts:['מולקולת ענק','סבון דטרגנטי','אבן יקרה מהוואי','אינדיקטור ברומו תימול'],
+       ok:0, pre:[0,4,4,5], post:[4,4,3,2]}
+    ]
+  },
+  {
+    name:'אנרגיה יוצרת', icon:'⚡', color:'#D97706',
+    desc:'פיזיקה: צבעי האור, מעגלים חשמליים וסוגי אנרגיה',
+    preN:11, postN:17, preDate:'דצמ׳ 2025', postDate:'מאי 2026',
+    qs:[
+      {t:'מאילו צבעים מורכב האור?',
+       opts:['כל צבעי הקשת','לבן בלבד','לבן וצהוב ביחד','צהוב בלבד','אף תשובה אינה נכונה'],
+       ok:0, pre:[4,2,2,2,1], post:[7,0,5,2,3]},
+      {t:'מה מסלולו של האור?',
+       opts:['תמיד בקו ישר','גם ישר וגם בסיב אופטי','בסיבובים','יכול להיות במסלול לא ישר'],
+       ok:0, pre:[3,2,3,3], post:[12,2,0,2]},
+      {t:'מה דרוש למעגל חשמלי?',
+       opts:['סוללה + חוט מוליך + נורה','סוללה + חוטים מוליכים','נורה + חוט מוליך','סוללה + מתג'],
+       ok:0, pre:[4,4,2,1], post:[9,6,0,1]},
+      {t:'מהו מבודד?',
+       opts:['עשוי מפלסטיק ואינו מוליך חשמל','חומר המוליך חשמל','עשוי ממתכת','אף תשובה אינה נכונה'],
+       ok:0, pre:[4,3,3,1], post:[7,4,2,3]}
+    ]
+  },
+  {
+    name:'חידות ואתגרים', icon:'🧩', color:'#059669',
+    desc:'לוגיקה, מדע ועבודת צוות בחדר בריחה',
+    preN:11, postN:10, preDate:'דצמ׳ 2025', postDate:'מאי 2026',
+    qs:[
+      {t:'הדרך הנכונה לעבוד בחדר בריחה?',
+       opts:['לשתף רעיונות ולהקשיב האחד לשנייה','לעבוד בהנחיית המורה עד הסיום','לצעוק את הפתרון הראשון שעולה'],
+       ok:0, pre:[7,3,1], post:[4,5,1]},
+      {t:'באיזה כוכב לכת האטמוספירה עשויה ברובה מ-CO₂?',
+       opts:['שבתאי','מאדים','ארץ'],
+       ok:1, pre:[5,2,4], post:[1,5,4]},
+      {t:'מה הרעיון של חדר בריחה?',
+       opts:['למצוא מפתח הכיתה ולצאת ממנה','לסיים את כל המשימות בזמן נתון','להקדים את הקבוצות האחרות'],
+       ok:1, pre:[4,6,1], post:[4,6,0]},
+      {t:'מה מוביל אותנו בחדר בריחה?',
+       opts:['כל מה שנכתב (חידות + אתגרים)','חידות','אתגרים','משימות'],
+       ok:0, pre:[5,5,1,0], post:[8,1,0,1]},
+      {t:'איזה איבר מכונה "משאבת הדם"?',
+       opts:['הלב','הכבד','המעי','הכליות'],
+       ok:0, pre:[5,4,1,1], post:[5,3,0,2]}
+    ]
+  },
+  {
+    name:'משחקים בראש גדול', icon:'🖥️', color:'#DC2626',
+    desc:'מחשבים: קיצורי מקלדת ופיתוח משחקים',
+    preN:17, postN:18, preDate:'דצמ׳ 2025', postDate:'מאי 2026',
+    qs:[
+      {t:'כיצד עוברים מאנגלית לעברית?',
+       opts:['Shift + Alt','Ctrl + Shift','Caps Lock + Alt','Alt + Tab'],
+       ok:0, pre:[3,9,4,1], post:[12,2,4,0]},
+      {t:'על אילו מקשים ללחוץ לצילום מסך?',
+       opts:['⊞ + Shift + D','⊞ + Shift (בלבד)','Ctrl + ⊞ + D','⊞ + Shift + 2'],
+       ok:0, pre:[1,3,6,5], post:[10,5,1,2]},
+      {t:'איזה מקש מעביר לשורה חדשה?',
+       opts:['Enter','רווח','Ctrl','Esc'],
+       ok:0, pre:[7,7,1,2], post:[13,3,0,2]},
+      {t:'כיצד מגיעים לתיקיית יח"ד?',
+       opts:['כונן G ← סיון תוכנית יחד','כונן H ← שכבה ג','כונן G ← תיקיית יחד'],
+       ok:0, pre:[11,5,1], post:[12,2,4]},
+      {t:'מהו השלב הראשון בפיתוח משחק?',
+       opts:['להגדיר את כללי המשחק','ליצור את כלי המשחק','לבחור גודל אותיות הכריכה'],
+       ok:0, pre:[3,13,1], post:[15,2,1]}
+    ]
+  },
+  {
+    name:'נפלאות הכימיה', icon:'⚗️', color:'#0284C7',
+    desc:'כימיה: מצבי צבירה, טבלה מחזורית ותרכובות',
+    preN:12, postN:7, preDate:'ספט׳–דצמ׳ 2025', postDate:'מאי 2026',
+    qs:[
+      {t:'האם מצבי הצבירה שייכים לתחום הכימיה?',
+       opts:['כן','לא'],
+       ok:0, pre:[12,0], post:[5,2]},
+      {t:'איזו טבלה מלמדת אותנו על החומרים והיסודות?',
+       opts:['טבלה מחזורית','טבלת אקסל','טבלה יסודית'],
+       ok:0, pre:[10,1,1], post:[7,0,0]},
+      {t:'כיצד ניתן להגדיר את המים?',
+       opts:['תרכובת','תמיסה','תערובת','בלילה'],
+       ok:0, pre:[2,3,5,2], post:[4,2,1,0]},
+      {t:'איזה כלי אינו שייך לכימיה?',
+       opts:['מנסרה (אופטיקה)','מבחנה','משטפת מים'],
+       ok:0, pre:[2,2,8], post:[6,1,0]},
+      {t:'מי מהחומרים הינו נייטרלי?',
+       opts:['מים','הליום','דו-תחמוצת הפחמן','חמצן'],
+       ok:0, pre:[3,2,5,1], post:[3,1,1,1]}
+    ]
+  },
+  {
+    name:'רפואה', icon:'🏥', color:'#9333EA',
+    desc:'מערכת הנשימה, מחזור הדם, שכבות העור והחייאה',
+    preN:82, postN:7, preDate:'נוב׳ 2024 – דצמ׳ 2025', postDate:'מאי 2026',
+    qs:[
+      {t:'מהם תפקידי מערכת הנשימה?',
+       opts:['להכניס O₂ ולאוורר CO₂ החוצה','להכניס אוויר ולהוציא אוויר','לסלק CO₂ בלבד','להזרים את הדם בגוף'],
+       ok:0, pre:[36,35,5,6], post:[4,3,0,0]},
+      {t:'איזה מחלה אינה קשורה למחלות הנשימה?',
+       opts:['טרשת עורקים','COPD','אסטמה','דלקת ריאות'],
+       ok:0, pre:[41,21,11,9], post:[5,1,0,1]},
+      {t:'סדרו שכבות העור מבחוץ לפנים:',
+       opts:['הפי דרמיס → דרמיס → סאב קותאן','דרמיס → הפי דרמיס → סאב קותאן','סאב קותאן → דרמיס → הפי דרמיס','כל התשובות נכונות'],
+       ok:0, pre:[16,25,24,17], post:[4,1,1,1]},
+      {t:'מבנה הלב:',
+       opts:['2 עליות, 2 חדרים, 4 מסתמים + מחיצה','2 מסתמים, 2 חדרים, 2 עליות, 2 מחיצות','2 חדרים, 3 עליות, 2 מסתמים','2 חדרים ו-2 עליות בלבד'],
+       ok:0, pre:[30,22,22,8], post:[3,1,2,1]},
+      {t:'מערכת ההובלה מורכבת מ:',
+       opts:['ורידים, עורקים, נימים','כל התשובות נכונות','עורקים, ורידים, נאדיות הריאה','מכלי דם כליליים'],
+       ok:0, pre:[30,24,15,13], post:[4,3,0,0]},
+      {t:'תפקיד כדוריות הדם הלבנות:',
+       opts:['להלחם בזיהומים ולהתרבות בדלקת','לקשר חמצן אל התאים','לצבוע את הדם בצבע כהה','אחראיות על כרישיות הדם'],
+       ok:0, pre:[36,27,11,8], post:[5,1,0,1]},
+      {t:'משמעות המילה פריסטלטיקה:',
+       opts:['פעילות מעיים — דחיפת המזון קדימה','פעילות הלב — הובלת דם לקיבה','פעילות מערכת העצבים בזמן אכילה','קשור לתחום הקוסמטיקה'],
+       ok:0, pre:[25,28,16,9], post:[5,1,0,1]},
+      {t:'יחס עיסויים : הנשמות בהחייאת מבוגר:',
+       opts:['30 עיסויים ו-2 הנשמות','15 עיסויים ו-2 הנשמות','5 עיסויים ו-2 הנשמות','2 עיסויים ו-30 הנשמות'],
+       ok:0, pre:[28,20,11,19], post:[4,3,0,0]},
+      {t:'לפני תחילת החייאה חשוב ל:',
+       opts:['כל התשובות נכונות','להזעיק עזרה','לשמור על בטיחות','לחבר דפיברלטור'],
+       ok:0, pre:[41,21,10,5], post:[6,1,0,0]},
+      {t:'סנדלי חבלה משמשות ל:',
+       opts:['הרחבת שטח הפנים + הפחתת לחץ על הפצע','לקבע פצצות למקום','סנדלים הקשורות לחבלים','להחלקה על הקרח'],
+       ok:0, pre:[30,26,11,9], post:[6,1,0,0]}
+    ]
+  }
+];
+
+function pct(q, isPre) {
+  const a = isPre ? q.pre : q.post;
+  const tot = a.reduce((s,v)=>s+v,0);
+  return tot ? Math.round(a[q.ok]/tot*100) : 0;
+}
+function avg(topic, isPre) {
+  const ps = topic.qs.map(q=>pct(q,isPre));
+  return Math.round(ps.reduce((s,v)=>s+v,0)/ps.length);
+}
+
+// ---- Home ----
+function renderHome() {
+  const g = document.getElementById('topicGrid');
+  g.innerHTML = '';
+  T.forEach((t,i) => {
+    const pa = avg(t,true), qa = avg(t,false), d = qa-pa;
+    const cls = d>3?'pos':d<-3?'neg':'neu';
+    const arrow = d>3?'↑':d<-3?'↓':'→';
+    g.innerHTML += `
+    <div class="card" style="--c:${t.color}" onclick="showDetail(${i})">
+      <div class="card-icon">${t.icon}</div>
+      <div class="card-title">${t.name}</div>
+      <div class="card-desc">${t.desc}</div>
+      <div class="card-stats">
+        <div class="stat"><div class="stat-lbl">פרה</div><div class="stat-val">${t.preN}</div></div>
+        <div class="stat"><div class="stat-lbl">פוסט</div><div class="stat-val">${t.postN}</div></div>
+        <div class="stat"><div class="stat-lbl">שאלות</div><div class="stat-val">${t.qs.length}</div></div>
+      </div>
+      <div class="card-imp">
+        <span class="imp-arrow ${cls}">${arrow} ${Math.abs(d)}%</span>
+        <span class="imp-txt">${pa}% → ${qa}% נכונות בממוצע</span>
+      </div>
+    </div>`;
+  });
+}
+
+// ---- Detail ----
+let ovChart = null, qCharts = [];
+
+function showDetail(idx) {
+  const t = T[idx];
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('detail').style.display = 'block';
+  window.scrollTo(0,0);
+
+  document.getElementById('detTitle').innerHTML = `${t.icon} ${t.name}`;
+
+  const pa = avg(t,true), qa = avg(t,false), d = qa-pa;
+  const dcls = d>=0?'pos':'neg', dsign = d>=0?'+':'';
+  document.getElementById('sumRow').innerHTML = `
+    <div class="sum-card">
+      <h3>תלמידים — פרה</h3>
+      <div class="sum-big">${t.preN}</div>
+      <div class="sum-sub">${t.preDate}</div>
+    </div>
+    <div class="sum-card">
+      <h3>תלמידים — פוסט</h3>
+      <div class="sum-big">${t.postN}</div>
+      <div class="sum-sub">${t.postDate}</div>
+    </div>
+    <div class="sum-card">
+      <h3>ממוצע נכונות — פרה</h3>
+      <div class="sum-big pct-blue">${pa}%</div>
+      <div class="sum-sub">תחילת שנה</div>
+    </div>
+    <div class="sum-card">
+      <h3>ממוצע נכונות — פוסט</h3>
+      <div class="sum-big ${dcls}">${qa}% <span style="font-size:1rem">(${dsign}${d}%)</span></div>
+      <div class="sum-sub">סוף שנה</div>
+    </div>`;
+
+  // Destroy old charts
+  if(ovChart){ovChart.destroy();ovChart=null;}
+  qCharts.forEach(c=>c.destroy());
+  qCharts=[];
+
+  // Overview chart
+  const labels = t.qs.map((_,i)=>`שאלה ${i+1}`);
+  const preD = t.qs.map(q=>pct(q,true));
+  const postD = t.qs.map(q=>pct(q,false));
+  ovChart = new Chart(document.getElementById('ovCanvas').getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'פרה — תחילת שנה',data:preD,backgroundColor:t.color+'55',borderColor:t.color,borderWidth:2,borderRadius:5},
+      {label:'פוסט — סוף שנה',data:postD,backgroundColor:t.color+'cc',borderColor:t.color,borderWidth:2,borderRadius:5}
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'#e2e8f0',font:{size:12}}},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y}%`}}
+      },
+      scales:{
+        x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}},
+        y:{min:0,max:100,ticks:{color:'#94a3b8',callback:v=>v+'%'},grid:{color:'#334155'}}
+      }
+    }
+  });
+
+  // Question cards
+  const ql = document.getElementById('qList');
+  ql.innerHTML = '';
+  t.qs.forEach((q,qi)=>{
+    const pp = pct(q,true), qp = pct(q,false), dd = qp-pp;
+    const ddcls = dd>=0?'pos':'neg', dds = dd>=0?'+':'';
+    const h = Math.max(160, q.opts.length*52);
+    const cid = `qc${qi}`;
+    ql.innerHTML += `
+    <div class="q-card">
+      <div class="q-num" style="color:${t.color}">שאלה ${qi+1}</div>
+      <div class="q-text">${q.t}</div>
+      <div class="correct-badge">✓ תשובה נכונה: ${q.opts[q.ok]}</div>
+      <div class="q-chart-box" style="height:${h}px"><canvas id="${cid}"></canvas></div>
+      <div class="pct-row">
+        <div class="pct-card">
+          <div class="pct-lbl">פרה — תחילת שנה</div>
+          <div class="pct-val pct-blue">${pp}%</div>
+        </div>
+        <div class="pct-card">
+          <div class="pct-lbl">פוסט — סוף שנה</div>
+          <div class="pct-val pct-green">${qp}% <span class="delta ${ddcls}">(${dds}${dd}%)</span></div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  setTimeout(()=>{
+    t.qs.forEach((q,qi)=>{
+      const tp = q.pre.reduce((s,v)=>s+v,0)||1;
+      const tq = q.post.reduce((s,v)=>s+v,0)||1;
+      const preD = q.pre.map(v=>Math.round(v/tp*100));
+      const postD = q.post.map(v=>Math.round(v/tq*100));
+      const bgPre = q.opts.map((_,i)=>i===q.ok?'#3b82f6':'#3b82f622');
+      const bgPost = q.opts.map((_,i)=>i===q.ok?'#10b981':'#10b98122');
+      const brPre = q.opts.map((_,i)=>i===q.ok?'#3b82f6':'#3b82f644');
+      const brPost = q.opts.map((_,i)=>i===q.ok?'#10b981':'#10b98144');
+      const c = new Chart(document.getElementById(`qc${qi}`).getContext('2d'),{
+        type:'bar',
+        data:{labels:q.opts,datasets:[
+          {label:'פרה %',data:preD,backgroundColor:bgPre,borderColor:brPre,borderWidth:1,borderRadius:3},
+          {label:'פוסט %',data:postD,backgroundColor:bgPost,borderColor:brPost,borderWidth:1,borderRadius:3}
+        ]},
+        options:{
+          responsive:true,maintainAspectRatio:false,indexAxis:'y',
+          plugins:{
+            legend:{labels:{color:'#e2e8f0',font:{size:11}}},
+            tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.x}%`}}
+          },
+          scales:{
+            x:{min:0,max:100,ticks:{color:'#94a3b8',callback:v=>v+'%'},grid:{color:'#334155'}},
+            y:{ticks:{color:'#e2e8f0',font:{size:11}},grid:{color:'#1e293b'}}
+          }
+        }
+      });
+      qCharts.push(c);
+    });
+  },80);
+}
+
+function showHome(){
+  document.getElementById('detail').style.display='none';
+  document.getElementById('home').style.display='block';
+  if(ovChart){ovChart.destroy();ovChart=null;}
+  qCharts.forEach(c=>c.destroy());
+  qCharts=[];
+}
+
+renderHome();
+</script>
+</body>
+</html>
