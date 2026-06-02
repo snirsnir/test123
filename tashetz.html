@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>תשבץ שומרי הסייבר - אתגר הסיסמאות והידע</title>
+    <style>
+        :root {
+            --bg-main: #f4f6f9;
+            --bg-card: #ffffff;
+            --cyber-blue: #1a73e8;
+            --cyber-accent: #115293;
+            --text-main: #202124;
+            --text-muted: #5f6368;
+            --border-color: #dadce0;
+            --cell-size: 38px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--cyber-blue);
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-size: 16px;
+            max-width: 700px;
+            line-height: 1.4;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 35px;
+            max-width: 1150px;
+            width: 100%;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* הגדרות קשיחות למניעת היעלמות הלוח */
+        .grid-container {
+            background-color: var(--bg-card);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 640px; /* מבטיח שהלוח לא יתכווץ לעולם */
+        }
+
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(16, var(--cell-size));
+            grid-template-rows: repeat(14, var(--cell-size));
+            gap: 1px;
+            background-color: #bdc1c6;
+            border: 2px solid #9aa0a6;
+            padding: 2px;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            background-color: #ffffff;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .cell.empty {
+            background-color: transparent;
+            border: none;
+        }
+
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #202124;
+            text-transform: uppercase;
+            outline: none;
+            box-sizing: border-box;
+            padding: 0;
+            /* מניעת היפוך אותיות באנגלית ומספרים בגלל ה-RTL של הדף */
+            direction: ltr; 
+        }
+
+        .cell input:focus {
+            background-color: #e8f0fe;
+        }
+
+        .cell .num {
+            position: absolute;
+            top: 2px;
+            right: 3px;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: bold;
+            pointer-events: none;
+            line-height: 1;
+            z-index: 10;
+        }
+
+        /* רשימת ההגדרות והרמזים */
+        .clues-container {
+            flex: 1;
+            background-color: var(--bg-card);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            max-height: 580px;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .clues-section {
+            margin-bottom: 25px;
+        }
+
+        .clues-section h2 {
+            font-size: 19px;
+            color: var(--cyber-blue);
+            border-bottom: 2px solid #e8f0fe;
+            padding-bottom: 6px;
+            margin-top: 0;
+            font-weight: 600;
+        }
+
+        .clue-item {
+            font-size: 14.5px;
+            margin: 10px 0;
+            line-height: 1.5;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            border-right: 3px solid transparent;
+        }
+
+        .clue-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .clue-item.theory-clue {
+            border-right-color: #f1c40f;
+            background-color: #fffde7;
+        }
+        .clue-item.theory-clue:hover {
+            background-color: #fff9c4;
+        }
+
+        .clue-item strong {
+            color: var(--cyber-accent);
+            margin-left: 6px;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 2px 6px;
+            background-color: #f1f3f4;
+            color: var(--text-muted);
+            border-radius: 4px;
+            margin-right: 5px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .badge.badge-theory {
+            background-color: #feeed1;
+            color: #b06000;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        button {
+            background-color: var(--cyber-blue);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--cyber-accent);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        button.reset {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            box-shadow: none;
+        }
+
+        button.reset:hover {
+            background-color: #f8f9fa;
+            color: var(--text-main);
+        }
+
+        #message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 27px;
+        }
+
+        .success { color: #137333; }
+        .error { color: #c5221f; }
+
+        @media (max-width: 950px) {
+            .game-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .clues-container {
+                width: 100%;
+                max-height: none;
+            }
+            .grid-container {
+                min-width: unset;
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🕵️‍♂️ תשבץ שומרי הסייבר: אתגר הסיסמאות והידע</h1>
+    <div class="subtitle">האקרים נעלו את שלטי התנועה של הטכנודע! פתרו את התשבץ באמצעות שילוב של הסיסמאות החלשות שמצאתם בסימולטור וידע שלמדתם בשיעור כדי להחזיר את האבטחה.</div>
+
+    <div class="game-container">
+        
+        <!-- לוח התשבץ -->
+        <div class="grid-container">
+            <div id="crossword" class="crossword-grid"></div>
+        </div>
+
+        <!-- רשימת ההגדרות והרמזים -->
+        <div class="clues-container">
+            <div class="clues-section">
+                <h2>מאוזן (אופקי) ➔</h2>
+                <div class="clue-item" data-word="1"><strong>1.</strong> רצף הספרות הנפוץ והחלש ביותר בעולם (6 ספרות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item theory-clue" data-word="4"><strong>4.</strong> סוג הסכנה שבה האקר משבש מידע או משתלט על מחשב של שלט נקראת מתקפת... (5 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
+                <div class="clue-item" data-word="6"><strong>6.</strong> שלושת האותיות הראשונות במקלדת בשורה העליונה משמאל (3 אותיות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item" data-word="7"><strong>7.</strong> קוד גרוע במיוחד - האצבע לוחצת 6 פעמים ברצף על הספרה 1 (6 ספרות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item" data-word="8"><strong>8.</strong> המילה האנגלית שפירושה "שלום" או "ברוכים הבאים" שמלא אנשים משתמשים בה (7 אותיות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item theory-clue" data-word="10"><strong>10.</strong> מה שהאקרים מנסים לגנוב או לשבש (למשל הטקסט שמופיע לנהגים על השלט) (4 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
+                <div class="clue-item" data-word="11"><strong>11.</strong> המילה האנגלית האמיתית שפירושה "סיסמה" - האקרים מנחשים אותה מיד! (8 אותיות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item" data-word="12"><strong>12.</strong> רצף קל של ספרות זוגיות עולות במקלדת - מ-2 עד 8 (4 ספרות) <span class="badge">סיסמה</span></div>
+            </div>
+            
+            <div class="clues-section">
+                <h2>מאונך (אנכי) 👇</h2>
+                <div class="clue-item" data-word="2"><strong>2.</strong> קיצור באנגלית של "מנהל מערכת" - הסיסמה שפתחה את שלט הדרכים (5 אותיות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item" data-word="3"><strong>3.</strong> 3 האותיות הראשונות באנגלית ואז 3 המספרים הראשונים ברצף (6 תווים) <span class="badge">סיסמה</span></div>
+                <div class="clue-item theory-clue" data-word="5"><strong>5.</strong> כדי שסיסמה תהיה חזקה היא צריכה להיות מורכבת ולא... (חלשה או נפוצה) (4 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
+                <div class="clue-item theory-clue" data-word="9"><strong>9.</strong> ההודעה המשעשעת והמשובשת שהאקרים כתבו על השלטים בארה"ב: "זהירות! ______ בהמשך!" (6 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button onclick="checkCrossword()">בדיקת פתרון הגנת הסייבר 🔒</button>
+        <button class="reset" onclick="resetCrossword()">איפוס לוח 🔄</button>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        const ROWS = 14;
+        const COLS = 16;
+
+        // מיפוי מדויק של המילים, המיקום והכיוון שלהן על הלוח
+        const words = {
+            "1": { row: 1, col: 1, dir: "H", answer: "123456", num: 1 },
+            "2": { row: 1, col: 2, dir: "V", answer: "ADMIN", num: 2 },
+            "3": { row: 1, col: 5, dir: "V", answer: "ABC123", num: 3 },
+            "4": { row: 4, col: 2, dir: "H", answer: "CYBER", num: 4 }, 
+            "5": { row: 4, col: 6, dir: "V", answer: "EASY", num: 5 },   
+            "6": { row: 6, col: 0, dir: "H", answer: "QWE", num: 6 },
+            "7": { row: 7, col: 9, dir: "H", answer: "111111", num: 7 },
+            "8": { row: 9, col: 1, dir: "H", answer: "WELCOME", num: 8 },
+            "9": { row: 9, col: 4, dir: "V", answer: "ZOMBIE", num: 9 }, 
+            "10": { row: 11, col: 3, dir: "H", answer: "DATA", num: 10 }, 
+            "11": { row: 11, col: 8, dir: "H", answer: "PASSWORD", num: 11 }, 
+            "12": { row: 13, col: 4, dir: "H", answer: "2468", num: 12 }
+        };
+
+        // יצירת מטריצה ריקה בגודל קבוע
+        let gridData = [];
+        for (let r = 0; r < ROWS; r++) {
+            gridData[r] = [];
+            for (let c = 0; c < COLS; c++) {
+                gridData[r][c] = null;
+            }
+        }
+
+        // הזרקת המילים למטריצה הריקה
+        for (let id in words) {
+            const w = words[id];
+            for (let i = 0; i < w.answer.length; i++) {
+                let r = w.row + (w.dir === "V" ? i : 0);
+                let c = w.col + (w.dir === "H" ? i : 0);
+                
+                if (!gridData[r][c]) {
+                    gridData[r][c] = { letter: w.answer[i], num: null, directions: [] };
+                }
+                // שומרים את כיוון התנועה של המילה בשביל מנגנון קפיצת התאים
+                gridData[r][c].directions.push(w.dir);
+                if (i === 0) {
+                    gridData[r][c].num = w.num;
+                }
+            }
+        }
+
+        // רינדור פיזי של הלוח ב-DOM
+        const gridContainer = document.getElementById('crossword');
+        gridContainer.innerHTML = ''; // איפוס למקרה של טעינה מחדש
+
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                const cellDiv = document.createElement('div');
+                
+                if (gridData[r][c]) {
+                    cellDiv.className = 'cell';
+                    
+                    if (gridData[r][c].num) {
+                        const numSpan = document.createElement('span');
+                        numSpan.className = 'num';
+                        numSpan.innerText = gridData[r][c].num;
+                        cellDiv.appendChild(numSpan);
+                    }
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.maxLength = 1;
+                    input.dataset.row = r;
+                    input.dataset.col = c;
+                    // שומרים את כיוון המילה הדומיננטי בתא
+                    input.dataset.primaryDir = gridData[r][c].directions[0];
+                    
+                    // מנגנון קפיצה חכם לתא הבא לפי כיוון המילה הרלוונטית
+                    input.addEventListener('input', function(e) {
+                        if (this.value.length === 1) {
+                            const currRow = parseInt(this.dataset.row);
+                            const currCol = parseInt(this.dataset.col);
+                            const moveDir = this.dataset.primaryDir;
+                            
+                            findAndFocusNext(currRow, currCol, moveDir);
+                        }
+                    });
+
+                    cellDiv.appendChild(input);
+                } else {
+                    cellDiv.className = 'cell empty';
+                }
+                gridContainer.appendChild(cellDiv);
+            }
+        }
+
+        // פונקציית הקפיצה החכמה - קופצת ימינה או למטה לפי כיוון הכתיבה המקורי
+        function findAndFocusNext(r, c, dir) {
+            let nextInput = null;
+            if (dir === "H") {
+                nextInput = document.querySelector(`input[data-row="${r}"][data-col="${c+1}"]`);
+            } else if (dir === "V") {
+                nextInput = document.querySelector(`input[data-row="${r+1}"][data-col="${c}"]`);
+            }
+            
+            // הגנת גיבוי: אם אין תא עוקב בכיוון המקורי, נחפש כל תא שכן פנוי
+            if (!nextInput) {
+                nextInput = document.querySelector(`input[data-row="${r}"][data-col="${c+1}"]`) || 
+                            document.querySelector(`input[data-row="${r+1}"][data-col="${c}"]`);
+            }
+            
+            if (nextInput) nextInput.focus();
+        }
+
+        // בדיקת הפתרונות של התלמידים
+        function checkCrossword() {
+            const inputs = document.querySelectorAll('.cell input');
+            let allCorrect = true;
+            let missingInputs = false;
+
+            inputs.forEach(input => {
+                const r = input.dataset.row;
+                const c = input.dataset.col;
+                const userVal = input.value.trim().toUpperCase();
+                const correctVal = gridData[r][c].letter;
+
+                if (userVal === '') {
+                    missingInputs = true;
+                    allCorrect = false;
+                    input.style.backgroundColor = 'transparent';
+                } else if (userVal === correctVal) {
+                    input.style.backgroundColor = '#e6f4ea'; // רקע ירוק עדין
+                    input.style.color = '#137333';
+                } else {
+                    allCorrect = false;
+                    input.style.backgroundColor = '#fce8e6'; // רקע אדום עדין
+                    input.style.color = '#c5221f';
+                }
+            });
+
+            const msgDiv = document.getElementById('message');
+            if (missingInputs) {
+                msgDiv.className = 'error';
+                msgDiv.innerText = '⚠️ ישנן משבצות ריקות! המשיכו לפצח את הקוד.';
+            } else if (allCorrect) {
+                msgDiv.className = 'success';
+                msgDiv.innerText = '🎉 אבטחת השלטים הוחזרה למצב תקין! כל השאלות והסיסמאות פוצחו בהצלחה! 🛡️';
+            } else {
+                msgDiv.className = 'error';
+                msgDiv.innerText = '❌ נמצאו שגיאות בקוד (משבצות אדומות). בצעו דיבאגינג ונסו שנית!';
+            }
+        }
+
+        // איפוס מלא של המשחק
+        function resetCrossword() {
+            const inputs = document.querySelectorAll('.cell input');
+            inputs.forEach(input => {
+                input.value = '';
+                input.style.backgroundColor = 'transparent';
+                input.style.color = '#202124';
+            });
+            const msgDiv = document.getElementById('message');
+            msgDiv.innerText = '';
+        }
+    </script>
+</body>
+</html>
