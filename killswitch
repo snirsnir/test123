@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+<meta charset="UTF-8">
+<title>Fake Virus Demo</title>
+
+<style>
+    *{ box-sizing:border-box; }
+
+    body{
+        background:black;
+        color:#00ff00;
+        font-family:monospace;
+        overflow:hidden;
+        margin:0;
+    }
+
+    #screen{
+        padding:40px;
+    }
+
+    h1{
+        color:red;
+        font-size:48px;
+    }
+
+    .warning{
+        font-size:24px;
+        margin-top:20px;
+    }
+
+    .blink{
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink{
+        50%{opacity:0;}
+    }
+
+    #countdown{
+        font-size:40px;
+        margin-top:30px;
+        color:yellow;
+    }
+
+    #stopped{
+        display:none;
+        color:cyan;
+        font-size:32px;
+        margin-top:40px;
+    }
+
+    /* ── Purchase Domain button ── */
+    #buyDomainBtn{
+        margin-top:28px;
+        display:inline-block;
+        padding:14px 28px;
+        font-size:20px;
+        font-family:monospace;
+        background:linear-gradient(135deg,#0a2a0a,#0d4d0d);
+        color:#00ff99;
+        border:2px solid #00ff99;
+        border-radius:6px;
+        cursor:pointer;
+        letter-spacing:1px;
+        box-shadow:0 0 18px #00ff6655;
+        transition:box-shadow .2s, transform .1s;
+    }
+    #buyDomainBtn:hover{
+        box-shadow:0 0 32px #00ff99aa;
+        transform:scale(1.04);
+    }
+
+    /* ── Popup overlay ── */
+    #popupOverlay{
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.82);
+        z-index:100;
+        align-items:center;
+        justify-content:center;
+    }
+    #popupOverlay.open{ display:flex; }
+
+    #registrarBox{
+        background:#f5f7ff;
+        color:#111;
+        border-radius:12px;
+        width:520px;
+        max-width:95vw;
+        overflow:hidden;
+        box-shadow:0 8px 48px #000c;
+        animation:popIn .25s ease;
+    }
+    @keyframes popIn{
+        from{ transform:scale(.88); opacity:0; }
+        to{   transform:scale(1);   opacity:1; }
+    }
+
+    #regHeader{
+        background:linear-gradient(90deg,#0057b8,#0083e8);
+        color:#fff;
+        padding:18px 22px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+    }
+    #regHeader h2{ margin:0; font-size:20px; font-family:Arial,sans-serif; }
+    #regHeader span{ font-size:13px; opacity:.85; font-family:Arial,sans-serif; }
+    #closePopupBtn{
+        background:transparent;
+        border:none;
+        color:#fff;
+        font-size:24px;
+        cursor:pointer;
+        line-height:1;
+    }
+
+    #regBody{ padding:28px 24px 24px; font-family:Arial,sans-serif; }
+
+    #regBody label{ display:block; font-size:13px; color:#555; margin-bottom:6px; }
+
+    #domainInput{
+        width:100%;
+        padding:12px 14px;
+        font-size:17px;
+        border:2px solid #ccc;
+        border-radius:7px;
+        outline:none;
+        transition:border-color .2s;
+        font-family:monospace;
+    }
+    #domainInput:focus{ border-color:#0083e8; }
+    #domainInput.error{ border-color:#e82020; animation:shake .3s; }
+    @keyframes shake{
+        0%,100%{ transform:translateX(0); }
+        25%{ transform:translateX(-8px); }
+        75%{ transform:translateX(8px); }
+    }
+    #domainInput.success{ border-color:#18b050; background:#f0fff5; }
+
+    #domainStatus{
+        min-height:22px;
+        margin-top:8px;
+        font-size:14px;
+        font-weight:bold;
+    }
+    #domainStatus.ok{ color:#18b050; }
+    #domainStatus.bad{ color:#e82020; }
+
+    #regFooter{
+        background:#f0f2f8;
+        padding:16px 24px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        border-top:1px solid #dde;
+        font-family:Arial,sans-serif;
+    }
+    #regFooter small{ color:#888; font-size:12px; }
+
+    #purchaseBtn{
+        padding:12px 28px;
+        background:linear-gradient(135deg,#0083e8,#0057b8);
+        color:#fff;
+        border:none;
+        border-radius:7px;
+        font-size:16px;
+        font-family:Arial,sans-serif;
+        cursor:pointer;
+        font-weight:bold;
+        transition:opacity .15s, transform .1s;
+    }
+    #purchaseBtn:hover{ opacity:.9; transform:scale(1.03); }
+
+    #purchaseSuccessMsg{
+        display:none;
+        text-align:center;
+        padding:16px;
+        font-family:Arial,sans-serif;
+    }
+    #purchaseSuccessMsg .big{ font-size:44px; }
+    #purchaseSuccessMsg p{ color:#18b050; font-size:17px; font-weight:bold; margin:8px 0 4px; }
+    #purchaseSuccessMsg small{ color:#555; font-size:13px; }
+
+    /* ── Virus Neutralized overlay ── */
+    #neutralizedOverlay{
+        display:none;
+        position:fixed;
+        inset:0;
+        background:#000;
+        z-index:200;
+        align-items:center;
+        justify-content:center;
+        flex-direction:column;
+        overflow:hidden;
+    }
+    #neutralizedOverlay.show{ display:flex; }
+
+    #matrixCanvas{
+        position:absolute;
+        inset:0;
+        opacity:.55;
+    }
+
+    /* scanline effect */
+    #neutralizedOverlay::after{
+        content:'';
+        position:absolute;
+        inset:0;
+        background:repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 3px,
+            rgba(0,0,0,.18) 3px,
+            rgba(0,0,0,.18) 4px
+        );
+        pointer-events:none;
+    }
+
+    #neutralText{
+        position:relative;
+        z-index:10;
+        text-align:center;
+        animation:fadeInUp .7s ease forwards;
+    }
+    @keyframes fadeInUp{
+        from{ opacity:0; transform:translateY(40px); }
+        to{   opacity:1; transform:translateY(0); }
+    }
+
+    #neutralText .icon{ font-size:90px; display:block; margin-bottom:8px; }
+
+    #neutralText h1{
+        font-size:clamp(36px,7vw,72px);
+        color:#00ff99;
+        text-shadow:0 0 30px #00ff99, 0 0 60px #00ff6688;
+        margin:0 0 12px;
+        letter-spacing:4px;
+        font-family:'Courier New',monospace;
+    }
+
+    #neutralText .sub{
+        font-size:clamp(16px,3vw,26px);
+        color:#88ffcc;
+        letter-spacing:2px;
+        font-family:monospace;
+        margin-bottom:30px;
+    }
+
+    #neutralText .details{
+        font-size:15px;
+        color:#00cc88;
+        font-family:monospace;
+        line-height:1.9;
+    }
+
+    #neutralText .pill{
+        display:inline-block;
+        background:#003322;
+        border:1px solid #00ff99;
+        border-radius:20px;
+        padding:4px 16px;
+        margin-top:18px;
+        font-size:13px;
+        color:#00ff99;
+        letter-spacing:1px;
+    }
+
+    .glowPulse{ animation: glowPulse 2s infinite; }
+    @keyframes glowPulse{
+        0%,100%{ text-shadow:0 0 30px #00ff99, 0 0 60px #00ff6688; }
+        50%{     text-shadow:0 0 60px #00ff99, 0 0 120px #00ff99aa, 0 0 180px #00ff6644; }
+    }
+</style>
+</head>
+
+<body>
+
+<div id="screen">
+
+    <img src="https://upload.wikimedia.org/wikipedia/en/1/18/Wana_Decrypt0r_screenshot.png"
+    style="width:420px;max-width:100%;border:3px solid #222;margin-bottom:20px;">
+
+    <h1>YOUR FILES ARE ENCRYPTED</h1>
+
+    <div class="warning">
+        כל הקבצים במחשב ננעלו!
+    </div>
+
+    <div class="warning blink">
+        שלם 5 ביטקוין תוך:
+    </div>
+
+    <div id="countdown">300</div>
+
+    <div id="stopped">
+        SYSTEM STOPPED — Kill Switch Activated
+    </div>
+
+    <!-- kill-switch-domain: red-dragon-shutdown.net -->
+
+    <br>
+    <button id="buyDomainBtn" onclick="openDomainPopup()">🌐 רכוש דומיין — הפעל Kill Switch</button>
+
+</div>
+
+<!-- ── Domain Registrar Popup ── -->
+<div id="popupOverlay">
+    <div id="registrarBox">
+        <div id="regHeader">
+            <div>
+                <h2>🌐 DomainShield — Domain Registrar</h2>
+                <span>Secure • Fast • Trusted since 2005</span>
+            </div>
+            <button id="closePopupBtn" onclick="closePopup()" title="סגור">✕</button>
+        </div>
+
+        <div id="regBody">
+            <label for="domainInput">הכנס את כתובת הדומיין לרכישה:</label>
+            <input id="domainInput" type="text" placeholder="example.com"
+                   oninput="checkDomainInput()" onkeydown="if(event.key==='Enter')doPurchase()">
+            <div id="domainStatus"></div>
+
+            <div style="margin-top:18px;background:#f9f9ff;border:1px solid #dde;border-radius:8px;padding:14px;">
+                <div style="font-size:13px;color:#888;margin-bottom:6px;">📋 מידע על הדומיין:</div>
+                <div id="domainInfo" style="font-size:14px;color:#333;line-height:1.7;">
+                    הכנס כתובת דומיין כדי לראות זמינות ומחיר.
+                </div>
+            </div>
+        </div>
+
+        <div id="regFooter">
+            <small>🔒 SSL מאובטח &nbsp;·&nbsp; תשלום מוצפן &nbsp;·&nbsp; 30 יום החזר כספי</small>
+            <button id="purchaseBtn" onclick="doPurchase()">רכוש עכשיו 🛒</button>
+        </div>
+
+        <div id="purchaseSuccessMsg">
+            <span class="big">✅</span>
+            <p>הדומיין נרשם בהצלחה!</p>
+            <small>Kill Switch מופעל... מחכה לאישור שרת</small>
+        </div>
+    </div>
+</div>
+
+<!-- ── מסך הווירוס נוטרל ── -->
+<div id="neutralizedOverlay">
+    <canvas id="matrixCanvas"></canvas>
+    <div id="neutralText">
+        <span class="icon">🛡️</span>
+        <h1 class="glowPulse">הווירוס נוטרל</h1>
+        <div class="sub">— מתג ההריגה הופעל —</div>
+        <div class="details">
+            <span>✔ הדומיין נרכש בהצלחה</span><br>
+            <span>✔ תהליכי הנוזקה הופסקו</span><br>
+            <span>✔ הקבצים המוצפנים שוחזרו</span><br>
+            <span>✔ חומת האש שוחזרה</span>
+        </div>
+        <div class="pill">🔒 המערכת מאובטחת</div>
+    </div>
+</div>
+
+<script>
+
+const killSwitchDomain = "red-dragon-shutdown.net";
+
+/* ── countdown timer ── */
+let time = 300;
+let timer = setInterval(() => {
+    time--;
+    document.getElementById("countdown").innerHTML = time;
+    if(time <= 0){
+        clearInterval(timer);
+        document.getElementById("countdown").innerHTML = "FILES LOST";
+    }
+}, 1000);
+
+/* ── original password input ── */
+function checkCode(){
+    const value = document.getElementById("password").value.trim();
+    if(value === killSwitchDomain){
+        activateKillSwitch();
+    }
+}
+
+function activateKillSwitch(){
+    document.getElementById("stopped").style.display = "block";
+    clearInterval(timer);
+    document.getElementById("countdown").innerHTML = "STOPPED";
+}
+
+/* ── auto-check on page load (original feature) ── */
+(function checkKillSwitch(){
+    if(window.location.href.includes(killSwitchDomain)){
+        activateKillSwitch();
+    }
+})();
+
+/* ══════════════════════════════════
+   Domain Registrar Popup
+══════════════════════════════════ */
+
+function openDomainPopup(){
+    document.getElementById("popupOverlay").classList.add("open");
+    setTimeout(() => document.getElementById("domainInput").focus(), 80);
+}
+
+function closePopup(){
+    document.getElementById("popupOverlay").classList.remove("open");
+}
+
+// Close popup when clicking outside the box
+document.getElementById("popupOverlay").addEventListener("click", function(e){
+    if(e.target === this) closePopup();
+});
+
+function checkDomainInput(){
+    const val = document.getElementById("domainInput").value.trim();
+    const statusEl = document.getElementById("domainStatus");
+    const infoEl   = document.getElementById("domainInfo");
+    const inputEl  = document.getElementById("domainInput");
+
+    inputEl.classList.remove("error","success");
+
+    if(!val){
+        statusEl.textContent = "";
+        statusEl.className = "";
+        infoEl.textContent = "הכנס כתובת דומיין כדי לראות זמינות ומחיר.";
+        return;
+    }
+
+    if(val === killSwitchDomain){
+        inputEl.classList.add("success");
+        statusEl.textContent = "✅ הדומיין פנוי לרכישה!";
+        statusEl.className = "ok";
+        infoEl.innerHTML = `
+            <strong style="color:#0057b8">${val}</strong><br>
+            💲 מחיר: <strong>$0.99 / שנה</strong><br>
+            📅 חידוש אוטומטי: כן<br>
+            🔒 WHOIS Privacy: כלול חינם
+        `;
+    } else {
+        statusEl.textContent = "❌ הדומיין תפוס או לא קיים";
+        statusEl.className = "bad";
+        infoEl.innerHTML = `
+            <span style="color:#e82020">הדומיין <strong>${escHtml(val)}</strong> אינו זמין.</span><br>
+            <span style="color:#888;font-size:13px;">נסה דומיין אחר.</span>
+        `;
+    }
+}
+
+function escHtml(s){
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function doPurchase(){
+    const val = document.getElementById("domainInput").value.trim();
+    if(val !== killSwitchDomain){
+        const inputEl = document.getElementById("domainInput");
+        inputEl.classList.add("error");
+        setTimeout(() => inputEl.classList.remove("error"), 400);
+        return;
+    }
+
+    // Show success inside popup
+    document.getElementById("regBody").style.display = "none";
+    document.getElementById("regFooter").style.display = "none";
+    document.getElementById("purchaseSuccessMsg").style.display = "block";
+
+    // Activate original kill switch state
+    activateKillSwitch();
+
+    // Close popup after 1.6s, then show neutralized after 3s
+    setTimeout(() => {
+        closePopup();
+        setTimeout(showNeutralized, 3000);
+    }, 1600);
+}
+
+/* ══════════════════════════════════
+   Virus Neutralized Screen
+══════════════════════════════════ */
+
+function showNeutralized(){
+    const overlay = document.getElementById("neutralizedOverlay");
+    overlay.classList.add("show");
+    startMatrix();
+}
+
+/* Matrix rain on canvas */
+function startMatrix(){
+    const canvas  = document.getElementById("matrixCanvas");
+    const ctx     = canvas.getContext("2d");
+    const W = canvas.width  = window.innerWidth;
+    const H = canvas.height = window.innerHeight;
+
+    const FONT = 15;
+    const cols  = Math.floor(W / FONT);
+    const drops = Array(cols).fill(1);
+
+    const chars = "01ABCDEFアイウエオカキクケコサシスセソタチツテトナニヌネノ";
+
+    function draw(){
+        ctx.fillStyle = "rgba(0,0,0,0.06)";
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.fillStyle = "#00ff99";
+        ctx.font = FONT + "px monospace";
+
+        for(let i = 0; i < drops.length; i++){
+            const ch = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(ch, i * FONT, drops[i] * FONT);
+
+            if(drops[i] * FONT > H && Math.random() > 0.975){
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+    }
+
+    setInterval(draw, 45);
+}
+</script>
+
+</body>
+</html>
