@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>תשבץ שומרי הסייבר - אתגר הסיסמאות והידע</title>
+    <title>תשבץ שומרי הסייבר - גרסה יציבה</title>
     <style>
         :root {
             --bg-main: #f4f6f9;
@@ -53,7 +53,6 @@
             align-items: flex-start;
         }
 
-        /* הגדרות קשיחות למניעת היעלמות הלוח */
         .grid-container {
             background-color: var(--bg-card);
             padding: 24px;
@@ -63,7 +62,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-width: 640px; /* מבטיח שהלוח לא יתכווץ לעולם */
+            min-width: 650px;
         }
 
         .crossword-grid {
@@ -107,7 +106,6 @@
             outline: none;
             box-sizing: border-box;
             padding: 0;
-            /* מניעת היפוך אותיות באנגלית ומספרים בגלל ה-RTL של הדף */
             direction: ltr; 
         }
 
@@ -127,7 +125,6 @@
             z-index: 10;
         }
 
-        /* רשימת ההגדרות והרמזים */
         .clues-container {
             flex: 1;
             background-color: var(--bg-card);
@@ -170,9 +167,6 @@
             border-right-color: #f1c40f;
             background-color: #fffde7;
         }
-        .clue-item.theory-clue:hover {
-            background-color: #fff9c4;
-        }
 
         .clue-item strong {
             color: var(--cyber-accent);
@@ -213,24 +207,21 @@
             border-radius: 6px;
             cursor: pointer;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            transition: background-color 0.2s, box-shadow 0.2s;
+            transition: background-color 0.2s;
         }
 
         button:hover {
             background-color: var(--cyber-accent);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
 
         button.reset {
             background-color: #ffffff;
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            box-shadow: none;
         }
 
         button.reset:hover {
             background-color: #f8f9fa;
-            color: var(--text-main);
         }
 
         #message {
@@ -243,22 +234,6 @@
 
         .success { color: #137333; }
         .error { color: #c5221f; }
-
-        @media (max-width: 950px) {
-            .game-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .clues-container {
-                width: 100%;
-                max-height: none;
-            }
-            .grid-container {
-                min-width: unset;
-                width: 100%;
-                overflow-x: auto;
-            }
-        }
     </style>
 </head>
 <body>
@@ -268,31 +243,29 @@
 
     <div class="game-container">
         
-        <!-- לוח התשבץ -->
         <div class="grid-container">
             <div id="crossword" class="crossword-grid"></div>
         </div>
 
-        <!-- רשימת ההגדרות והרמזים -->
         <div class="clues-container">
             <div class="clues-section">
                 <h2>מאוזן (אופקי) ➔</h2>
-                <div class="clue-item" data-word="1"><strong>1.</strong> רצף הספרות הנפוץ והחלש ביותר בעולם (6 ספרות) <span class="badge">סיסמה</span></div>
-                <div class="clue-item theory-clue" data-word="4"><strong>4.</strong> סוג הסכנה שבה האקר משבש מידע או משתלט על מחשב של שלט נקראת מתקפת... (5 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
-                <div class="clue-item" data-word="6"><strong>6.</strong> שלושת האותיות הראשונות במקלדת בשורה העליונה משמאל (3 אותיות) <span class="badge">סיסמה</span></div>
-                <div class="clue-item" data-word="7"><strong>7.</strong> קוד גרוע במיוחד - האצבע לוחצת 6 פעמים ברצף על הספרה 1 (6 ספרות) <span class="badge">סיסמה</span></div>
-                <div class="clue-item" data-word="8"><strong>8.</strong> המילה האנגלית שפירושה "שלום" או "ברוכים הבאים" שמלא אנשים משתמשים בה (7 אותיות) <span class="badge">סיסמה</span></div>
-                <div class="clue-item theory-clue" data-word="10"><strong>10.</strong> מה שהאקרים מנסים לגנוב או לשבש (למשל הטקסט שמופיע לנהגים על השלט) (4 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
-                <div class="clue-item" data-word="11"><strong>11.</strong> המילה האנגלית האמיתית שפירושה "סיסמה" - האקרים מנחשים אותה מיד! (8 אותיות) <span class="badge">סיסמה</span></div>
-                <div class="clue-item" data-word="12"><strong>12.</strong> רצף קל של ספרות זוגיות עולות במקלדת - מ-2 עד 8 (4 ספרות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item"><strong>1.</strong> רצף הספרות הנפוץ והחלש ביותר בעולם (6 ספרות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item theory-clue"><strong>4.</strong> סוג הסכנה שבה האקר משבש מידע או משתלט על מחשב של שלט נקראת מתקפת... (5 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
+                <div class="clue-item"><strong>6.</strong> שלושת האותיות הראשונות במקלדת בשורה העליונה משמאל (3 אותיות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item"><strong>7.</strong> קוד גרוע במיוחד - האצבע לוחצת 6 פעמים ברצף על הספרה 1 (6 ספרות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item"><strong>8.</strong> המילה האנגלית שפירושה "שלום" או "ברוכים הבאים" שמלא אנשים משתמשים בה (7 אותיות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item theory-clue"><strong>10.</strong> מה שהאקרים מנסים לגנוב או לשבש (למשל הטקסט שמופיע לנהגים על השלט) (4 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
+                <div class="clue-item"><strong>11.</strong> המילה האנגלית האמיתית שפירושה "סיסמה" - האקרים מנחשים אותה מיד! (8 אותיות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item"><strong>12.</strong> רצף קל של ספרות זוגיות עולות במקלדת - מ-2 עד 8 (4 ספרות) <span class="badge">סיסמה</span></div>
             </div>
             
             <div class="clues-section">
                 <h2>מאונך (אנכי) 👇</h2>
-                <div class="clue-item" data-word="2"><strong>2.</strong> קיצור באנגלית של "מנהל מערכת" - הסיסמה שפתחה את שלט הדרכים (5 אותיות) <span class="badge">סיסמה</span></div>
-                <div class="clue-item" data-word="3"><strong>3.</strong> 3 האותיות הראשונות באנגלית ואז 3 המספרים הראשונים ברצף (6 תווים) <span class="badge">סיסמה</span></div>
-                <div class="clue-item theory-clue" data-word="5"><strong>5.</strong> כדי שסיסמה תהיה חזקה היא צריכה להיות מורכבת ולא... (חלשה או נפוצה) (4 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
-                <div class="clue-item theory-clue" data-word="9"><strong>9.</strong> ההודעה המשעשעת והמשובשת שהאקרים כתבו על השלטים בארה"ב: "זהירות! ______ בהמשך!" (6 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
+                <div class="clue-item"><strong>2.</strong> קיצור באנגלית של "מנהל מערכת" - הסיסמה שפתחה את שלט הדרכים (5 אותיות) <span class="badge">סיסמה</span></div>
+                <div class="clue-item"><strong>3.</strong> 3 האותיות הראשונות באנגלית ואז 3 המספרים הראשונים ברצף (6 תווים) <span class="badge">סיסמה</span></div>
+                <div class="clue-item theory-clue"><strong>5.</strong> כדי שסיסמה תהיה חזקה היא צריכה להיות מורכבת ולא... (חלשה או נפוצה) (4 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
+                <div class="clue-item theory-clue"><strong>9.</strong> ההודעה המשעשעת והמשובשת שהאקרים כתבו על השלטים בארה"ב: "זהירות! ______ בהמשך!" (6 אותיות) <span class="badge badge-theory">ידע מהשיעור</span></div>
             </div>
         </div>
 
@@ -309,7 +282,6 @@
         const ROWS = 14;
         const COLS = 16;
 
-        // מיפוי מדויק של המילים, המיקום והכיוון שלהן על הלוח
         const words = {
             "1": { row: 1, col: 1, dir: "H", answer: "123456", num: 1 },
             "2": { row: 1, col: 2, dir: "V", answer: "ADMIN", num: 2 },
@@ -325,7 +297,7 @@
             "12": { row: 13, col: 4, dir: "H", answer: "2468", num: 12 }
         };
 
-        // יצירת מטריצה ריקה בגודל קבוע
+        // בנייה בטוחה של מטריצת מערכים ריקה בגודל מוגדר מראש
         let gridData = [];
         for (let r = 0; r < ROWS; r++) {
             gridData[r] = [];
@@ -334,7 +306,7 @@
             }
         }
 
-        // הזרקת המילים למטריצה הריקה
+        // הזרקת המילים לתוך המטריצה המובנית
         for (let id in words) {
             const w = words[id];
             for (let i = 0; i < w.answer.length; i++) {
@@ -342,25 +314,21 @@
                 let c = w.col + (w.dir === "H" ? i : 0);
                 
                 if (!gridData[r][c]) {
-                    gridData[r][c] = { letter: w.answer[i], num: null, directions: [] };
+                    gridData[r][c] = { letter: w.answer[i], num: null, dir: w.dir };
                 }
-                // שומרים את כיוון התנועה של המילה בשביל מנגנון קפיצת התאים
-                gridData[r][c].directions.push(w.dir);
                 if (i === 0) {
                     gridData[r][c].num = w.num;
                 }
             }
         }
 
-        // רינדור פיזי של הלוח ב-DOM
+        // רינדור הלוח לרשת ה-HTML
         const gridContainer = document.getElementById('crossword');
-        gridContainer.innerHTML = ''; // איפוס למקרה של טעינה מחדש
-
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 const cellDiv = document.createElement('div');
                 
-                if (gridData[r][c]) {
+                if (gridData[r] && gridData[r][c]) {
                     cellDiv.className = 'cell';
                     
                     if (gridData[r][c].num) {
@@ -375,17 +343,11 @@
                     input.maxLength = 1;
                     input.dataset.row = r;
                     input.dataset.col = c;
-                    // שומרים את כיוון המילה הדומיננטי בתא
-                    input.dataset.primaryDir = gridData[r][c].directions[0];
+                    input.dataset.dir = gridData[r][c].dir;
                     
-                    // מנגנון קפיצה חכם לתא הבא לפי כיוון המילה הרלוונטית
-                    input.addEventListener('input', function(e) {
+                    input.addEventListener('input', function() {
                         if (this.value.length === 1) {
-                            const currRow = parseInt(this.dataset.row);
-                            const currCol = parseInt(this.dataset.col);
-                            const moveDir = this.dataset.primaryDir;
-                            
-                            findAndFocusNext(currRow, currCol, moveDir);
+                            findAndFocusNext(parseInt(this.dataset.row), parseInt(this.dataset.col), this.dataset.dir);
                         }
                     });
 
@@ -397,7 +359,7 @@
             }
         }
 
-        // פונקציית הקפיצה החכמה - קופצת ימינה או למטה לפי כיוון הכתיבה המקורי
+        // פונקציית פוקוס חסינת שגיאות - בודקת קיום אלמנט לפני פנייה אליו
         function findAndFocusNext(r, c, dir) {
             let nextInput = null;
             if (dir === "H") {
@@ -405,39 +367,40 @@
             } else if (dir === "V") {
                 nextInput = document.querySelector(`input[data-row="${r+1}"][data-col="${c}"]`);
             }
-            
-            // הגנת גיבוי: אם אין תא עוקב בכיוון המקורי, נחפש כל תא שכן פנוי
-            if (!nextInput) {
-                nextInput = document.querySelector(`input[data-row="${r}"][data-col="${c+1}"]`) || 
-                            document.querySelector(`input[data-row="${r+1}"][data-col="${c}"]`);
+            if (nextInput) {
+                nextInput.focus();
             }
-            
-            if (nextInput) nextInput.focus();
         }
 
-        // בדיקת הפתרונות של התלמידים
+        // פונקציית בדיקת פתרון חסינת קריסות (Safe Validation)
         function checkCrossword() {
             const inputs = document.querySelectorAll('.cell input');
             let allCorrect = true;
             let missingInputs = false;
 
             inputs.forEach(input => {
-                const r = input.dataset.row;
-                const c = input.dataset.col;
+                const r = parseInt(input.dataset.row);
+                const c = parseInt(input.dataset.col);
                 const userVal = input.value.trim().toUpperCase();
-                const correctVal = gridData[r][c].letter;
 
-                if (userVal === '') {
-                    missingInputs = true;
-                    allCorrect = false;
-                    input.style.backgroundColor = 'transparent';
-                } else if (userVal === correctVal) {
-                    input.style.backgroundColor = '#e6f4ea'; // רקע ירוק עדין
-                    input.style.color = '#137333';
+                // הגנה קריטית: בודקים שהתא אכן קיים במערך הנתונים לפני קריאת ה-letter
+                if (gridData[r] && gridData[r][c]) {
+                    const correctVal = gridData[r][c].letter;
+
+                    if (userVal === '') {
+                        missingInputs = true;
+                        allCorrect = false;
+                        input.style.backgroundColor = 'transparent';
+                    } else if (userVal === correctVal) {
+                        input.style.backgroundColor = '#e6f4ea'; 
+                        input.style.color = '#137333';
+                    } else {
+                        allCorrect = false;
+                        input.style.backgroundColor = '#fce8e6'; 
+                        input.style.color = '#c5221f';
+                    }
                 } else {
                     allCorrect = false;
-                    input.style.backgroundColor = '#fce8e6'; // רקע אדום עדין
-                    input.style.color = '#c5221f';
                 }
             });
 
@@ -454,7 +417,6 @@
             }
         }
 
-        // איפוס מלא של המשחק
         function resetCrossword() {
             const inputs = document.querySelectorAll('.cell input');
             inputs.forEach(input => {
