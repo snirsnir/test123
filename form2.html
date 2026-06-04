@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ניוזלטר טכנודע</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Rubik', sans-serif;
+      background-color: #f2f2f2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .page-title {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 900;
+      color: #111;
+      text-align: center;
+      margin-bottom: 36px;
+      letter-spacing: -0.5px;
+    }
+
+    .card {
+      background-color: #8B1A3A;
+      border-radius: 20px;
+      padding: 48px 40px 44px;
+      width: 100%;
+      max-width: 860px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+
+    .card-title {
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+
+    .card-subtitle {
+      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .form-fields {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .form-fields input {
+      flex: 1 1 200px;
+      min-width: 0;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      text-align: right;
+      background: #fff;
+      color: #333;
+      outline: none;
+      transition: box-shadow 0.2s;
+    }
+
+    .form-fields input::placeholder {
+      color: #999;
+    }
+
+    .form-fields input:focus {
+      box-shadow: 0 0 0 3px rgba(255, 220, 60, 0.55);
+    }
+
+    .form-fields input.required-field::placeholder::after {
+      content: " *";
+      color: red;
+    }
+
+    .submit-btn {
+      background-color: #F5C518;
+      color: #111;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 48px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      font-family: 'Rubik', sans-serif;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+
+    .submit-btn:hover {
+      background-color: #e0b000;
+      transform: scale(1.04);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .success-msg {
+      display: none;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 16px;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+    }
+
+    .error-msg {
+      color: #FFD700;
+      font-size: 0.9rem;
+      margin-top: -12px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 36px 20px 36px;
+      }
+
+      .form-fields {
+        flex-direction: column;
+      }
+
+      .form-fields input {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="page-title">הצטרפות לניוזלטר טכנודע</h1>
+
+  <div class="card">
+    <h2 class="card-title">ניוזלטר טכנודע</h2>
+    <p class="card-subtitle">השאירו פרטים ותקבלו עדכונים על אירועים וסדנאות - לפני כולם</p>
+
+    <form id="newsletter-form" novalidate>
+      <div class="form-fields">
+        <input type="text" id="first-name" name="entry.1328992113" placeholder="שם פרטי" autocomplete="given-name">
+        <input type="text" id="last-name" name="entry.636161506" placeholder="שם משפחה" autocomplete="family-name">
+        <input type="email" id="email" name="entry.500685231" placeholder='* כתובת דוא"ל' required autocomplete="email">
+      </div>
+      <p class="error-msg" id="error-msg">נא להזין כתובת דוא"ל תקינה</p>
+      <button type="submit" class="submit-btn">אני בפנים!</button>
+      <p class="success-msg" id="success-msg">תודה! נרשמת בהצלחה לניוזלטר טכנודע</p>
+    </form>
+  </div>
+
+  <iframe name="hidden-google-frame" id="hidden-google-frame" style="display:none;"></iframe>
+
+  <script>
+    const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdp8dWIWn5r1q_383zMpmayOa64SV_L2ArmbzHJBAduhoxVEQ/formResponse";
+
+    document.getElementById("newsletter-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const errorMsg = document.getElementById("error-msg");
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorMsg.style.display = "block";
+        document.getElementById("email").focus();
+        return;
+      }
+      errorMsg.style.display = "none";
+
+      const firstName = document.getElementById("first-name").value.trim();
+      const lastName = document.getElementById("last-name").value.trim();
+
+      const params = new URLSearchParams();
+      params.append("entry.1328992113", firstName);
+      params.append("entry.636161506", lastName);
+      params.append("entry.500685231", email);
+
+      const iframe = document.getElementById("hidden-google-frame");
+
+      const tempForm = document.createElement("form");
+      tempForm.method = "POST";
+      tempForm.action = GOOGLE_FORM_URL;
+      tempForm.target = "hidden-google-frame";
+      tempForm.style.display = "none";
+
+      for (const [key, value] of params.entries()) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        tempForm.appendChild(input);
+      }
+
+      document.body.appendChild(tempForm);
+      tempForm.submit();
+      document.body.removeChild(tempForm);
+
+      document.getElementById("newsletter-form").reset();
+      const submitBtn = document.querySelector(".submit-btn");
+      submitBtn.style.display = "none";
+      const successMsg = document.getElementById("success-msg");
+      successMsg.style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
