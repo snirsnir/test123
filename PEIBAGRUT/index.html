@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>איפה הבגרות של פיי?</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #1a1a2e;
+    color: white;
+    height: 100dvh;
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  #screen {
+    width: 100vw;
+    height: 100dvh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ===== START SCREEN ===== */
+  #startScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 20px;
+    text-align: center;
+  }
+
+  #startScreen h1 {
+    font-size: clamp(1.6rem, 6vw, 2.5rem);
+    color: #e94560;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(233,69,96,0.5);
+    animation: pulse 2s infinite;
+  }
+
+  #startScreen .subtitle {
+    font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+    color: #a8dadc;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  #startScreen .bagrut-preview {
+    width: 120px;
+    height: 90px;
+    object-fit: contain;
+    margin: 20px auto;
+    animation: shake 0.5s infinite alternate;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(233,69,96,0.6);
+  }
+
+  #startBtn {
+    background: linear-gradient(45deg, #e94560, #ff6b6b);
+    color: white;
+    border: none;
+    padding: 18px 50px;
+    font-size: 1.3rem;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-weight: bold;
+    box-shadow: 0 5px 25px rgba(233,69,96,0.5);
+    animation: bounce 1s infinite alternate;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ===== GAME SCREEN ===== */
+  #gameScreen { display: none; width: 100%; height: 100%; position: relative; }
+
+  #gameArena {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #hud {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.7);
+    padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+  }
+
+  #stageName { font-size: 0.9rem; color: #e94560; font-weight: bold; }
+  #timer { font-size: 1.3rem; font-weight: bold; color: #ffd700; }
+  #score { font-size: 0.9rem; color: #a8dadc; }
+
+  /* ===== BAGRUT IMAGE ===== */
+  .bagrut {
+    position: absolute;
+    width: 110px;
+    height: 80px;
+    object-fit: contain;
+    cursor: pointer;
+    touch-action: none;
+    border-radius: 6px;
+    transition: none;
+    will-change: transform, left, top;
+  }
+
+  /* ===== STAGE MESSAGES ===== */
+  #stageMsg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.92);
+    border: 2px solid #e94560;
+    border-radius: 20px;
+    padding: 25px 30px;
+    text-align: center;
+    z-index: 2000;
+    max-width: 85vw;
+    display: none;
+  }
+
+  #stageMsg h2 { color: #e94560; font-size: 1.4rem; margin-bottom: 10px; }
+  #stageMsg p { color: #ccc; font-size: 1rem; line-height: 1.5; margin-bottom: 15px; }
+  #stageMsgBtn {
+    background: #e94560; color: white; border: none;
+    padding: 12px 35px; font-size: 1rem; border-radius: 50px;
+    cursor: pointer; font-weight: bold;
+  }
+
+  /* ===== STAGE 3 - SPIN ===== */
+  #spinWrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    transform-origin: center center;
+  }
+
+  /* ===== STAGE 4 - MINI ===== */
+  .bagrut-mini {
+    width: 35px !important;
+    height: 25px !important;
+  }
+
+  /* ===== STAGE 5 - CLONES ===== */
+  .bagrut-fake {
+    filter: sepia(1) hue-rotate(180deg);
+  }
+
+  /* ===== MISS ANIMATION ===== */
+  .miss-text {
+    position: fixed;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e94560;
+    pointer-events: none;
+    z-index: 3000;
+    animation: missAnim 0.8s forwards;
+  }
+
+  /* ===== END SCREEN ===== */
+  #endScreen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    padding: 30px 20px;
+    text-align: center;
+    overflow-y: auto;
+  }
+
+  #endScreen h1 { font-size: clamp(1.4rem, 5vw, 2rem); color: #e94560; margin-bottom: 5px; margin-top: 20px; }
+  #endScreen .trophy { font-size: 4rem; margin: 10px 0; }
+  #endScreen .final-score { font-size: 2.5rem; font-weight: bold; color: #ffd700; margin: 10px 0; }
+  #endScreen .score-label { font-size: 1rem; color: #a8dadc; margin-bottom: 15px; }
+  #endScreen .verdict { font-size: 1rem; color: #ccc; line-height: 1.6; max-width: 340px; margin: 0 auto 15px; }
+  #endScreen .stages-summary { width: 100%; max-width: 380px; margin: 10px auto; }
+  #endScreen .stage-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 15px; margin: 6px 0;
+    background: rgba(255,255,255,0.07); border-radius: 12px;
+    font-size: 0.9rem;
+  }
+  #endScreen .stage-row .sname { color: #a8dadc; }
+  #endScreen .stage-row .sresult { color: #e94560; font-weight: bold; }
+  #endScreen .play-again {
+    background: linear-gradient(45deg, #e94560, #ff6b6b);
+    color: white; border: none;
+    padding: 15px 45px; font-size: 1.1rem;
+    border-radius: 50px; cursor: pointer;
+    margin: 20px 0; font-weight: bold;
+    box-shadow: 0 5px 25px rgba(233,69,96,0.4);
+  }
+  #endScreen .certificate-fail {
+    width: 80px; opacity: 0.3;
+    margin: 10px auto; display: block;
+    filter: grayscale(1);
+    transform: rotate(-15deg);
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes pulse {
+    0%,100% { text-shadow: 0 0 20px rgba(233,69,96,0.5); }
+    50% { text-shadow: 0 0 40px rgba(233,69,96,1), 0 0 60px rgba(233,69,96,0.5); }
+  }
+  @keyframes shake {
+    0% { transform: rotate(-3deg) scale(1); }
+    100% { transform: rotate(3deg) scale(1.05); }
+  }
+  @keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-8px); }
+  }
+  @keyframes missAnim {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-60px) scale(1.5); }
+  }
+  @keyframes stageTransition {
+    0% { transform: translate(-50%,-50%) scale(0.5); opacity: 0; }
+    100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  }
+  @keyframes flashRed {
+    0%,100% { background: transparent; }
+    50% { background: rgba(233,69,96,0.2); }
+  }
+
+  .bg-flash { animation: flashRed 0.3s; }
+</style>
+</head>
+<body>
+
+<div id="screen">
+
+  <!-- ===== START ===== -->
+  <div id="startScreen">
+    <h1>🎓 איפה הבגרות של פיי?!</h1>
+    <p class="subtitle">
+      פיי סיים את הבגרות...<br>
+      אבל התעודה <strong style="color:#e94560">לא ממש מסכימה להישמע.</strong><br><br>
+      5 שלבים. 5 ניסיונות. 0 סיכויים.
+    </p>
+    <img src="bagrut.jpg" class="bagrut-preview" alt="תעודת בגרות">
+    <button id="startBtn" onclick="startGame()">בוא נתחיל 😈</button>
+    <p style="margin-top:20px; font-size:0.75rem; color:#555; max-width:280px;">
+      * לא קיבלנו אחריות על נזקי עצבנות, שבירת מסכים, או בגרויות שאבדו לצמיתות
+    </p>
+  </div>
+
+  <!-- ===== GAME ===== -->
+  <div id="gameScreen">
+    <div id="hud">
+      <div id="stageName">שלב 1</div>
+      <div id="timer">⏱ 30</div>
+      <div id="score">תפיסות: 0</div>
+    </div>
+    <div id="gameArena">
+      <div id="spinWrapper">
+        <!-- bagruts injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STAGE MSG ===== -->
+  <div id="stageMsg">
+    <h2 id="stageMsgTitle"></h2>
+    <p id="stageMsgBody"></p>
+    <button id="stageMsgBtn" onclick="dismissStageMsg()">יאללה! 💪</button>
+  </div>
+
+  <!-- ===== END ===== -->
+  <div id="endScreen" id="endScreen">
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+//  GAME STATE
+// ============================================================
+let currentStage = 0;
+let stageTimer = null;
+let stageSeconds = 30;
+let missCount = 0;
+let catchCount = 0; // always stays 0 :)
+let stageResults = [];
+let spinAngle = 0;
+let spinRaf = null;
+let bagrutElems = [];
+let moveInterval = null;
+let flashTimeout = null;
+let disappearInterval = null;
+let cloneCheckInterval = null;
+let gameActive = false;
+
+const STAGES = [
+  {
+    id: 1,
+    name: "שלב 1 – החמקן",
+    title: "🏃 התעודה החמקנית",
+    body: "אוקיי זה פשוט, נכון?\nסתם תגע בתעודה...\n(ספוילר: לא.)",
+    duration: 15,
+    bg: "linear-gradient(135deg, #1a1a2e, #16213e)"
+  },
+  {
+    id: 2,
+    name: "שלב 2 – המתחפשת",
+    title: "🎭 המתחפשת",
+    body: "עכשיו יש 6 תעודות.\n5 מזויפות, 1 אמיתית.\nאפילו האמיתית לא רוצה אותך.",
+    duration: 15,
+    bg: "linear-gradient(135deg, #0f3460, #533483)"
+  },
+  {
+    id: 3,
+    name: "שלב 3 – הסחרחורת",
+    title: "🌀 הסחרחורת",
+    body: "המסך מסתובב.\nהתעודה מסתובבת.\nהמוח שלך מסתובב.\nבהצלחה.",
+    duration: 15,
+    bg: "linear-gradient(135deg, #533483, #1a1a2e)"
+  },
+  {
+    id: 4,
+    name: "שלב 4 – הזעיר",
+    title: "🔬 הזעירה",
+    body: "התעודה הלכה לדיאטה.\nהיא עכשיו קטנה מאוד מאוד.\nאולי תביא משקפת?",
+    duration: 15,
+    bg: "linear-gradient(135deg, #1a1a2e, #0a4f4f)"
+  },
+  {
+    id: 5,
+    name: "שלב 5 – הבלתי אפשרי",
+    title: "💀 הבלתי אפשרי",
+    body: "התעודה נעלמת כל שתי שניות.\n5 עותקים. 4 מזויפים.\nוגם האמיתית לא קיימת.",
+    duration: 15,
+    bg: "linear-gradient(135deg, #4a0000, #1a1a2e)"
+  }
+];
+
+// ============================================================
+//  UTILS
+// ============================================================
+function rand(min, max) { return Math.random() * (max - min) + min; }
+function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
+
+function safePos(w, h, elemW, elemH) {
+  const hudH = 50;
+  const margin = 10;
+  return {
+    x: rand(margin, w - elemW - margin),
+    y: rand(hudH + margin, h - elemH - margin)
+  };
+}
+
+function showMissText(x, y) {
+  const msgs = ['!ברוח', 'אוופס!', 'לא הפעם!', 'היהה!', 'קרוב... לא!', '😂', 'ניסית!'];
+  const el = document.createElement('div');
+  el.className = 'miss-text';
+  el.textContent = msgs[randInt(0, msgs.length - 1)];
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+function flashArena() {
+  const arena = document.getElementById('gameArena');
+  arena.classList.add('bg-flash');
+  setTimeout(() => arena.classList.remove('bg-flash'), 300);
+}
+
+function clearAllIntervals() {
+  if (stageTimer) { clearInterval(stageTimer); stageTimer = null; }
+  if (moveInterval) { clearInterval(moveInterval); moveInterval = null; }
+  if (disappearInterval) { clearInterval(disappearInterval); disappearInterval = null; }
+  if (cloneCheckInterval) { clearInterval(cloneCheckInterval); cloneCheckInterval = null; }
+  if (spinRaf) { cancelAnimationFrame(spinRaf); spinRaf = null; }
+}
+
+function clearBagruts() {
+  bagrutElems.forEach(el => el.remove());
+  bagrutElems = [];
+}
+
+// ============================================================
+//  START
+// ============================================================
+function startGame() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameScreen').style.display = 'block';
+  currentStage = 0;
+  missCount = 0;
+  catchCount = 0;
+  stageResults = [];
+  loadStage(0);
+}
+
+// ============================================================
+//  STAGE LOADER
+// ============================================================
+function loadStage(idx) {
+  clearAllIntervals();
+  clearBagruts();
+  spinAngle = 0;
+  document.getElementById('spinWrapper').style.transform = 'none';
+  gameActive = false;
+
+  const stage = STAGES[idx];
+  document.getElementById('gameArena').style.background = stage.bg;
+  document.getElementById('stageName').textContent = stage.name;
+
+  showStageMessage(stage.title, stage.body, () => {
+    gameActive = true;
+    startTimer(stage.duration, () => endStage(idx));
+    switch(idx) {
+      case 0: runStage1(); break;
+      case 1: runStage2(); break;
+      case 2: runStage3(); break;
+      case 3: runStage4(); break;
+      case 4: runStage5(); break;
+    }
+  });
+}
+
+function showStageMessage(title, body, cb) {
+  const msg = document.getElementById('stageMsg');
+  document.getElementById('stageMsgTitle').textContent = title;
+  document.getElementById('stageMsgBody').textContent = body;
+  msg.style.display = 'block';
+  msg.style.animation = 'stageTransition 0.4s';
+  document.getElementById('stageMsgBtn').onclick = () => {
+    msg.style.display = 'none';
+    cb();
+  };
+}
+
+function dismissStageMsg() {} // overridden above
+
+function startTimer(seconds, onEnd) {
+  stageSeconds = seconds;
+  document.getElementById('timer').textContent = '⏱ ' + stageSeconds;
+  stageTimer = setInterval(() => {
+    stageSeconds--;
+    document.getElementById('timer').textContent = '⏱ ' + stageSeconds;
+    if (stageSeconds <= 0) {
+      clearInterval(stageTimer);
+      onEnd();
+    }
+  }, 1000);
+}
+
+// ============================================================
+//  STAGE 1 – DODGER
+// ============================================================
+function runStage1() {
+  const arena = document.getElementById('spinWrapper');
+  const W = window.innerWidth, H = window.innerHeight;
+  const b = createBagrut(arena, false, false);
+  const pos = safePos(W, H, 110, 80);
+  b.style.left = pos.x + 'px';
+  b.style.top = pos.y + 'px';
+
+  b.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (!gameActive) return;
+    missCount++;
+    updateScore();
+    showMissText(pos.x + 55, pos.y);
+    flashArena();
+    teleport(b);
+  }, { passive: false });
+
+  b.addEventListener('mousedown', (e) => {
+    if (!gameActive) return;
+    missCount++;
+    updateScore();
+    showMissText(e.clientX, e.clientY);
+    flashArena();
+    teleport(b);
+  });
+}
+
+function teleport(el) {
+  const W = window.innerWidth, H = window.innerHeight;
+  const pos = safePos(W, H, 110, 80);
+  el.style.transition = 'left 0.15s, top 0.15s';
+  el.style.left = pos.x + 'px';
+  el.style.top = pos.y + 'px';
+  setTimeout(() => el.style.transition = 'none', 200);
+}
+
+// ============================================================
+//  STAGE 2 – DISGUISE (6 certificates, 1 real)
+// ============================================================
+function runStage2() {
+  const arena = document.getElementById('spinWrapper');
+  const W = window.innerWidth, H = window.innerHeight;
+  const realIdx = randInt(0, 5);
+
+  for (let i = 0; i < 6; i++) {
+    const isFake = (i !== realIdx);
+    const b = createBagrut(arena, isFake, false);
+    const pos = safePos(W, H, 110, 80);
+    b.style.left = pos.x + 'px';
+    b.style.top = pos.y + 'px';
+
+    const onTouch = (e) => {
+      e.preventDefault();
+      if (!gameActive) return;
+      missCount++;
+      updateScore();
+      const cx = parseFloat(b.style.left) + 55;
+      const cy = parseFloat(b.style.top) + 40;
+      if (isFake) {
+        showMissText(cx, cy - 40);
+        b.style.opacity = '0';
+        setTimeout(() => { b.style.opacity = '1'; teleport(b); }, 600);
+      } else {
+        showMissText(cx, cy - 40);
+        flashArena();
+        teleport(b);
+        // reshuffle real
+        clearBagrutsExcept();
+        setTimeout(() => runStage2Reshuffle(arena), 400);
+      }
+    };
+
+    b.addEventListener('touchstart', onTouch, { passive: false });
+    b.addEventListener('mousedown', onTouch);
+  }
+
+  // periodic reshuffle so player can't memorize
+  moveInterval = setInterval(() => {
+    if (!gameActive) return;
+    bagrutElems.forEach(el => { teleport(el); });
+  }, 4000);
+}
+
+function clearBagrutsExcept() {
+  bagrutElems.forEach(el => el.remove());
+  bagrutElems = [];
+}
+
+function runStage2Reshuffle(arena) {
+  if (!gameActive) return;
+  const W = window.innerWidth, H = window.innerHeight;
+  const realIdx = randInt(0, 5);
+  for (let i = 0; i < 6; i++) {
+    const isFake = (i !== realIdx);
+    const b = createBagrut(arena, isFake, false);
+    const pos = safePos(W, H, 110, 80);
+    b.style.left = pos.x + 'px';
+    b.style.top = pos.y + 'px';
+    const onTouch = (e) => {
+      e.preventDefault();
+      if (!gameActive) return;
+      missCount++;
+      updateScore();
+      showMissText(parseFloat(b.style.left) + 55, parseFloat(b.style.top));
+      flashArena();
+      clearBagrutsExcept();
+      setTimeout(() => runStage2Reshuffle(arena), 400);
+    };
+    b.addEventListener('touchstart', onTouch, { passive: false });
+    b.addEventListener('mousedown', onTouch);
+  }
+}
+
+// ============================================================
+//  STAGE 3 – SPIN
+// ============================================================
+function runStage3() {
+  const arena = document.getElementById('spinWrapper');
+  const W = window.innerWidth, H = window.innerHeight;
+  const b = createBagrut(arena, false, false);
+  const pos = safePos(W, H, 110, 80);
+  b.style.left = pos.x + 'px';
+  b.style.top = pos.y + 'px';
+
+  let spinSpeed = 1.5;
+
+  // Spin the wrapper
+  function spinFrame() {
+    spinAngle += spinSpeed;
+    document.getElementById('spinWrapper').style.transform =
+      `rotate(${spinAngle}deg)`;
+    // counter-rotate bagrut so it looks upright (optional weird effect)
+    spinRaf = requestAnimationFrame(spinFrame);
+  }
+  spinRaf = requestAnimationFrame(spinFrame);
+
+  // Move bagrut on a circular path too
+  let angle2 = 0;
+  const cx = W / 2, cy = H / 2;
+  const radius = Math.min(W, H) * 0.25;
+  moveInterval = setInterval(() => {
+    if (!gameActive) return;
+    angle2 += 0.05;
+    const nx = cx + Math.cos(angle2) * radius - 55;
+    const ny = cy + Math.sin(angle2) * radius - 40;
+    b.style.left = Math.max(5, Math.min(W - 120, nx)) + 'px';
+    b.style.top = Math.max(55, Math.min(H - 90, ny)) + 'px';
+  }, 30);
+
+  const onTouch = (e) => {
+    e.preventDefault();
+    if (!gameActive) return;
+    missCount++;
+    updateScore();
+    const cx2 = parseFloat(b.style.left);
+    const cy2 = parseFloat(b.style.top);
+    showMissText(cx2 + 55, cy2 - 20);
+    flashArena();
+    spinSpeed += 0.8; // speed up when touched!
+  };
+  b.addEventListener('touchstart', onTouch, { passive: false });
+  b.addEventListener('mousedown', onTouch);
+}
+
+// ============================================================
+//  STAGE 4 – MINI
+// ============================================================
+function runStage4() {
+  const arena = document.getElementById('spinWrapper');
+  const W = window.innerWidth, H = window.innerHeight;
+  const b = createBagrut(arena, false, true);
+  let pos = safePos(W, H, 35, 25);
+  b.style.left = pos.x + 'px';
+  b.style.top = pos.y + 'px';
+
+  const onTouch = (e) => {
+    e.preventDefault();
+    if (!gameActive) return;
+    missCount++;
+    updateScore();
+    showMissText(parseFloat(b.style.left) + 17, parseFloat(b.style.top) - 20);
+    flashArena();
+    // teleport with shrink animation
+    b.style.opacity = '0';
+    b.style.transform = 'scale(0)';
+    setTimeout(() => {
+      const np = safePos(W, H, 35, 25);
+      b.style.left = np.x + 'px';
+      b.style.top = np.y + 'px';
+      b.style.opacity = '1';
+      b.style.transform = 'scale(1)';
+    }, 300);
+  };
+  b.addEventListener('touchstart', onTouch, { passive: false });
+  b.addEventListener('mousedown', onTouch);
+
+  // Random jumps
+  moveInterval = setInterval(() => {
+    if (!gameActive) return;
+    const np = safePos(W, H, 35, 25);
+    b.style.transition = 'left 0.1s, top 0.1s';
+    b.style.left = np.x + 'px';
+    b.style.top = np.y + 'px';
+    setTimeout(() => b.style.transition = 'none', 150);
+  }, 1200);
+}
+
+// ============================================================
+//  STAGE 5 – IMPOSSIBLE
+// ============================================================
+function runStage5() {
+  const arena = document.getElementById('spinWrapper');
+  spawnStage5Clones(arena);
+
+  disappearInterval = setInterval(() => {
+    if (!gameActive) return;
+    clearBagrutsExcept();
+    setTimeout(() => {
+      if (gameActive) spawnStage5Clones(arena);
+    }, 500);
+  }, 2000);
+}
+
+function spawnStage5Clones(arena) {
+  const W = window.innerWidth, H = window.innerHeight;
+  const realIdx = randInt(0, 4);
+  for (let i = 0; i < 5; i++) {
+    const isFake = (i !== realIdx);
+    const b = createBagrut(arena, isFake, false);
+    const pos = safePos(W, H, 110, 80);
+    b.style.left = pos.x + 'px';
+    b.style.top = pos.y + 'px';
+
+    const onTouch = (e) => {
+      e.preventDefault();
+      if (!gameActive) return;
+      missCount++;
+      updateScore();
+      showMissText(parseFloat(b.style.left) + 55, parseFloat(b.style.top) - 20);
+      flashArena();
+      clearBagrutsExcept();
+      setTimeout(() => { if (gameActive) spawnStage5Clones(arena); }, 300);
+    };
+    b.addEventListener('touchstart', onTouch, { passive: false });
+    b.addEventListener('mousedown', onTouch);
+  }
+
+  // move real bagrut immediately
+  const real = bagrutElems.find(el => !el.classList.contains('bagrut-fake'));
+  if (real) {
+    moveInterval && clearInterval(moveInterval);
+    moveInterval = setInterval(() => {
+      if (!gameActive || !real.parentNode) return;
+      const np = safePos(W, H, 110, 80);
+      real.style.transition = 'left 0.2s, top 0.2s';
+      real.style.left = np.x + 'px';
+      real.style.top = np.y + 'px';
+    }, 700);
+  }
+}
+
+// ============================================================
+//  CREATE BAGRUT ELEMENT
+// ============================================================
+function createBagrut(parent, isFake, isMini) {
+  const img = document.createElement('img');
+  img.src = 'bagrut.jpg';
+  img.className = 'bagrut' + (isMini ? ' bagrut-mini' : '') + (isFake ? ' bagrut-fake' : '');
+  img.draggable = false;
+  parent.appendChild(img);
+  bagrutElems.push(img);
+  return img;
+}
+
+// ============================================================
+//  END STAGE
+// ============================================================
+function endStage(idx) {
+  gameActive = false;
+  clearAllIntervals();
+
+  const missesThisStage = missCount - stageResults.reduce((a, b) => a + b.misses, 0);
+  stageResults.push({
+    name: STAGES[idx].name.replace(/שלב \d+ – /, ''),
+    misses: Math.max(0, missesThisStage)
+  });
+
+  currentStage++;
+  if (currentStage < STAGES.length) {
+    clearBagruts();
+    loadStage(currentStage);
+  } else {
+    showEndScreen();
+  }
+}
+
+function updateScore() {
+  document.getElementById('score').textContent = 'ניסיונות: ' + missCount;
+}
+
+// ============================================================
+//  END SCREEN
+// ============================================================
+function showEndScreen() {
+  clearAllIntervals();
+  clearBagruts();
+  document.getElementById('gameScreen').style.display = 'none';
+
+  const end = document.getElementById('endScreen');
+  end.style.display = 'flex';
+
+  const totalMisses = missCount;
+  let verdict, trophy;
+
+  if (totalMisses < 5) {
+    trophy = '🪨';
+    verdict = 'אפילו לא ניסית? בטח ישבת עם הידיים בכיסיים. פיי מאוכזב ממך.';
+  } else if (totalMisses < 20) {
+    trophy = '🥔';
+    verdict = 'כמה ניסיונות בודדים? הבגרות שלך כבר הספיקה לטוס לפוסט-דוקטורט בחו"ל.';
+  } else if (totalMisses < 50) {
+    trophy = '🤡';
+    verdict = 'לא נורא! עשית מאמץ. אבל הבגרות עדיין לא שלך. ואף פעם לא תהיה.';
+  } else if (totalMisses < 100) {
+    trophy = '🫠';
+    verdict = 'וואו, ניסית ממש קשה! הבגרות רואה את המאמץ שלך... ומתגלגלת מצחוק.';
+  } else {
+    trophy = '🔥';
+    verdict = 'מדהים! ' + totalMisses + ' ניסיונות!! זה כבר לא חיפוש בגרות, זה אובססיה. שחרר. פיי גם לא מצא אותה.';
+  }
+
+  const stageRows = stageResults.map((s, i) => `
+    <div class="stage-row">
+      <span class="sname">שלב ${i+1}: ${s.name}</span>
+      <span class="sresult">${s.misses} פספוסים</span>
+    </div>
+  `).join('');
+
+  end.innerHTML = `
+    <h1>🎓 ניסית! כנסת! כשלת!</h1>
+    <div class="trophy">${trophy}</div>
+    <div class="final-score">${totalMisses}</div>
+    <div class="score-label">ניסיונות כושלים לתפוס בגרות</div>
+    <p class="verdict">${verdict}</p>
+    <img src="bagrut.jpg" class="certificate-fail" alt="בגרות שאבדה">
+    <p style="font-size:0.75rem; color:#555; margin-bottom:10px;">
+      ↑ זאת הבגרות של פיי. תסתכל עליה טוב.<br>
+      זה הכי קרוב שתגיע אליה.
+    </p>
+    <div class="stages-summary">
+      <p style="color:#a8dadc; font-size:0.85rem; margin-bottom:8px; font-weight:bold;">סיכום שלבים:</p>
+      ${stageRows}
+    </div>
+    <button class="play-again" onclick="location.reload()">⟳ לנסות שוב (גם לא יעזור)</button>
+    <p style="font-size:0.7rem; color:#444; margin-bottom:20px;">
+      תעודת הבגרות של פיי נמצאת כנראה בממד אחר.<br>
+      אנחנו מצטערים על כל עצבנות שנגרמה.
+    </p>
+  `;
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+</script>
+</body>
+</html>
