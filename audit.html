@@ -217,7 +217,8 @@
     <button onclick="showTab('must')">MUST vs Nice-to-Have</button>
     <button onclick="showTab('proposals')">ניתוח הצעות</button>
     <button onclick="showTab('compare')">השוואה מפורטת</button>
-    <button onclick="showTab('recommend')">המלצה סופית</button>
+    <button onclick="showTab('recommend')">השוואה בין הצעות</button>
+    <button onclick="showTab('tecom-options')" style="background:rgba(234,179,8,.25);color:#fde68a;font-weight:800;border:1px solid rgba(234,179,8,.5);">⭐ המלצות סופיות</button>
   </nav>
 </div>
 
@@ -1130,6 +1131,338 @@
     </div>
     <div style="font-size:.78rem;color:var(--gray3);margin-top:8px;">* לומן 5200 — מומלץ לשדרג ל-7000 לומן בעלות תוספת קטנה. כל המחירים ללא מע"מ.</div>
   </div>
+</div>
+
+<!-- ===================== TECOM OPTIONS ===================== -->
+<div class="section" id="tab-tecom-options">
+
+  <div class="hero" style="background:linear-gradient(135deg,#1e3a5f 0%,#1e5a3a 100%);">
+    <h2>⭐ המלצות סופיות — טכום אלקטרוניקה</h2>
+    <p>לאחר פגישות ושיחות עם הספקים, החלטנו שהכיוון הטוב ביותר בשבילנו הוא <strong>טכום</strong>. הם המקצועיים ביותר. כעת אנחנו ניצבים בפני דילמה בבחירת מערכת התצוגה. להלן ההשוואה:</p>
+    <div class="meta">
+      <div class="meta-item"><strong>₪151,300</strong>הצעה 1 — מקרן</div>
+      <div class="meta-item"><strong>₪178,318</strong>הצעה 2 — LED BOE</div>
+      <div class="meta-item"><strong>₪248,355</strong>הצעה 3 — LED QSTECH</div>
+    </div>
+  </div>
+
+  <!-- MAIN COMPARISON TABLE -->
+  <div class="table-wrap" style="margin-bottom:28px;">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:200px;text-align:right;">קטגוריה</th>
+          <th style="background:#1e3a8a;color:#fff;">
+            📽️ הצעה 1<br>
+            <span style="font-size:.78rem;font-weight:400;opacity:.85;">טכום + מקרן לייזר</span>
+          </th>
+          <th style="background:#14532d;color:#fff;">
+            📺 הצעה 2<br>
+            <span style="font-size:.78rem;font-weight:400;opacity:.85;">טכום + BOE P1.5 (פרוטאץ')</span><br>
+            <span style="font-size:.72rem;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px;margin-top:4px;display:inline-block;">זהה למסך במרכז חץ ✓</span>
+          </th>
+          <th style="background:#78350f;color:#fff;">
+            הצעה 3<br>
+            <span style="font-size:.78rem;font-weight:400;opacity:.85;">טכום + QSTECH LED COB</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- PRICING -->
+        <tr class="category-row"><td colspan="4">💰 מחיר</td></tr>
+        <tr>
+          <td><strong>מחיר ללא מע"מ</strong></td>
+          <td>₪128,220</td>
+          <td>₪151,117</td>
+          <td style="font-weight:700;">₪210,470</td>
+        </tr>
+        <tr>
+          <td><strong>מחיר כולל מע"מ 18%</strong></td>
+          <td style="font-size:1.05rem;font-weight:700;color:#1a3a5c;">₪151,300</td>
+          <td style="font-size:1.05rem;font-weight:700;color:#1a3a5c;">₪178,318</td>
+          <td style="font-size:1.15rem;font-weight:800;color:#b45309;">₪248,355</td>
+        </tr>
+        <tr>
+          <td>הפרש מהצעה 1</td>
+          <td style="color:#888;">—</td>
+          <td style="color:#15803d;font-weight:600;">+ ₪27,018 יותר</td>
+          <td style="color:#b45309;font-weight:700;">+ ₪97,055 יותר</td>
+        </tr>
+
+        <!-- DISPLAY -->
+        <tr class="category-row"><td colspan="4">📺 מערכת תצוגה</td></tr>
+        <tr>
+          <td>סוג תצוגה</td>
+          <td>מקרן לייזר Sony VPL-PHZ61</td>
+          <td style="font-weight:600;">מסך LED ישיר BOE<br><span style="font-size:.75rem;color:#15803d;font-weight:700;">זהה למסך במרכז חץ ✓</span></td>
+          <td style="font-weight:600;">מסך LED ישיר QSTECH COB</td>
+        </tr>
+        <tr>
+          <td>גודל תצוגה</td>
+          <td>מסך הקרנה 400×250 ס"מ<br><span style="font-size:.75rem;color:#888;">(תלוי במרחק ובמסך)</span></td>
+          <td>320×192 ס"מ <span style="font-size:.75rem;color:#888;">(קטן יותר)</span></td>
+          <td style="font-weight:700;color:#15803d;">363×215 ס"מ <span style="font-size:.75rem;">(קבוע, אחיד)</span></td>
+        </tr>
+        <tr>
+          <td>פיטצ' (pixel pitch)</td>
+          <td class="cell-na">N/A — תלוי ברזולוציית מקרן</td>
+          <td style="font-weight:600;"><strong>1.5 מ"מ</strong> — טוב ✓</td>
+          <td style="font-weight:700;color:#15803d;"><strong>1.25 מ"מ</strong> — עדין מאוד ✓✓</td>
+        </tr>
+        <tr>
+          <td>טכנולוגיה</td>
+          <td>לייזר 7,000 אנסי — מוקרן על מסך לבן</td>
+          <td><strong>GOB</strong> — Glue-On-Board<br><span style="font-size:.75rem;color:#888;">הגנה על פיקסלים, חיי מוצר ארוכים</span></td>
+          <td style="font-weight:700;"><strong>COB</strong> — Chip-On-Board<br><span style="font-size:.75rem;color:#15803d;">ניגודיות גבוהה, עמידות מכנית מעולה</span></td>
+        </tr>
+        <tr>
+          <td>בהירות</td>
+          <td>7,000 אנסי — עשוי להיחלש עם הזמן</td>
+          <td style="font-weight:600;">600–800 nits — קבוע ✓</td>
+          <td style="font-weight:700;color:#15803d;">600–800 nits — קבוע לכל החיים ✓</td>
+        </tr>
+        <tr>
+          <td>זמן כיבוי/הדלקה</td>
+          <td class="cell-bad">~30–60 שניות המתנה ✗</td>
+          <td class="cell-good">מיידי ✓</td>
+          <td class="cell-good">מיידי — אפס המתנה ✓</td>
+        </tr>
+        <tr>
+          <td>רגישות לאור חיצוני</td>
+          <td class="cell-bad">גבוהה — צריך חדר מוחשך ⚠</td>
+          <td class="cell-good">נמוכה ✓</td>
+          <td class="cell-good">נמוכה — עובד באור מלא ✓</td>
+        </tr>
+        <tr>
+          <td>חיי מוצר</td>
+          <td>~20,000 שעות (לייזר)</td>
+          <td style="font-weight:600;">80,000–100,000 שעות ✓</td>
+          <td style="font-weight:700;color:#15803d;">100,000 שעות ✓✓</td>
+        </tr>
+        <tr>
+          <td>תחזוקה</td>
+          <td class="cell-bad">החלפת מנורה עתידית אפשרית, ניקוי תקופתי ⚠</td>
+          <td class="cell-good">אפס תחזוקה שוטפת ✓</td>
+          <td class="cell-good">אפס תחזוקה שוטפת ✓</td>
+        </tr>
+        <tr>
+          <td>מסך מגע לפודיום</td>
+          <td class="cell-bad">לא כלול ✗</td>
+          <td class="cell-na">לא מפורט</td>
+          <td class="cell-good">24" Multitouch ✓ (כלול)</td>
+        </tr>
+
+        <!-- SOUND -->
+        <tr style="background:#f0fdf4;">
+          <td colspan="4" style="padding:10px 14px;text-align:center;border-top:2px solid #86efac;">
+            <span style="background:#15803d;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🔊 מערכת שמע — זהה בכל שלוש ההצעות</span>
+          </td>
+        </tr>
+        <tr style="background:#f0fdf4;">
+          <td style="color:#15803d;font-weight:600;">DSP מרכזי</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
+            Biamp TesiraFORTE CI ✓
+          </td>
+        </tr>
+        <tr style="background:#f0fdf4;">
+          <td style="color:#15803d;font-weight:600;">רמקולים</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
+            Biamp ENT220W ×2 + ENT203W ×2 + VLF208LV ×2 ✓
+          </td>
+        </tr>
+        <tr style="background:#f0fdf4;">
+          <td style="color:#15803d;font-weight:600;">מגבר</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
+            Voltera D 2400.8 — 8 ערוצים ✓
+          </td>
+        </tr>
+        <tr style="background:#f0fdf4;">
+          <td style="color:#15803d;font-weight:600;">מיקרופונים</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;border-bottom:2px solid #86efac;">
+            Shure SLXD+ דש + ידני אלחוטי + ATR1500 גיבוי חוטי ✓
+          </td>
+        </tr>
+
+        <!-- CONTROL -->
+        <tr style="background:#eff6ff;">
+          <td colspan="4" style="padding:10px 14px;text-align:center;border-top:2px solid #93c5fd;">
+            <span style="background:#1d4ed8;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🎛️ מערכת שליטה — זהה בכל שלוש ההצעות</span>
+          </td>
+        </tr>
+        <tr style="background:#eff6ff;">
+          <td style="color:#1d4ed8;font-weight:600;">בקר שליטה</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;">
+            Kramer BRAIN + הרחבות + מסך מגע 8" ✓
+          </td>
+        </tr>
+        <tr style="background:#eff6ff;">
+          <td style="color:#1d4ed8;font-weight:600;">טאבלט אלחוטי</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;">
+            טאבלט נייד לשליטה מכל מקום באולם ✓
+          </td>
+        </tr>
+        <tr style="background:#eff6ff;">
+          <td style="color:#1d4ed8;font-weight:600;">שליטה תאורה</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;border-bottom:2px solid #93c5fd;">
+            מודול תאורה — שליטה על תאורת האולם ✓
+          </td>
+        </tr>
+
+        <!-- WARRANTY -->
+        <tr style="background:#faf5ff;">
+          <td colspan="4" style="padding:10px 14px;text-align:center;border-top:2px solid #c4b5fd;">
+            <span style="background:#7c3aed;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🛡️ אחריות ושירות — זהה בכל שלוש ההצעות</span>
+          </td>
+        </tr>
+        <tr style="background:#faf5ff;">
+          <td style="color:#7c3aed;font-weight:600;">אחריות בסיסית</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
+            12 חודש שירות באתר הלקוח ✓
+          </td>
+        </tr>
+        <tr style="background:#faf5ff;">
+          <td style="color:#7c3aed;font-weight:600;">הרחבה ל-36 חודש</td>
+          <td colspan="3" style="text-align:center;font-weight:600;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
+            8,350 ₪/שנה (הצעות 1 ו-2) &nbsp;|&nbsp; 11,855 ₪/שנה (הצעה 3 — כולל מסך LED)
+          </td>
+        </tr>
+        <tr style="background:#faf5ff;">
+          <td style="color:#7c3aed;font-weight:600;">קריאת שירות</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
+            650 ₪ לקריאה כולל נסיעה ותיקון עד שעת עבודה ✓
+          </td>
+        </tr>
+        <tr style="background:#faf5ff;">
+          <td style="color:#7c3aed;font-weight:600;">זמן אספקה</td>
+          <td colspan="3" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;border-bottom:2px solid #c4b5fd;">
+            45 ימי עבודה מאישור הזמנה ✓
+          </td>
+        </tr>
+
+        <!-- SUMMARY -->
+        <tr class="category-row"><td colspan="4">✅ סיכום</td></tr>
+        <tr>
+          <td><strong>המחיר כולל מע"מ</strong></td>
+          <td style="font-size:1.1rem;font-weight:700;color:#1a3a5c;">₪151,300</td>
+          <td style="font-size:1.1rem;font-weight:700;color:#1a3a5c;">₪178,318</td>
+          <td style="font-size:1.25rem;font-weight:800;color:#b45309;">₪248,355</td>
+        </tr>
+        <tr>
+          <td><strong>המלצה</strong></td>
+          <td><span class="badge warning">בסיסית — ללא LED</span></td>
+          <td><span class="badge nice">פשרה טובה</span></td>
+          <td><span class="badge nice">אופציה מתקדמת</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HIGHLIGHTS -->
+  <div class="section-title">הבדלים מרכזיים</div>
+  <div class="grid2" style="margin-bottom:24px;">
+
+    <div style="background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border-right:4px solid #1e3a8a;">
+      <h3 style="color:#1e3a8a;font-size:.95rem;margin-bottom:14px;">📽️ הצעה 1 — מקרן לייזר Sony</h3>
+      <div style="font-size:1.6rem;font-weight:900;color:#1e3a8a;margin-bottom:4px;">₪151,300</div>
+      <div style="font-size:.78rem;color:#888;margin-bottom:14px;">כולל מע"מ | ₪128,220 ללא מע"מ</div>
+      <ul style="list-style:none;padding:0;font-size:.85rem;line-height:2;">
+        <li>✅ המחיר הנמוך ביותר מבין 3 ההצעות</li>
+        <li>✅ מקרן Sony מהטובים בשוק — 7,000 אנסי</li>
+        <li>✅ מסך הקרנה נגלל חשמלי 400×250 ס"מ</li>
+        <li>❌ צריך חדר חצי חשוך להקרנה טובה</li>
+        <li>❌ המתנה של 30-60 שניות בהפעלה</li>
+        <li>❌ תחזוקה עתידית אפשרית</li>
+        <li>❌ לא כולל מסך מגע לפודיום</li>
+      </ul>
+    </div>
+
+    <div style="background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border-right:4px solid #15803d;">
+      <h3 style="color:#15803d;font-size:.95rem;margin-bottom:14px;">📺 הצעה 2 — LED BOE P1.5 (פרוטאץ') + מערכת טכום</h3>
+      <div style="font-size:1.6rem;font-weight:900;color:#15803d;margin-bottom:4px;">₪178,318</div>
+      <div style="font-size:.78rem;color:#888;margin-bottom:6px;">כולל מע"מ 18% | ₪151,117 ללא מע"מ</div>
+      <div style="font-size:.75rem;color:#555;margin-bottom:10px;">טכום ללא מקרן/מסך: ₪108,170 + מסך BOE פרוטאץ': ₪42,947</div>
+      <div style="background:#dcfce7;border:1px solid #86efac;border-radius:6px;padding:6px 12px;font-size:.8rem;font-weight:700;color:#15803d;margin-bottom:12px;">✅ זהה למסך המותקן במרכז חץ</div>
+      <ul style="list-style:none;padding:0;font-size:.85rem;line-height:2;">
+        <li>✅ מסך LED איכותי במחיר בינוני</li>
+        <li>✅ GOB — הגנה על פיקסלים, עמידות טובה</li>
+        <li>✅ עובד באור מלא, הדלקה מיידית</li>
+        <li>✅ גודל 3.2×1.92 מ' — מתאים לאולם</li>
+        <li>⚠ פיטצ' 1.5 — טוב, אך פחות חד מ-QSTECH</li>
+        <li>❌ לא כולל מסך מגע לפודיום</li>
+      </ul>
+    </div>
+
+    <div style="background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border-right:4px solid #b45309;">
+      <h3 style="color:#b45309;font-size:.95rem;margin-bottom:14px;">📺 הצעה 3 — LED QSTECH COB P1.25</h3>
+      <div style="font-size:1.6rem;font-weight:900;color:#b45309;margin-bottom:4px;">₪248,355</div>
+      <div style="font-size:.78rem;color:#888;margin-bottom:14px;">כולל מע"מ | ₪210,470 ללא מע"מ</div>
+      <ul style="list-style:none;padding:0;font-size:.85rem;line-height:2;">
+        <li>✅ המסך הגדול ביותר — 3.63×2.15 מ'</li>
+        <li>✅ פיטצ' 1.25 — החד ביותר מבין 3 ההצעות</li>
+        <li>✅ טכנולוגיית COB — ניגודיות מעולה, עמיד מכנית</li>
+        <li>✅ 100,000 שעות חיי מוצר — ללא תחזוקה</li>
+        <li>✅ כולל מסך מגע 24" לפודיום מרצה</li>
+        <li>✅ הדלקה/כיבוי מיידי</li>
+        <li>✅ עובד באור מלא ללא הגבלה</li>
+        <li>❌ המחיר הגבוה ביותר — ₪97K יותר מהצעה 1</li>
+      </ul>
+    </div>
+
+    <!-- Price visual bar -->
+    <div style="background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);">
+      <h3 style="color:var(--blue);font-size:.95rem;margin-bottom:18px;">💰 השוואת מחיר (כולל מע"מ)</h3>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:.82rem;">
+          <span>📽️ הצעה 1 — מקרן</span><strong style="color:#1e3a8a;">₪151,300</strong>
+        </div>
+        <div style="background:#e2e8f0;border-radius:4px;height:20px;overflow:hidden;">
+          <div style="width:61%;background:#1e3a8a;height:100%;border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:.82rem;">
+          <span>📺 הצעה 2 — BOE LED</span><strong style="color:#15803d;">₪178,318</strong>
+        </div>
+        <div style="background:#e2e8f0;border-radius:4px;height:20px;overflow:hidden;">
+          <div style="width:72%;background:#15803d;height:100%;border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:.82rem;">
+          <span>⭐ הצעה 3 — QSTECH LED</span><strong style="color:#b45309;">₪248,355</strong>
+        </div>
+        <div style="background:#e2e8f0;border-radius:4px;height:20px;overflow:hidden;">
+          <div style="width:100%;background:linear-gradient(90deg,#f59e0b,#b45309);height:100%;border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="font-size:.75rem;color:#94a3b8;margin-top:12px;border-top:1px solid #e2e8f0;padding-top:10px;">
+        * הצעה 3 היא שילוב תיאורטי — יש לאשר מחיר סופי עם הספקים
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NOTE -->
+  <div style="background:linear-gradient(135deg,#1e3a5f,#14532d);color:#fff;border-radius:var(--radius);padding:22px 26px;margin-bottom:8px;">
+    <h3 style="font-size:1rem;font-weight:800;margin-bottom:12px;">🎯 המלצה סופית לטכנודע — בין 3 ההצעות</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:14px;">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:6px;">📌 אם תקציב מוגבל</div>
+        <div style="font-size:.82rem;opacity:.9;line-height:1.6;">הצעה 1 (מקרן) — ₪151,300. פתרון מקצועי ועובד, אך ללא יתרונות LED לטווח ארוך.</div>
+      </div>
+      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:14px;">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:6px;">🔄 פשרה סבירה</div>
+        <div style="font-size:.82rem;opacity:.9;line-height:1.6;">הצעה 2 (BOE P1.5) — ₪178,318. LED איכותי במחיר ביניים. שילוב מסך פרוטאץ' עם מערכת טכום.</div>
+      </div>
+      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:14px;">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:6px;">💡 אופציה מתקדמת</div>
+        <div style="font-size:.82rem;opacity:.9;line-height:1.6;">הצעה 3 (QSTECH COB P1.25) — ₪248,355. המסך הגדול, החד והאיכותי ביותר. לאורך 10 שנה — ההחזר על ההשקעה גבוה.</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
