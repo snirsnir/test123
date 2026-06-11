@@ -763,8 +763,8 @@
             </div>
 
             <button class="btn btn-primary btn-lg" onclick="startExam()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 התחל/י את המבדק
+                <svg width="18" height="18" fill="currentColor" stroke="none" viewBox="0 0 24 24"><polygon points="19 3 5 12 19 21 19 3"/></svg>
             </button>
         </div>
     </div>
@@ -815,7 +815,7 @@
 
     <div class="main">
 
-        <!-- ── PART 0: SIMULATION (ד') – FIRST ── -->
+        <!-- ── PART 0: SIMULATION (ד') ── -->
         <div id="part-0">
             <div class="section-time-banner">
                 <div>
@@ -834,7 +834,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-
                     <div class="roleplay-scenario">
                         <h4>🎭 התרחיש</h4>
                         <p>
@@ -869,7 +868,7 @@
                 <div class="nav-right">
                     <button class="btn btn-primary" onclick="goNext(0)">
                         חלק א' – מכתב מכירתי
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" transform="rotate(180 12 12)"/></svg>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
                 </div>
             </div>
@@ -901,7 +900,6 @@
                             המיועדת להפעלה בשעות אחר הצהריים במימון הרשות המקומית או ההורים.
                         </p>
                     </div>
-
                     <div class="info-box">
                         <h4>🎯 המשימה</h4>
                         <ul>
@@ -909,7 +907,6 @@
                             <li>המטרה: לקבוע פגישת מכירה/הצגה של התוכנית</li>
                         </ul>
                     </div>
-
                     <label class="field-label" for="answer-a">✍️ כתוב/י כאן את האימייל</label>
                     <textarea id="answer-a" rows="14" placeholder=""></textarea>
                     <div class="word-count" id="wc-a">0 מילים</div>
@@ -918,13 +915,13 @@
 
             <div class="nav-row">
                 <button class="btn btn-secondary" onclick="goPrev(1)">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                     חזרה לסימולציה
                 </button>
                 <div class="nav-right">
                     <button class="btn btn-primary" onclick="goNext(1)">
-                        חלק ב' – ניתוח כלכלי
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" transform="rotate(180 12 12)"/></svg>
+                        חלק ג' – ניתוח כלכלי
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
                 </div>
             </div>
@@ -944,12 +941,11 @@
                 <div class="card-header">
                     <span class="part-badge">חלק ג'</span>
                     <div>
-                        <div class="card-title">ניתוח כדאיות – מחנה מדע קיץ (5 ימים)</div>
+                        <div class="card-title">ניתוח כדאיות – ימי מדע</div>
                         <div class="card-subtitle">חשב/י נקודת איזון ויעד רווח. ניתן לחשב על דף ולרשום כאן את התשובות.</div>
                     </div>
                 </div>
                 <div class="card-body">
-
                     <h4 style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;">📊 נתוני הפרויקט</h4>
                     <div class="data-grid">
                         <div class="data-cell">
@@ -968,7 +964,6 @@
                             <div class="data-unit">₪ לילד</div>
                         </div>
                     </div>
-
                     <div class="answer-pair">
                         <div class="answer-field">
                             <div class="q-number">שאלה 1</div>
@@ -987,7 +982,6 @@
                             </div>
                         </div>
                     </div>
-
                     <label class="field-label" for="answer-b3">🧮 הסבר את דרך החישוב שלך</label>
                     <div class="field-hint">תאר/י כיצד הגעת לתשובות ואילו שיקולים נוספים תבחן/י</div>
                     <textarea id="answer-b3" rows="7" placeholder=""></textarea>
@@ -997,13 +991,13 @@
 
             <div class="nav-row">
                 <button class="btn btn-secondary" onclick="goPrev(2)">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                    חזרה לחלק א'
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                    חזרה לחלק ב'
                 </button>
                 <div class="nav-right">
                     <button class="btn btn-primary" onclick="goNext(2)">
-                        חלק ג' – תפיסת ניהול
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" transform="rotate(180 12 12)"/></svg>
+                        חלק ד' – תפיסת ניהול
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
                 </div>
             </div>
@@ -1019,7 +1013,6 @@
                 <div>⏱ 15 דקות מומלץ</div>
             </div>
 
-            <!-- Question 1 -->
             <div class="card">
                 <div class="card-header">
                     <span class="part-badge">ד' · שאלה 1</span>
@@ -1035,7 +1028,6 @@
                 </div>
             </div>
 
-            <!-- Question 2 -->
             <div class="card">
                 <div class="card-header">
                     <span class="part-badge">ד' · שאלה 2</span>
@@ -1053,8 +1045,8 @@
 
             <div class="nav-row">
                 <button class="btn btn-secondary" onclick="goPrev(3)">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                    חזרה לחלק ב'
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                    חזרה לחלק ג'
                 </button>
                 <div class="nav-right">
                     <button class="btn btn-success btn-lg" onclick="submitExam()">
