@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>סקירת הצעות שדרוג אודיטוריום | טכנודע חדרה 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --blue:    #1a3a5c;
@@ -200,6 +201,138 @@
   .chip-orange{background:#ffedd5;color:#c2410c;}
 
   hr.divider{border:none;border-top:2px solid var(--gray2);margin:24px 0;}
+
+  /* ===== JOURNEY / FUNNEL ===== */
+  #tab-journey{font-family:'Rubik',sans-serif;}
+  .funnel-step{display:none;}
+  .funnel-step.active{display:block;animation:fadeInUp .5s ease;}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+  .journey-header{text-align:center;padding:48px 20px 32px;}
+  .journey-header h2{font-size:2.2rem;font-weight:900;color:var(--blue);margin-bottom:14px;}
+  .journey-header p{color:var(--gray4);font-size:1rem;max-width:580px;margin:0 auto 32px;line-height:1.7;}
+
+  .jsi{display:flex;justify-content:center;align-items:center;gap:6px;margin-bottom:28px;}
+  .jsi-dot{width:10px;height:10px;border-radius:50%;background:var(--gray2);transition:all .35s;}
+  .jsi-dot.active{background:var(--blue);width:28px;border-radius:5px;}
+  .jsi-dot.done{background:var(--teal);}
+
+  .step-title{font-size:1.35rem;font-weight:900;color:var(--blue);text-align:center;margin-bottom:6px;}
+  .step-subtitle{font-size:.9rem;color:var(--gray4);text-align:center;margin-bottom:24px;}
+
+  /* Funnel grid rows */
+  .fn-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:700px;margin:0 auto;}
+  .fn-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:420px;margin:0 auto;}
+  .fn-grid1{display:flex;justify-content:center;margin:0 auto;}
+
+  /* Base funnel card */
+  .fn-card{
+    background:#fff;border-radius:14px;padding:16px 12px;
+    box-shadow:0 3px 14px rgba(0,0,0,.10);text-align:center;
+    position:relative;border-top:4px solid var(--gray2);
+    transition:background .4s,border-color .4s,box-shadow .4s;
+    animation:nodeIn .4s ease both;
+  }
+  .fn-card:nth-child(1){animation-delay:.05s}
+  .fn-card:nth-child(2){animation-delay:.15s}
+  .fn-card:nth-child(3){animation-delay:.25s}
+  .fn-card:nth-child(4){animation-delay:.35s}
+  @keyframes nodeIn{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+  .fn-card.fn-tecom{border-top-color:#2563a8;}
+  .fn-card.fn-multi{border-top-color:#7c3aed;}
+  .fn-card.fn-barkai{border-top-color:#0f766e;}
+  .fn-card.fn-proto{border-top-color:#b45309;}
+
+  .fn-card.fn-elim{
+    background:#fef2f2;border-top-color:#dc2626 !important;
+    animation:nodeIn .4s ease both, elimShake .55s ease .65s;
+  }
+  @keyframes elimShake{
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-5px) rotate(-1.5deg)}
+    40%{transform:translateX(5px) rotate(1.5deg)}
+    60%{transform:translateX(-3px)}80%{transform:translateX(3px)}
+  }
+  .fn-card.fn-pass{background:linear-gradient(135deg,#f0fdf4,#dcfce7);box-shadow:0 4px 20px rgba(21,128,61,.18);}
+  .fn-card.fn-finalist{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-top-color:#2563a8;box-shadow:0 4px 22px rgba(37,99,168,.18);}
+  .fn-card.fn-finalist.fn-barkai-f{border-top-color:#0f766e;background:linear-gradient(135deg,#f0fdf4,#dcfce7);}
+  .fn-card.fn-winner{
+    background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-top-color:#15803d;
+    box-shadow:0 6px 30px rgba(21,128,61,.3);width:200px;
+    animation:nodeIn .45s ease .1s both,winPulse 1.6s ease 1s infinite;
+  }
+  @keyframes winPulse{0%,100%{box-shadow:0 6px 30px rgba(21,128,61,.3)}50%{box-shadow:0 10px 44px rgba(21,128,61,.55)}}
+
+  .fn-emoji{font-size:2rem;line-height:1;margin-bottom:6px;}
+  .fn-name{font-weight:800;font-size:.9rem;color:var(--blue);margin-bottom:4px;}
+  .fn-name-dead{text-decoration:line-through !important;color:#94a3b8 !important;}
+  .fn-price{font-size:.74rem;color:var(--gray4);}
+  .fn-price-dead{color:#94a3b8 !important;}
+  .fn-prices{font-size:.7rem;color:var(--gray4);line-height:1.75;}
+
+  .fn-x{
+    position:absolute;top:-12px;right:-12px;width:28px;height:28px;
+    background:#dc2626;border-radius:50%;color:#fff;font-size:.88rem;font-weight:900;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(220,38,38,.45);
+    animation:popIn .35s cubic-bezier(.34,1.56,.64,1) .7s both;
+  }
+  .fn-check{
+    position:absolute;top:-12px;right:-12px;width:28px;height:28px;
+    background:#15803d;border-radius:50%;color:#fff;font-size:.85rem;font-weight:900;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(21,128,61,.45);
+    animation:popIn .35s cubic-bezier(.34,1.56,.64,1) .4s both;
+  }
+  @keyframes popIn{from{transform:scale(0) rotate(-180deg)}to{transform:scale(1) rotate(0)}}
+
+  .fn-reason{
+    margin-top:8px;background:#fee2e2;border:1px solid #fca5a5;
+    border-radius:8px;padding:6px 8px;font-size:.68rem;color:#b91c1c;
+    line-height:1.45;text-align:center;
+    animation:fadeInUp .4s ease .95s both;
+  }
+
+  /* Funnel SVG connector */
+  .fn-funnel{max-width:700px;margin:2px auto 4px;text-align:center;}
+  .fn-funnel svg{width:100%;height:60px;display:block;}
+  .fn-funnel-lbl{
+    font-size:.72rem;color:var(--teal);font-weight:800;
+    letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px;
+    animation:fadeInUp .4s ease .4s both;
+  }
+
+  .next-btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--blue);color:#fff;border:none;
+    padding:13px 30px;border-radius:50px;font-size:.95rem;font-weight:700;
+    cursor:pointer;transition:all .2s;margin-top:8px;
+  }
+  .next-btn:hover{background:var(--blue2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,99,168,.35);}
+
+  .winner-banner{
+    background:linear-gradient(135deg,#065f46,#14532d);color:#fff;
+    border-radius:16px;padding:40px 32px;text-align:center;margin:0 0 24px;
+    animation:winReveal .7s ease;
+  }
+  @keyframes winReveal{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .winner-banner h2{font-size:2rem;font-weight:900;margin-bottom:10px;}
+
+  .final-cards{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
+  .final-card-main{
+    background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;
+    border-radius:14px;padding:26px;max-width:360px;flex:1;min-width:240px;
+    animation:fadeInUp .5s ease .2s both;
+  }
+  .final-card-secondary{
+    background:#fff;border-radius:14px;padding:26px;
+    max-width:340px;flex:1;min-width:220px;border:2px dashed #b45309;
+    animation:fadeInUp .5s ease .4s both;
+  }
+
+  @keyframes tabGlow{0%,100%{box-shadow:none}50%{box-shadow:0 0 14px rgba(234,179,8,.6);}}
+  .tab-star-glow{animation:tabGlow 2.2s ease infinite;}
 </style>
 </head>
 <body>
@@ -218,7 +351,8 @@
     <button onclick="showTab('proposals')">ניתוח הצעות</button>
     <button onclick="showTab('compare')">השוואה מפורטת</button>
     <button onclick="showTab('recommend')">השוואה בין הצעות</button>
-    <button onclick="showTab('tecom-options')" style="background:rgba(234,179,8,.25);color:#fde68a;font-weight:800;border:1px solid rgba(234,179,8,.5);">⭐ המלצות סופיות</button>
+    <button onclick="showTab('journey');resetJourney();" style="background:rgba(99,102,241,.2);color:#c7d2fe;font-weight:700;border:1px solid rgba(99,102,241,.45);">🔍 הדרך להמלצות</button>
+    <button class="tab-star-glow" onclick="showTab('tecom-options')" style="background:rgba(234,179,8,.35);color:#fde68a;font-weight:900;border:2px solid rgba(234,179,8,.75);font-size:.95rem;">⭐ המלצות סופיות</button>
   </nav>
 </div>
 
@@ -229,7 +363,7 @@
     <p>מסמך זה מסכם את 4 הצעות המחיר שהתקבלו לשדרוג מערכות האודיטוריום, כולל ניתוח מפורט, השוואת מחירים והמלצות לפי סדרי עדיפויות של טכנודע.</p>
     <div class="meta">
       <div class="meta-item"><strong>4</strong>הצעות נסקרו</div>
-      <div class="meta-item"><strong>₪117K–₪216K</strong>טווח מחירים (ללא מע"מ) | טכום: ₪210K (LED)</div>
+      <div class="meta-item"><strong>₪139K–₪255K</strong>טווח מחירים (כולל מע"מ 18%) | טכום: ₪248K (LED)</div>
       <div class="meta-item"><strong>מרץ–מאי 2026</strong>תאריכי הצעות</div>
       <div class="meta-item"><strong>ברקאי</strong>ההצעה המומלצת</div>
     </div>
@@ -253,8 +387,8 @@
         <li><span class="dot"></span>פודיום עץ Custom + טאבלט + מסך מגע 24" לפודיום</li>
       </ul>
       <div style="margin-top:14px;text-align:center;">
-        <div style="font-size:1.5rem;font-weight:900;color:var(--blue);">₪210,470</div>
-        <div style="font-size:.75rem;color:var(--gray3);">ללא מע"מ | מסך LED</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--blue);">₪248,355</div>
+        <div style="font-size:.75rem;color:var(--gray3);">כולל מע"מ 18% | מסך LED</div>
         <div style="font-size:.85rem;color:var(--teal);margin-top:2px;font-weight:700;">כולל מסך LED מקצועי</div>
       </div>
     </div>
@@ -273,9 +407,9 @@
         <li><span class="dot"></span>פודיום עם מסך 22" מובנה</li>
       </ul>
       <div style="margin-top:14px;text-align:center;">
-        <div style="font-size:1.5rem;font-weight:900;color:var(--blue);">₪216,480</div>
-        <div style="font-size:.75rem;color:var(--gray3);">ללא מע"מ</div>
-        <div style="font-size:.85rem;color:var(--amber);margin-top:2px;">החקרה היקרה ביותר</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--blue);">₪255,446</div>
+        <div style="font-size:.75rem;color:var(--gray3);">כולל מע"מ 18%</div>
+        <div style="font-size:.85rem;color:var(--amber);margin-top:2px;">ההצעה היקרה ביותר</div>
       </div>
     </div>
 
@@ -293,8 +427,8 @@
         <li><span class="dot"></span>מסך 195" + BUKAI פודיום קומפקטי</li>
       </ul>
       <div style="margin-top:14px;text-align:center;">
-        <div style="font-size:1.5rem;font-weight:900;color:var(--green);">₪117,739</div>
-        <div style="font-size:.75rem;color:var(--gray3);">ללא מע"מ</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--green);">₪138,932</div>
+        <div style="font-size:.75rem;color:var(--gray3);">כולל מע"מ 18%</div>
         <div style="font-size:.85rem;color:var(--green);margin-top:2px;">הזול ביותר בשוק</div>
       </div>
     </div>
@@ -313,8 +447,8 @@
         <li><span class="dot"></span>TW M12+B15 רמקולים</li>
       </ul>
       <div style="margin-top:14px;text-align:center;">
-        <div style="font-size:1.5rem;font-weight:900;color:var(--blue);">₪191,937</div>
-        <div style="font-size:.75rem;color:var(--gray3);">ללא מע"מ | אחריות 24 חודש</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--blue);">₪226,486</div>
+        <div style="font-size:.75rem;color:var(--gray3);">כולל מע"מ 18% | אחריות 24 חודש</div>
         <div style="font-size:.85rem;color:var(--red);margin-top:2px;">חששות לגבי איכות מוצרים</div>
       </div>
     </div>
@@ -324,7 +458,7 @@
   <!-- Opinion intro -->
   <div class="opinion-box">
     <h3>💡 מסקנה ראשונית — לפני שנצלול לעומק</h3>
-    <p>לאחר סקירת כל 4 ההצעות ביחס לצרכי טכנודע, <strong>הפער בין ברקאי לשאר ההצעות בולט מאוד:</strong> ₪117,739 מול ₪150K–₪216K — עם ציוד מקצועי מהשורה הראשונה (Biamp, Crestron, Lumens).</p>
+    <p>לאחר סקירת כל 4 ההצעות ביחס לצרכי טכנודע, <strong>הפער בין ברקאי לשאר ההצעות בולט מאוד:</strong> ₪138,932 מול ₪178K–₪255K (כולל מע"מ) — עם ציוד מקצועי מהשורה הראשונה (Biamp, Crestron, Lumens).</p>
     <p>מולטיפקט מציעה את המערכת הכי מקיפה אך יקרה מדי ומוכוונת להקלטה ושידור — שאינם עדיפות ראשונה לטכנודע. פרוטאץ' מציעה LED מרשים אך עם בחירות מוצרים בעייתיות (Behringer, TW). טכום מציעה מוצרים מצוינים במחיר הוגן אך יקרה מברקאי.</p>
   </div>
 
@@ -1133,6 +1267,239 @@
   </div>
 </div>
 
+<!-- ===================== JOURNEY / FUNNEL ===================== -->
+<div class="section" id="tab-journey">
+
+  <div class="jsi">
+    <div class="jsi-dot active"></div>
+    <div class="jsi-dot"></div>
+    <div class="jsi-dot"></div>
+    <div class="jsi-dot"></div>
+    <div class="jsi-dot"></div>
+  </div>
+
+  <!-- STEP 0: Intro -->
+  <div class="funnel-step active" id="jstep-0">
+    <div class="journey-header">
+      <div style="font-size:4rem;line-height:1;margin-bottom:18px;">🔍</div>
+      <h2>איך הגענו להמלצות הסופיות?</h2>
+      <p>4 ספקים הגישו הצעות מחיר לשדרוג האודיטוריום. לאחר ניתוח ההצעות, פגישות זום וביקורים בשטח — עברנו תהליך בחירה שלב אחר שלב. לחצו להתחיל.</p>
+      <button class="next-btn" onclick="nextJourneyStep()">התחל &nbsp;›</button>
+    </div>
+  </div>
+
+  <!-- STEP 1: All 4 companies -->
+  <div class="funnel-step" id="jstep-1">
+    <div class="step-title">שלב 1 — 4 ספקים נכנסים לתחרות</div>
+    <div class="step-subtitle">כל ספק הגיש הצעה ונפגשנו איתו בשטח ובזום</div>
+
+    <div class="fn-grid4" style="margin-bottom:28px;">
+      <div class="fn-card fn-tecom">
+        <div class="fn-emoji">🔵</div>
+        <div class="fn-name">טכום</div>
+        <div class="fn-prices">₪151,300<br>₪192,187<br>₪248,355</div>
+        <div style="margin-top:6px;"><span class="chip chip-blue">ראש העין</span></div>
+      </div>
+      <div class="fn-card fn-multi">
+        <div class="fn-emoji">🟣</div>
+        <div class="fn-name">מולטיפקט</div>
+        <div class="fn-price">₪255,446</div>
+        <div style="margin-top:6px;"><span class="chip chip-orange">פתח תקווה</span></div>
+      </div>
+      <div class="fn-card fn-barkai">
+        <div class="fn-emoji">🟢</div>
+        <div class="fn-name">ברקאי</div>
+        <div class="fn-price">₪138,932</div>
+        <div style="margin-top:6px;"><span class="chip chip-green">רעננה</span></div>
+      </div>
+      <div class="fn-card fn-proto">
+        <div class="fn-emoji">🟠</div>
+        <div class="fn-name">פרוטאץ'</div>
+        <div class="fn-price">₪226,486</div>
+        <div style="margin-top:6px;"><span class="chip chip-orange">פתח תקווה</span></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="next-btn" onclick="nextJourneyStep()">הבא &nbsp;›</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Funnel 1 — 4 → 2 -->
+  <div class="funnel-step" id="jstep-2">
+    <div class="step-title">סיבוב 1 — סינון ראשוני</div>
+    <div class="step-subtitle">מולטיפקט ופרוטאץ' נשארים למעלה — טכום וברקאי עוברים</div>
+
+    <!-- Top row: all 4 (2 eliminated stay here, 2 continue down) -->
+    <div class="fn-grid4" style="margin-bottom:0;">
+      <!-- Eliminated: מולטיפקט (col 1) -->
+      <div class="fn-card fn-multi fn-elim">
+        <div class="fn-x">✕</div>
+        <div class="fn-emoji">🟣</div>
+        <div class="fn-name fn-name-dead">מולטיפקט</div>
+        <div class="fn-price fn-price-dead">₪255,446</div>
+        <div class="fn-reason">💸 הצעה יקרה ביותר — לא הסכימו לרדת במחיר</div>
+      </div>
+      <!-- Passing: טכום (col 2) -->
+      <div class="fn-card fn-tecom fn-pass">
+        <div class="fn-check">✓</div>
+        <div class="fn-emoji">🔵</div>
+        <div class="fn-name">טכום</div>
+        <div class="fn-prices">₪151,300<br>₪192,187<br>₪248,355</div>
+      </div>
+      <!-- Passing: ברקאי (col 3) -->
+      <div class="fn-card fn-barkai fn-pass">
+        <div class="fn-check">✓</div>
+        <div class="fn-emoji">🟢</div>
+        <div class="fn-name">ברקאי</div>
+        <div class="fn-price">₪138,932</div>
+      </div>
+      <!-- Eliminated: פרוטאץ' (col 4) -->
+      <div class="fn-card fn-proto fn-elim">
+        <div class="fn-x">✕</div>
+        <div class="fn-emoji">🟠</div>
+        <div class="fn-name fn-name-dead">פרוטאץ'</div>
+        <div class="fn-price fn-price-dead">₪226,486</div>
+        <div class="fn-reason">🎦 מתמחים בעיקר במסכים ופחות בציוד הגברה — ניכר בפגישה בשטח</div>
+      </div>
+    </div>
+
+    <!-- Funnel shape: lines from cols 2+3 converging downward -->
+    <div class="fn-funnel">
+      <svg viewBox="0 0 700 60" preserveAspectRatio="none">
+        <!-- outer funnel walls (decorative) -->
+        <line x1="0" y1="0" x2="255" y2="58" stroke="#e2e8f0" stroke-width="1.5" opacity="0.7"/>
+        <line x1="700" y1="0" x2="445" y2="58" stroke="#e2e8f0" stroke-width="1.5" opacity="0.7"/>
+        <!-- passing lines from טכום (col2 center ≈ 262) and ברקאי (col3 center ≈ 438) to center 350 -->
+        <line x1="262" y1="4" x2="350" y2="58" stroke="#2563a8" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
+        <line x1="438" y1="4" x2="350" y2="58" stroke="#0f766e" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
+        <!-- arrow -->
+        <polygon points="344,52 356,52 350,62" fill="#475569" opacity="0.6"/>
+      </svg>
+      <div class="fn-funnel-lbl">עוברים לסיבוב הבא</div>
+    </div>
+
+    <!-- Bottom row: the 2 finalists -->
+    <div class="fn-grid2" style="margin-bottom:24px;">
+      <div class="fn-card fn-tecom fn-pass">
+        <div class="fn-emoji">🔵</div>
+        <div class="fn-name">טכום</div>
+        <div class="fn-prices">₪151,300<br>₪192,187<br>₪248,355</div>
+      </div>
+      <div class="fn-card fn-barkai fn-pass">
+        <div class="fn-emoji">🟢</div>
+        <div class="fn-name">ברקאי</div>
+        <div class="fn-price">₪138,932</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="next-btn" onclick="nextJourneyStep()">הבא &nbsp;›</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Funnel 2 — 2 → 1 -->
+  <div class="funnel-step" id="jstep-3">
+    <div class="step-title">סיבוב 2 — ראש בראש</div>
+    <div class="step-subtitle">ברקאי נשארת — טכום יורדת לשלב הסופי</div>
+
+    <!-- Top row: 2 cards (ברקאי eliminated stays, טכום passes) -->
+    <div class="fn-grid2" style="max-width:500px;margin-bottom:0;">
+      <!-- Passing: טכום (col 1 in RTL = right side) -->
+      <div class="fn-card fn-tecom fn-pass">
+        <div class="fn-check">✓</div>
+        <div class="fn-emoji">🔵</div>
+        <div class="fn-name">טכום</div>
+        <div class="fn-prices">₪151,300<br>₪192,187<br>₪248,355</div>
+        <div style="margin-top:8px;font-size:.7rem;color:#166534;line-height:1.8;">
+          ✅ מקצועיות מוכחת<br>✅ ירדו במחיר<br>✅ ניסיון בשטח
+        </div>
+      </div>
+      <!-- Eliminated: ברקאי (col 2 = left side) -->
+      <div class="fn-card fn-barkai fn-elim">
+        <div class="fn-x">✕</div>
+        <div class="fn-emoji">🟢</div>
+        <div class="fn-name fn-name-dead">ברקאי</div>
+        <div class="fn-price fn-price-dead">₪138,932</div>
+        <div class="fn-reason">⚠️ ניכר חוסר ניסיון בשטח — אווירת שוק, קצוות פתוחים, הגיעו ללא ציוד בסיסי (מטר, וכו..)</div>
+      </div>
+    </div>
+
+    <!-- Funnel shape: line from טכום (col1 center ≈ 125) to center 250 -->
+    <div class="fn-funnel" style="max-width:500px;">
+      <svg viewBox="0 0 500 60" preserveAspectRatio="none">
+        <!-- outer wall from eliminated side (decorative) -->
+        <line x1="500" y1="0" x2="260" y2="58" stroke="#e2e8f0" stroke-width="1.5" opacity="0.6"/>
+        <!-- passing line from טכום center (~125) to center 250 -->
+        <line x1="125" y1="4" x2="250" y2="58" stroke="#2563a8" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
+        <!-- arrow -->
+        <polygon points="244,52 256,52 250,62" fill="#2563a8" opacity="0.65"/>
+      </svg>
+      <div class="fn-funnel-lbl">עובר לשלב הסופי</div>
+    </div>
+
+    <!-- Winner: טכום alone -->
+    <div class="fn-grid1" style="margin-bottom:24px;">
+      <div class="fn-card fn-tecom fn-winner">
+        <div style="font-size:1.4rem;margin-bottom:4px;">🏆</div>
+        <div class="fn-emoji">🔵</div>
+        <div class="fn-name" style="font-size:1rem;">טכום</div>
+        <div class="fn-prices">₪151,300<br>₪192,187<br>₪248,355</div>
+        <div style="margin-top:10px;background:#dcfce7;border-radius:8px;padding:6px;font-size:.72rem;color:#166534;font-weight:800;">✅ נבחרה!</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="next-btn" onclick="nextJourneyStep()">לתוצאה הסופית &nbsp;🏆</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Winner celebration -->
+  <div class="funnel-step" id="jstep-4">
+    <div class="winner-banner">
+      <div style="font-size:3.5rem;margin-bottom:12px;">🏆</div>
+      <h2>הכרעה — טכום נבחרה!</h2>
+      <p style="opacity:.9;max-width:520px;margin:0 auto;line-height:1.65;">לאחר תהליך מקיף של השוואות, פגישות זום וביקורים בשטח — <strong>טכום אלקטרוניקה היא הבחירה המקצועית.</strong> הם הגיעו מוכנים, ידעו לענות, ירדו במחיר ועומדים בסטנדרטים הגבוהים שדרשנו.</p>
+    </div>
+
+    <div class="final-cards">
+      <div class="final-card-main">
+        <div style="font-size:2rem;margin-bottom:10px;">✅</div>
+        <div style="font-size:1.3rem;font-weight:900;margin-bottom:8px;">טכום אלקטרוניקה</div>
+        <div style="font-size:.83rem;opacity:.85;margin-bottom:14px;">הספק הראשי — לכלל מערכת האודיטוריום</div>
+        <ul style="list-style:none;padding:0;font-size:.82rem;line-height:1.95;opacity:.92;">
+          <li>✅ מקצועיות בשטח ובפגישות זום</li>
+          <li>✅ ירדו במחיר לאחר משא ומתן</li>
+          <li>✅ ציוד מוביל: Biamp, Shure, Kramer</li>
+          <li>✅ אחריות 12 חודש + הרחבה אפשרית</li>
+          <li>✅ ניסיון מוכח בפרויקטים דומים</li>
+        </ul>
+      </div>
+
+      <div class="final-card-secondary">
+        <div style="font-size:2rem;margin-bottom:10px;">🔗</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#b45309;margin-bottom:6px;">פרוטאץ' — אופציית מסך בלבד</div>
+        <div style="font-size:.82rem;color:var(--gray4);margin-bottom:14px;line-height:1.55;">פרוטאץ' מתמחים במסכי LED — אפשר לשלב אותם כספק המסך בלבד, לצד מערכת טכום המלאה.</div>
+        <ul style="list-style:none;padding:0;font-size:.82rem;line-height:1.95;color:var(--gray4);">
+          <li>📺 BOE P1.5 — זהה למסך במרכז חץ</li>
+          <li>🔧 מומחיות בהתקנת מסכי LED</li>
+          <li>⚠ לציוד הגברה — טכום בלבד</li>
+        </ul>
+        <div style="margin-top:14px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:8px 12px;font-size:.78rem;color:#c2410c;font-weight:600;">
+          ⭐ ממליצים: טכום לכלל המערכת + בחינת מסך פרוטאץ' כאופציה
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:28px;">
+      <button class="next-btn" style="background:linear-gradient(135deg,#d97706,#b45309);" onclick="showTab('tecom-options')">
+        למעבר להמלצות הסופיות &nbsp;⭐
+      </button>
+    </div>
+  </div>
+
+</div>
+
 <!-- ===================== TECOM OPTIONS ===================== -->
 <div class="section" id="tab-tecom-options">
 
@@ -1142,7 +1509,8 @@
     <div class="meta">
       <div class="meta-item"><strong>₪151,300</strong>הצעה 1 — מקרן</div>
       <div class="meta-item"><strong>₪178,318</strong>הצעה 2 — LED BOE</div>
-      <div class="meta-item"><strong>₪248,355</strong>הצעה 3 — LED QSTECH</div>
+      <div class="meta-item"><strong>₪192,187</strong>הצעה 3 — LED QSTECH P1.5</div>
+      <div class="meta-item"><strong>₪248,355</strong>הצעה 4 — LED QSTECH P1.25</div>
     </div>
   </div>
 
@@ -1161,65 +1529,77 @@
             <span style="font-size:.78rem;font-weight:400;opacity:.85;">טכום + BOE P1.5 (פרוטאץ')</span><br>
             <span style="font-size:.72rem;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px;margin-top:4px;display:inline-block;">זהה למסך במרכז חץ ✓</span>
           </th>
+          <th style="background:#065f46;color:#fff;">
+            📺 הצעה 3<br>
+            <span style="font-size:.78rem;font-weight:400;opacity:.85;">טכום + QSTECH LED COB P1.5</span>
+          </th>
           <th style="background:#78350f;color:#fff;">
-            הצעה 3<br>
-            <span style="font-size:.78rem;font-weight:400;opacity:.85;">טכום + QSTECH LED COB</span>
+            הצעה 4<br>
+            <span style="font-size:.78rem;font-weight:400;opacity:.85;">טכום + QSTECH LED COB P1.25</span>
           </th>
         </tr>
       </thead>
       <tbody>
 
         <!-- PRICING -->
-        <tr class="category-row"><td colspan="4">💰 מחיר</td></tr>
+        <tr class="category-row"><td colspan="5">💰 מחיר</td></tr>
         <tr>
           <td><strong>מחיר ללא מע"מ</strong></td>
           <td>₪128,220</td>
           <td>₪151,117</td>
+          <td>₪162,870</td>
           <td style="font-weight:700;">₪210,470</td>
         </tr>
         <tr>
           <td><strong>מחיר כולל מע"מ 18%</strong></td>
           <td style="font-size:1.05rem;font-weight:700;color:#1a3a5c;">₪151,300</td>
           <td style="font-size:1.05rem;font-weight:700;color:#1a3a5c;">₪178,318</td>
+          <td style="font-size:1.05rem;font-weight:700;color:#065f46;">₪192,187</td>
           <td style="font-size:1.15rem;font-weight:800;color:#b45309;">₪248,355</td>
         </tr>
         <tr>
           <td>הפרש מהצעה 1</td>
           <td style="color:#888;">—</td>
           <td style="color:#15803d;font-weight:600;">+ ₪27,018 יותר</td>
+          <td style="color:#065f46;font-weight:600;">+ ₪40,887 יותר</td>
           <td style="color:#b45309;font-weight:700;">+ ₪97,055 יותר</td>
         </tr>
 
         <!-- DISPLAY -->
-        <tr class="category-row"><td colspan="4">📺 מערכת תצוגה</td></tr>
+        <tr class="category-row"><td colspan="5">📺 מערכת תצוגה</td></tr>
         <tr>
           <td>סוג תצוגה</td>
           <td>מקרן לייזר Sony VPL-PHZ61</td>
           <td style="font-weight:600;">מסך LED ישיר BOE<br><span style="font-size:.75rem;color:#15803d;font-weight:700;">זהה למסך במרכז חץ ✓</span></td>
+          <td style="font-weight:600;">מסך LED ישיר QSTECH COB</td>
           <td style="font-weight:600;">מסך LED ישיר QSTECH COB</td>
         </tr>
         <tr>
           <td>גודל תצוגה</td>
           <td>מסך הקרנה 400×250 ס"מ<br><span style="font-size:.75rem;color:#888;">(תלוי במרחק ובמסך)</span></td>
           <td>320×192 ס"מ <span style="font-size:.75rem;color:#888;">(קטן יותר)</span></td>
+          <td style="font-weight:700;color:#065f46;">301×171 ס"מ</td>
           <td style="font-weight:700;color:#15803d;">363×215 ס"מ <span style="font-size:.75rem;">(קבוע, אחיד)</span></td>
         </tr>
         <tr>
           <td>פיטצ' (pixel pitch)</td>
           <td class="cell-na">N/A — תלוי ברזולוציית מקרן</td>
           <td style="font-weight:600;"><strong>1.5 מ"מ</strong> — טוב ✓</td>
+          <td style="font-weight:700;color:#065f46;"><strong>1.5 מ"מ</strong> COB — טוב ✓</td>
           <td style="font-weight:700;color:#15803d;"><strong>1.25 מ"מ</strong> — עדין מאוד ✓✓</td>
         </tr>
         <tr>
           <td>טכנולוגיה</td>
           <td>לייזר 7,000 אנסי — מוקרן על מסך לבן</td>
           <td><strong>GOB</strong> — Glue-On-Board<br><span style="font-size:.75rem;color:#888;">הגנה על פיקסלים, חיי מוצר ארוכים</span></td>
+          <td style="font-weight:700;"><strong>COB</strong> — Chip-On-Board<br><span style="font-size:.75rem;color:#065f46;">ניגודיות גבוהה, עמידות מכנית מעולה</span></td>
           <td style="font-weight:700;"><strong>COB</strong> — Chip-On-Board<br><span style="font-size:.75rem;color:#15803d;">ניגודיות גבוהה, עמידות מכנית מעולה</span></td>
         </tr>
         <tr>
           <td>בהירות</td>
           <td>7,000 אנסי — עשוי להיחלש עם הזמן</td>
           <td style="font-weight:600;">600–800 nits — קבוע ✓</td>
+          <td style="font-weight:700;color:#065f46;">600–800 nits — קבוע לכל החיים ✓</td>
           <td style="font-weight:700;color:#15803d;">600–800 nits — קבוע לכל החיים ✓</td>
         </tr>
         <tr>
@@ -1227,22 +1607,26 @@
           <td class="cell-bad">~30–60 שניות המתנה ✗</td>
           <td class="cell-good">מיידי ✓</td>
           <td class="cell-good">מיידי — אפס המתנה ✓</td>
+          <td class="cell-good">מיידי — אפס המתנה ✓</td>
         </tr>
         <tr>
           <td>רגישות לאור חיצוני</td>
           <td class="cell-bad">גבוהה — צריך חדר מוחשך ⚠</td>
           <td class="cell-good">נמוכה ✓</td>
           <td class="cell-good">נמוכה — עובד באור מלא ✓</td>
+          <td class="cell-good">נמוכה — עובד באור מלא ✓</td>
         </tr>
         <tr>
           <td>חיי מוצר</td>
           <td>~20,000 שעות (לייזר)</td>
           <td style="font-weight:600;">80,000–100,000 שעות ✓</td>
+          <td style="font-weight:700;color:#065f46;">100,000 שעות ✓✓</td>
           <td style="font-weight:700;color:#15803d;">100,000 שעות ✓✓</td>
         </tr>
         <tr>
           <td>תחזוקה</td>
           <td class="cell-bad">החלפת מנורה עתידית אפשרית, ניקוי תקופתי ⚠</td>
+          <td class="cell-good">אפס תחזוקה שוטפת ✓</td>
           <td class="cell-good">אפס תחזוקה שוטפת ✓</td>
           <td class="cell-good">אפס תחזוקה שוטפת ✓</td>
         </tr>
@@ -1251,107 +1635,110 @@
           <td class="cell-bad">לא כלול ✗</td>
           <td class="cell-na">לא מפורט</td>
           <td class="cell-good">24" Multitouch ✓ (כלול)</td>
+          <td class="cell-good">24" Multitouch ✓ (כלול)</td>
         </tr>
 
         <!-- SOUND -->
         <tr style="background:#f0fdf4;">
-          <td colspan="4" style="padding:10px 14px;text-align:center;border-top:2px solid #86efac;">
-            <span style="background:#15803d;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🔊 מערכת שמע — זהה בכל שלוש ההצעות</span>
+          <td colspan="5" style="padding:10px 14px;text-align:center;border-top:2px solid #86efac;">
+            <span style="background:#15803d;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🔊 מערכת שמע — זהה בכל ארבע ההצעות</span>
           </td>
         </tr>
         <tr style="background:#f0fdf4;">
           <td style="color:#15803d;font-weight:600;">DSP מרכזי</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
             Biamp TesiraFORTE CI ✓
           </td>
         </tr>
         <tr style="background:#f0fdf4;">
           <td style="color:#15803d;font-weight:600;">רמקולים</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
             Biamp ENT220W ×2 + ENT203W ×2 + VLF208LV ×2 ✓
           </td>
         </tr>
         <tr style="background:#f0fdf4;">
           <td style="color:#15803d;font-weight:600;">מגבר</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;">
             Voltera D 2400.8 — 8 ערוצים ✓
           </td>
         </tr>
         <tr style="background:#f0fdf4;">
           <td style="color:#15803d;font-weight:600;">מיקרופונים</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;border-bottom:2px solid #86efac;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#15803d;border-right:1px solid #86efac;border-left:1px solid #86efac;border-bottom:2px solid #86efac;">
             Shure SLXD+ דש + ידני אלחוטי + ATR1500 גיבוי חוטי ✓
           </td>
         </tr>
 
         <!-- CONTROL -->
         <tr style="background:#eff6ff;">
-          <td colspan="4" style="padding:10px 14px;text-align:center;border-top:2px solid #93c5fd;">
-            <span style="background:#1d4ed8;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🎛️ מערכת שליטה — זהה בכל שלוש ההצעות</span>
+          <td colspan="5" style="padding:10px 14px;text-align:center;border-top:2px solid #93c5fd;">
+            <span style="background:#1d4ed8;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🎛️ מערכת שליטה — זהה בכל ארבע ההצעות</span>
           </td>
         </tr>
         <tr style="background:#eff6ff;">
           <td style="color:#1d4ed8;font-weight:600;">בקר שליטה</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;">
             Kramer BRAIN + הרחבות + מסך מגע 8" ✓
           </td>
         </tr>
         <tr style="background:#eff6ff;">
           <td style="color:#1d4ed8;font-weight:600;">טאבלט אלחוטי</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;">
             טאבלט נייד לשליטה מכל מקום באולם ✓
           </td>
         </tr>
         <tr style="background:#eff6ff;">
           <td style="color:#1d4ed8;font-weight:600;">שליטה תאורה</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;border-bottom:2px solid #93c5fd;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#1d4ed8;border-right:1px solid #93c5fd;border-left:1px solid #93c5fd;border-bottom:2px solid #93c5fd;">
             מודול תאורה — שליטה על תאורת האולם ✓
           </td>
         </tr>
 
         <!-- WARRANTY -->
         <tr style="background:#faf5ff;">
-          <td colspan="4" style="padding:10px 14px;text-align:center;border-top:2px solid #c4b5fd;">
-            <span style="background:#7c3aed;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🛡️ אחריות ושירות — זהה בכל שלוש ההצעות</span>
+          <td colspan="5" style="padding:10px 14px;text-align:center;border-top:2px solid #c4b5fd;">
+            <span style="background:#7c3aed;color:#fff;font-weight:800;font-size:.82rem;padding:5px 18px;border-radius:20px;letter-spacing:.5px;">🛡️ אחריות ושירות — זהה בכל ארבע ההצעות</span>
           </td>
         </tr>
         <tr style="background:#faf5ff;">
           <td style="color:#7c3aed;font-weight:600;">אחריות בסיסית</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
             12 חודש שירות באתר הלקוח ✓
           </td>
         </tr>
         <tr style="background:#faf5ff;">
           <td style="color:#7c3aed;font-weight:600;">הרחבה ל-36 חודש</td>
-          <td colspan="3" style="text-align:center;font-weight:600;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
-            8,350 ₪/שנה (הצעות 1 ו-2) &nbsp;|&nbsp; 11,855 ₪/שנה (הצעה 3 — כולל מסך LED)
+          <td colspan="4" style="text-align:center;font-weight:600;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
+            8,350 ₪/שנה (הצעות 1 ו-2) &nbsp;|&nbsp; 11,855 ₪/שנה (הצעות 3 ו-4 — כולל מסך LED)
           </td>
         </tr>
         <tr style="background:#faf5ff;">
           <td style="color:#7c3aed;font-weight:600;">קריאת שירות</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;">
             650 ₪ לקריאה כולל נסיעה ותיקון עד שעת עבודה ✓
           </td>
         </tr>
         <tr style="background:#faf5ff;">
           <td style="color:#7c3aed;font-weight:600;">זמן אספקה</td>
-          <td colspan="3" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;border-bottom:2px solid #c4b5fd;">
+          <td colspan="4" style="text-align:center;font-weight:700;color:#7c3aed;border-right:1px solid #c4b5fd;border-left:1px solid #c4b5fd;border-bottom:2px solid #c4b5fd;">
             45 ימי עבודה מאישור הזמנה ✓
           </td>
         </tr>
 
         <!-- SUMMARY -->
-        <tr class="category-row"><td colspan="4">✅ סיכום</td></tr>
+        <tr class="category-row"><td colspan="5">✅ סיכום</td></tr>
         <tr>
           <td><strong>המחיר כולל מע"מ</strong></td>
           <td style="font-size:1.1rem;font-weight:700;color:#1a3a5c;">₪151,300</td>
           <td style="font-size:1.1rem;font-weight:700;color:#1a3a5c;">₪178,318</td>
+          <td style="font-size:1.05rem;font-weight:700;color:#065f46;">₪192,187</td>
           <td style="font-size:1.25rem;font-weight:800;color:#b45309;">₪248,355</td>
         </tr>
         <tr>
           <td><strong>המלצה</strong></td>
           <td><span class="badge warning">בסיסית — ללא LED</span></td>
           <td><span class="badge nice">פשרה טובה</span></td>
+          <td><span class="badge must">פשרה מתקדמת</span></td>
           <td><span class="badge nice">אופציה מתקדמת</span></td>
         </tr>
 
@@ -1368,7 +1755,7 @@
       <div style="font-size:1.6rem;font-weight:900;color:#1e3a8a;margin-bottom:4px;">₪151,300</div>
       <div style="font-size:.78rem;color:#888;margin-bottom:14px;">כולל מע"מ | ₪128,220 ללא מע"מ</div>
       <ul style="list-style:none;padding:0;font-size:.85rem;line-height:2;">
-        <li>✅ המחיר הנמוך ביותר מבין 3 ההצעות</li>
+        <li>✅ המחיר הנמוך ביותר מבין 4 ההצעות</li>
         <li>✅ מקרן Sony מהטובים בשוק — 7,000 אנסי</li>
         <li>✅ מסך הקרנה נגלל חשמלי 400×250 ס"מ</li>
         <li>❌ צריך חדר חצי חשוך להקרנה טובה</li>
@@ -1389,23 +1776,38 @@
         <li>✅ GOB — הגנה על פיקסלים, עמידות טובה</li>
         <li>✅ עובד באור מלא, הדלקה מיידית</li>
         <li>✅ גודל 3.2×1.92 מ' — מתאים לאולם</li>
-        <li>⚠ פיטצ' 1.5 — טוב, אך פחות חד מ-QSTECH</li>
+        <li>⚠ פיטצ' 1.5 GOB — טוב, אך פחות חד מ-QSTECH COB</li>
         <li>❌ לא כולל מסך מגע לפודיום</li>
       </ul>
     </div>
 
+    <div style="background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border-right:4px solid #065f46;">
+      <h3 style="color:#065f46;font-size:.95rem;margin-bottom:14px;">📺 הצעה 3 — LED QSTECH COB P1.5</h3>
+      <div style="font-size:1.6rem;font-weight:900;color:#065f46;margin-bottom:4px;">₪192,187</div>
+      <div style="font-size:.78rem;color:#888;margin-bottom:14px;">כולל מע"מ 18% | ₪162,870 ללא מע"מ</div>
+      <ul style="list-style:none;padding:0;font-size:.85rem;line-height:2;">
+        <li>✅ מסך QSTECH COB — ניגודיות גבוהה, עמידות מכנית מעולה</li>
+        <li>✅ גודל 301×171 ס"מ — מתאים לאולם</li>
+        <li>✅ פיטצ' 1.5 COB — טוב ✓</li>
+        <li>✅ הדלקה/כיבוי מיידי, עובד באור מלא</li>
+        <li>✅ 100,000 שעות חיי מוצר</li>
+        <li>✅ כולל מסך מגע 24" לפודיום מרצה</li>
+        <li>⚠ גודל קטן יותר מהצעה 4 (363×215 ס"מ)</li>
+        <li>⚠ פיטצ' פחות עדין מהצעה 4 (1.25 מ"מ)</li>
+      </ul>
+    </div>
+
     <div style="background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);border-right:4px solid #b45309;">
-      <h3 style="color:#b45309;font-size:.95rem;margin-bottom:14px;">📺 הצעה 3 — LED QSTECH COB P1.25</h3>
+      <h3 style="color:#b45309;font-size:.95rem;margin-bottom:14px;">📺 הצעה 4 — LED QSTECH COB P1.25</h3>
       <div style="font-size:1.6rem;font-weight:900;color:#b45309;margin-bottom:4px;">₪248,355</div>
       <div style="font-size:.78rem;color:#888;margin-bottom:14px;">כולל מע"מ | ₪210,470 ללא מע"מ</div>
       <ul style="list-style:none;padding:0;font-size:.85rem;line-height:2;">
         <li>✅ המסך הגדול ביותר — 3.63×2.15 מ'</li>
-        <li>✅ פיטצ' 1.25 — החד ביותר מבין 3 ההצעות</li>
+        <li>✅ פיטצ' 1.25 — החד ביותר מבין 4 ההצעות</li>
         <li>✅ טכנולוגיית COB — ניגודיות מעולה, עמיד מכנית</li>
         <li>✅ 100,000 שעות חיי מוצר — ללא תחזוקה</li>
         <li>✅ כולל מסך מגע 24" לפודיום מרצה</li>
-        <li>✅ הדלקה/כיבוי מיידי</li>
-        <li>✅ עובד באור מלא ללא הגבלה</li>
+        <li>✅ הדלקה/כיבוי מיידי, עובד באור מלא</li>
         <li>❌ המחיר הגבוה ביותר — ₪97K יותר מהצעה 1</li>
       </ul>
     </div>
@@ -1431,14 +1833,22 @@
       </div>
       <div style="margin-bottom:16px;">
         <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:.82rem;">
-          <span>⭐ הצעה 3 — QSTECH LED</span><strong style="color:#b45309;">₪248,355</strong>
+          <span>📺 הצעה 3 — QSTECH COB P1.5</span><strong style="color:#065f46;">₪192,187</strong>
+        </div>
+        <div style="background:#e2e8f0;border-radius:4px;height:20px;overflow:hidden;">
+          <div style="width:77%;background:#065f46;height:100%;border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:.82rem;">
+          <span>⭐ הצעה 4 — QSTECH COB P1.25</span><strong style="color:#b45309;">₪248,355</strong>
         </div>
         <div style="background:#e2e8f0;border-radius:4px;height:20px;overflow:hidden;">
           <div style="width:100%;background:linear-gradient(90deg,#f59e0b,#b45309);height:100%;border-radius:4px;"></div>
         </div>
       </div>
       <div style="font-size:.75rem;color:#94a3b8;margin-top:12px;border-top:1px solid #e2e8f0;padding-top:10px;">
-        * הצעה 3 היא שילוב תיאורטי — יש לאשר מחיר סופי עם הספקים
+        * כל המחירים ללא מע"מ. הצעות 3 ו-4 כוללות מסך מגע 24" לפודיום.
       </div>
     </div>
 
@@ -1446,7 +1856,7 @@
 
   <!-- BOTTOM NOTE -->
   <div style="background:linear-gradient(135deg,#1e3a5f,#14532d);color:#fff;border-radius:var(--radius);padding:22px 26px;margin-bottom:8px;">
-    <h3 style="font-size:1rem;font-weight:800;margin-bottom:12px;">🎯 המלצה סופית לטכנודע — בין 3 ההצעות</h3>
+    <h3 style="font-size:1rem;font-weight:800;margin-bottom:12px;">🎯 המלצה סופית לטכנודע — בין 4 ההצעות</h3>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
       <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:14px;">
         <div style="font-weight:700;font-size:.9rem;margin-bottom:6px;">📌 אם תקציב מוגבל</div>
@@ -1457,8 +1867,12 @@
         <div style="font-size:.82rem;opacity:.9;line-height:1.6;">הצעה 2 (BOE P1.5) — ₪178,318. LED איכותי במחיר ביניים. שילוב מסך פרוטאץ' עם מערכת טכום.</div>
       </div>
       <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:14px;">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:6px;">🌟 פשרה מתקדמת</div>
+        <div style="font-size:.82rem;opacity:.9;line-height:1.6;">הצעה 3 (QSTECH COB P1.5) — ₪192,187. מסך QSTECH COB בגודל 301×171 ס"מ, ניגודיות מעולה, כולל מסך מגע 24". ₪14K יותר מהצעה 2.</div>
+      </div>
+      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:14px;">
         <div style="font-weight:700;font-size:.9rem;margin-bottom:6px;">💡 אופציה מתקדמת</div>
-        <div style="font-size:.82rem;opacity:.9;line-height:1.6;">הצעה 3 (QSTECH COB P1.25) — ₪248,355. המסך הגדול, החד והאיכותי ביותר. לאורך 10 שנה — ההחזר על ההשקעה גבוה.</div>
+        <div style="font-size:.82rem;opacity:.9;line-height:1.6;">הצעה 4 (QSTECH COB P1.25) — ₪248,355. המסך הגדול, החד והאיכותי ביותר. לאורך 10 שנה — ההחזר על ההשקעה גבוה.</div>
       </div>
     </div>
   </div>
@@ -1470,8 +1884,33 @@ function showTab(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  event.target.classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+var journeyStep = 0;
+function nextJourneyStep() {
+  var cur = document.getElementById('jstep-' + journeyStep);
+  if (cur) cur.classList.remove('active');
+  journeyStep++;
+  var nxt = document.getElementById('jstep-' + journeyStep);
+  if (nxt) nxt.classList.add('active');
+  updateJsiDots();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function resetJourney() {
+  journeyStep = 0;
+  document.querySelectorAll('.funnel-step').forEach(s => s.classList.remove('active'));
+  var s0 = document.getElementById('jstep-0');
+  if (s0) s0.classList.add('active');
+  updateJsiDots();
+}
+function updateJsiDots() {
+  document.querySelectorAll('#tab-journey .jsi-dot').forEach(function(d, i) {
+    d.classList.remove('active','done');
+    if (i === journeyStep) d.classList.add('active');
+    else if (i < journeyStep) d.classList.add('done');
+  });
 }
 // Fix sticky top offset based on actual topbar height
 window.addEventListener('DOMContentLoaded', function() {
