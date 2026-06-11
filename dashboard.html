@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דוח משוב ביקורי טכנודע</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #eef2f7;
+    color: #2d3748;
+    direction: rtl;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0f2957 0%, #1a56a8 60%, #2575d0 100%);
+    color: #fff;
+    padding: 28px 24px 22px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,.35);
+  }
+  header h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: .5px; }
+  header p  { margin-top: 6px; font-size: .95rem; opacity: .82; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    justify-content: center;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,.1);
+    position: sticky; top: 0; z-index: 200;
+  }
+  .tab-btn {
+    padding: 16px 52px;
+    font-size: 1.05rem; font-weight: 700;
+    border: none; background: transparent; cursor: pointer;
+    color: #718096;
+    border-bottom: 4px solid transparent;
+    transition: .2s;
+    font-family: inherit;
+  }
+  .tab-btn:hover  { color: #1a56a8; background: #ebf4ff; }
+  .tab-btn.active { color: #1a56a8; border-bottom-color: #1a56a8; }
+
+  /* ── PAGE CONTENT ── */
+  .tab-content { display: none; padding: 28px 24px; max-width: 1440px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* ── SUMMARY BANNER ── */
+  .summary-banner {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px 32px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.07);
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch;
+  }
+  .sum-stat {
+    flex: 1; min-width: 130px;
+    text-align: center;
+    padding: 12px 8px;
+    border-left: 1px solid #e2e8f0;
+  }
+  .sum-stat:last-child { border-left: none; }
+  .sum-stat .sv { font-size: 2.2rem; font-weight: 800; color: #1a56a8; line-height: 1.1; }
+  .sum-stat .sl { font-size: .78rem; color: #718096; margin-top: 5px; line-height: 1.3; }
+  .sum-stat.green .sv  { color: #276749; }
+  .sum-stat.orange .sv { color: #c05621; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-size: 1.2rem; font-weight: 700; color: #0f2957;
+    margin-bottom: 18px; padding-bottom: 8px;
+    border-bottom: 3px solid #bee3f8;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  /* ── QUESTIONS GRID ── */
+  .questions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(580px, 1fr));
+    gap: 20px;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 22px 16px;
+    box-shadow: 0 3px 14px rgba(0,0,0,.07);
+    border-right: 6px solid #1a56a8;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; }
+  .q-num {
+    flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #1a56a8; color: #fff;
+    font-size: .9rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .q-texts { flex: 1; }
+  .q-text-main { font-size: .97rem; font-weight: 700; color: #1a202c; line-height: 1.45; }
+  .q-text-trans {
+    font-size: .82rem; color: #718096; font-style: italic;
+    margin-top: 4px; line-height: 1.4;
+    padding: 4px 8px; background: #f7fafc; border-radius: 6px;
+  }
+
+  /* stats row */
+  .q-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    padding: 3px 11px; border-radius: 20px; font-size: .8rem; font-weight: 700;
+  }
+  .badge-blue   { background: #ebf4ff; color: #1a56a8; }
+  .badge-green  { background: #f0fff4; color: #276749; }
+  .badge-orange { background: #fffaf0; color: #c05621; }
+  .badge-gray   { background: #f7fafc; color: #4a5568; }
+
+  /* charts row */
+  .charts-row {
+    display: flex; gap: 12px; align-items: center;
+  }
+  .bar-wrap  { flex: 3; height: 175px; position: relative; }
+  .pie-wrap  { flex: 1.2; height: 155px; position: relative; }
+
+  /* legend */
+  .score-legend {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px;
+  }
+  .score-legend span {
+    display: flex; align-items: center; gap: 4px;
+    font-size: .72rem; color: #4a5568;
+  }
+  .score-legend span::before {
+    content: '';
+    width: 10px; height: 10px; border-radius: 2px;
+    display: inline-block;
+  }
+  .leg1::before { background: #e53e3e; }
+  .leg2::before { background: #ed8936; }
+  .leg3::before { background: #d69e2e; }
+  .leg4::before { background: #38a169; }
+  .leg5::before { background: #2b6cb0; }
+
+  /* Arabic direction fixes */
+  .arabic-q { direction: rtl; text-align: right; }
+
+  @media (max-width: 720px) {
+    .questions-grid { grid-template-columns: 1fr; }
+    .tab-btn { padding: 14px 20px; font-size: .9rem; }
+    .charts-row { flex-direction: column; }
+    .bar-wrap, .pie-wrap { width: 100%; }
+    .pie-wrap { height: 170px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📊 דוח משוב — ביקורי טכנודע</h1>
+  <p>ניתוח שאלוני המשוב ממבקרים דוברי עברית וערבית · סולם ציונים 1–5</p>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="btn-he" onclick="showTab('he')">📋 שאלון עברית</button>
+  <button class="tab-btn"        id="btn-ar" onclick="showTab('ar')">📋 שאלון ערבית&nbsp;|&nbsp;استطلاع عربي</button>
+</div>
+
+<!-- ══════════════════  HEBREW TAB  ══════════════════ -->
+<div id="tab-he" class="tab-content active">
+  <div class="summary-banner" id="he-summary"></div>
+  <div class="section-title">ניתוח לפי שאלה</div>
+  <div class="questions-grid" id="he-grid"></div>
+</div>
+
+<!-- ══════════════════  ARABIC TAB  ══════════════════ -->
+<div id="tab-ar" class="tab-content">
+  <div class="summary-banner" id="ar-summary"></div>
+  <div class="section-title">تحليل حسب السؤال &nbsp;|&nbsp; ניתוח לפי שאלה</div>
+  <div class="questions-grid" id="ar-grid"></div>
+</div>
+
+<script>
+/* ───────────────────────────────────────────────
+   PRE-COMPUTED STATISTICS  (from CSV files)
+   Each entry: {d1,d2,d3,d4,d5, avg, total, pos}
+   pos = % of scores that are 4 or 5
+─────────────────────────────────────────────── */
+const HE_STATS = [
+  {d1:17,d2:4, d3:26,d4:40,d5:65, avg:3.87,total:152,pos:69.1},
+  {d1:42,d2:20,d3:33,d4:22,d5:32, avg:2.88,total:149,pos:36.2},
+  {d1:26,d2:24,d3:30,d4:22,d5:50, avg:3.30,total:152,pos:47.4},
+  {d1:27,d2:16,d3:36,d4:22,d5:48, avg:3.32,total:149,pos:47.0},
+  {d1:13,d2:18,d3:18,d4:28,d5:75, avg:3.88,total:152,pos:67.8},
+  {d1:24,d2:14,d3:37,d4:21,d5:50, avg:3.40,total:146,pos:48.6},
+  {d1:12,d2:21,d3:24,d4:31,d5:60, avg:3.72,total:148,pos:61.5},
+  {d1:15,d2:13,d3:32,d4:27,d5:59, avg:3.70,total:146,pos:58.9},
+  {d1:23,d2:22,d3:25,d4:27,d5:49, avg:3.39,total:146,pos:52.1},
+  {d1:16,d2:17,d3:18,d4:27,d5:69, avg:3.79,total:147,pos:65.3},
+  {d1:14,d2:12,d3:26,d4:21,d5:68, avg:3.83,total:141,pos:63.1},
+  {d1:11,d2:15,d3:22,d4:28,d5:64, avg:3.85,total:140,pos:65.7},
+  {d1:14,d2:13,d3:25,d4:23,d5:57, avg:3.73,total:132,pos:60.6},
+  {d1:14,d2:15,d3:39,d4:21,d5:40, avg:3.45,total:129,pos:47.3},
+  {d1:15,d2:14,d3:22,d4:32,d5:46, avg:3.62,total:129,pos:60.5},
+  {d1:21,d2:15,d3:24,d4:18,d5:49, avg:3.46,total:127,pos:52.8},
+];
+
+const AR_STATS = [
+  {d1:29,d2:21,d3:62,d4:74, d5:305,avg:4.23,total:491,pos:77.2},
+  {d1:80,d2:58,d3:97,d4:70, d5:186,avg:3.46,total:491,pos:52.1},
+  {d1:56,d2:33,d3:72,d4:86, d5:242,avg:3.87,total:489,pos:67.1},
+  {d1:71,d2:36,d3:73,d4:79, d5:235,avg:3.75,total:494,pos:63.6},
+  {d1:34,d2:22,d3:59,d4:80, d5:295,avg:4.18,total:490,pos:76.5},
+  {d1:41,d2:37,d3:94,d4:87, d5:235,avg:3.89,total:494,pos:65.2},
+  {d1:42,d2:36,d3:80,d4:98, d5:231,avg:3.90,total:487,pos:67.6},
+  {d1:29,d2:28,d3:82,d4:83, d5:263,avg:4.08,total:485,pos:71.3},
+  {d1:36,d2:41,d3:71,d4:85, d5:252,avg:3.98,total:485,pos:69.5},
+  {d1:30,d2:21,d3:77,d4:82, d5:274,avg:4.13,total:484,pos:73.6},
+  {d1:24,d2:26,d3:71,d4:83, d5:276,avg:4.17,total:480,pos:74.8},
+  {d1:25,d2:27,d3:67,d4:82, d5:279,avg:4.17,total:480,pos:75.2},
+  {d1:30,d2:25,d3:75,d4:87, d5:258,avg:4.09,total:475,pos:72.6},
+  {d1:35,d2:30,d3:99,d4:67, d5:249,avg:3.97,total:480,pos:65.8},
+  {d1:23,d2:32,d3:71,d4:97, d5:253,avg:4.10,total:476,pos:73.5},
+  {d1:61,d2:31,d3:77,d4:66, d5:245,avg:3.84,total:480,pos:64.8},
+];
+
+/* ── QUESTION TEXTS ── */
+const HE_QUESTIONS = [
+  "הביקור בטכנודע עורר בי סקרנות לגלות ולדעת יותר על נושאי המדע שהוצגו",
+  "יש לי שאלות חדשות שאני רוצה לחקור לאחר הביקור",
+  "אחרי הביקור, אני מתעניין/ת יותר ללמוד מדע וטכנולוגיה",
+  "הביקור גרם לי לחשוב על מקצועות או תחומי עבודה בתחום המדע והטכנולוגיה",
+  "אני רוצה להשתתף בעוד פעילויות מדעיות דומות",
+  "הפעילויות עזרו לי לחשוב בצורה מדעית (להציב שאלות, לנתח, להסיק מסקנות)",
+  "למדתי להבין כיצד מדענים חושבים ופותרים בעיות",
+  "קיבלתי הזדמנות לחקור ולגלות דברים בעצמי במהלך השיעורים",
+  "הרגשתי שאני חוקר/ת אמיתי/ת במהלך הפעילויות",
+  "נחשפתי לנושאים מדעיים חדשים שלא הכרתי קודם",
+  "למדתי דברים חדשים ומעניינים על מדע וטכנולוגיה",
+  "ההסברים היו ברורים ועזרו לי להבין מושגים מדעיים",
+  "אני מרגיש/ה שהידע שרכשתי היום יישאר איתי",
+  "אני רואה כעת את המדע כמעניין ורלוונטי יותר לחיי",
+  "הבנתי שמדע וטכנולוגיה נגישים גם עבורי",
+  "אני רוצה ללמוד תחום ידע מדעי (כגון: כימיה, פיזיקה, ביולוגיה, סייבר) או טכנולוגי (כגון: רובוטיקה, הנדסה)",
+];
+
+const AR_QUESTIONS = [
+  "لقد أثارت زيارتي إلى التخنوداع فضولي لاكتشاف ومعرفة المزيد عن المواضيع العلمية المقدمة",
+  "لدي أسئلة جديدة أريد استكشافها بعد الزيارة",
+  "بعد الزيارة، أصبحت مهتماً/ة أكثر بدراسة العلوم والتكنولوجيا",
+  "الزيارة جعلتني أفكر في المهن أو مجالات العمل في مجال العلوم والتكنولوجيا",
+  "أريد المشاركة في المزيد من الأنشطة العلمية المماثلة",
+  "ساعدتني الأنشطة على التفكير العلمي (طرح الأسئلة، التحليل، استخلاص النتائج)",
+  "لقد تعلمت أن أفهم كيف يفكر العلماء وكيف يحلون المشاكل",
+  "أتيحت لي الفرصة لاستكشاف واكتشاف أشياء بنفسي أثناء الدروس",
+  "لقد شعرت وكأنني باحث/ة حقيقي/ة أثناء الأنشطة",
+  "تعرفت على مواضيع علمية جديدة لم أكن على دراية بها من قبل",
+  "تعلمت أشياء جديدة ومثيرة للاهتمام حول العلوم والتكنولوجيا",
+  "كان الشرح واضحاً وساعدني على فهم المفاهيم العلمية",
+  "أشعر أن المعرفة التي اكتسبتها اليوم ستبقى معي",
+  "أرى الآن أن العلم أصبح أكثر إثارة للاهتمام وأكثر ارتباطاً بحياتي",
+  "لقد أدركت أن العلم والتكنولوجيا متاحان لي أيضاً",
+  "أريد دراسة مجال علمي (مثل: الكيمياء، الفيزياء، الأحياء) أو مجال تكنولوجي (مثل: الروبوتات، الهندسة)",
+];
+
+/* Hebrew translations for Arabic questions */
+const AR_TRANS = [
+  "הביקור בטכנודע עורר בי סקרנות לגלות יותר על נושאי המדע שהוצגו",
+  "יש לי שאלות חדשות שאני רוצה לחקור לאחר הביקור",
+  "לאחר הביקור, אני מתעניין/ת יותר ללמוד מדע וטכנולוגיה",
+  "הביקור גרם לי לחשוב על מקצועות ותחומי עבודה במדע ובטכנולוגיה",
+  "אני רוצה להשתתף בעוד פעילויות מדעיות דומות",
+  "הפעילויות עזרו לי לחשוב בצורה מדעית (לשאול שאלות, לנתח, להסיק מסקנות)",
+  "למדתי להבין כיצד מדענים חושבים ופותרים בעיות",
+  "קיבלתי הזדמנות לחקור ולגלות דברים בעצמי במהלך השיעורים",
+  "הרגשתי שאני חוקר/ת אמיתי/ת במהלך הפעילויות",
+  "נחשפתי לנושאים מדעיים חדשים שלא הכרתי קודם",
+  "למדתי דברים חדשים ומעניינים על מדע וטכנולוגיה",
+  "ההסברים היו ברורים ועזרו לי להבין מושגים מדעיים",
+  "אני מרגיש/ה שהידע שרכשתי היום יישאר איתי",
+  "אני רואה כעת את המדע כמעניין ורלוונטי יותר לחיי",
+  "הבנתי שמדע וטכנולוגיה נגישים גם עבורי",
+  "אני רוצה ללמוד תחום מדעי (כגון: כימיה, פיזיקה, ביולוגיה) או טכנולוגי (כגון: רובוטיקה, הנדסה)",
+];
+
+/* ── COLORS ── */
+const SCORE_COLORS = ['#e53e3e','#ed8936','#d69e2e','#38a169','#2b6cb0'];
+const SCORE_LABELS = ['1 – נמוך מאוד','2 – נמוך','3 – בינוני','4 – גבוה','5 – גבוה מאוד'];
+const SCORE_LABELS_AR = ['1 – ضعيف جداً','2 – ضعيف','3 – متوسط','4 – جيد','5 – ممتاز'];
+
+/* ── TAB SWITCH ── */
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  document.getElementById('btn-' + id).classList.add('active');
+}
+
+/* ── OVERALL AVG of averages ── */
+function overallAvg(stats) {
+  return (stats.reduce((s,q) => s + q.avg, 0) / stats.length).toFixed(2);
+}
+function overallPos(stats) {
+  return (stats.reduce((s,q) => s + q.pos, 0) / stats.length).toFixed(1);
+}
+function bestQ(stats) {
+  return stats.reduce((best, q, i) => q.avg > stats[best].avg ? i : best, 0);
+}
+function worstQ(stats) {
+  return stats.reduce((worst, q, i) => q.avg < stats[worst].avg ? i : worst, 0);
+}
+
+/* ── RENDER SUMMARY BANNER ── */
+function renderSummary(containerId, stats, respondentsLabel) {
+  const el = document.getElementById(containerId);
+  const totalResp = stats[0].total;
+  const avg = overallAvg(stats);
+  const pos = overallPos(stats);
+  const best = bestQ(stats) + 1;
+  const worst = worstQ(stats) + 1;
+
+  el.innerHTML = `
+    <div class="sum-stat">
+      <div class="sv">${totalResp}</div>
+      <div class="sl">${respondentsLabel}</div>
+    </div>
+    <div class="sum-stat">
+      <div class="sv">${avg}</div>
+      <div class="sl">ממוצע כולל<br>(סולם 1–5)</div>
+    </div>
+    <div class="sum-stat green">
+      <div class="sv">${pos}%</div>
+      <div class="sl">ציוני 4–5<br>(תגובות חיוביות)</div>
+    </div>
+    <div class="sum-stat">
+      <div class="sv">16</div>
+      <div class="sl">שאלות בסקר</div>
+    </div>
+    <div class="sum-stat green">
+      <div class="sv">שאלה ${best}</div>
+      <div class="sl">ציון גבוה ביותר<br>${stats[best-1].avg.toFixed(2)}</div>
+    </div>
+    <div class="sum-stat orange">
+      <div class="sv">שאלה ${worst}</div>
+      <div class="sl">ציון נמוך ביותר<br>${stats[worst-1].avg.toFixed(2)}</div>
+    </div>
+  `;
+}
+
+/* ── RENDER QUESTION CARDS ── */
+let chartInstances = {};
+
+function renderCards(gridId, stats, questions, translations, lang) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+
+  stats.forEach((s, idx) => {
+    const qNum = idx + 1;
+    const cardId = `${gridId}-q${qNum}`;
+    const dist = [s.d1, s.d2, s.d3, s.d4, s.d5];
+
+    // Color border based on avg
+    const borderColor = s.avg >= 4 ? '#38a169' : s.avg >= 3 ? '#1a56a8' : '#e53e3e';
+
+    // Positive/negative badge color
+    const posBadge = s.pos >= 60 ? 'badge-green' : s.pos >= 40 ? 'badge-blue' : 'badge-orange';
+
+    const isAr = lang === 'ar';
+
+    const transHtml = isAr
+      ? `<div class="q-text-trans">🇮🇱 ${translations[idx]}</div>`
+      : '';
+
+    grid.innerHTML += `
+      <div class="q-card" id="${cardId}" style="border-right-color:${borderColor}">
+        <div class="q-header">
+          <div class="q-num">${qNum}</div>
+          <div class="q-texts">
+            <div class="q-text-main ${isAr ? 'arabic-q' : ''}">${questions[idx]}</div>
+            ${transHtml}
+          </div>
+        </div>
+        <div class="q-stats">
+          <span class="badge badge-gray">n = ${s.total}</span>
+          <span class="badge badge-blue">ממוצע: ${s.avg.toFixed(2)}</span>
+          <span class="badge ${posBadge}">ציוני 4–5: ${s.pos}%</span>
+        </div>
+        <div class="charts-row">
+          <div class="bar-wrap">
+            <canvas id="bar-${cardId}"></canvas>
+          </div>
+          <div class="pie-wrap">
+            <canvas id="pie-${cardId}"></canvas>
+          </div>
+        </div>
+        <div class="score-legend">
+          <span class="leg1">ציון 1</span>
+          <span class="leg2">ציון 2</span>
+          <span class="leg3">ציון 3</span>
+          <span class="leg4">ציון 4</span>
+          <span class="leg5">ציון 5</span>
+        </div>
+      </div>
+    `;
+  });
+
+  /* Create charts AFTER DOM is updated */
+  stats.forEach((s, idx) => {
+    const qNum = idx + 1;
+    const cardId = `${gridId}-q${qNum}`;
+    const dist = [s.d1, s.d2, s.d3, s.d4, s.d5];
+    const scoreLabels = ['1','2','3','4','5'];
+
+    // Bar chart
+    const barKey = `bar-${cardId}`;
+    if (chartInstances[barKey]) chartInstances[barKey].destroy();
+    chartInstances[barKey] = new Chart(
+      document.getElementById(barKey),
+      {
+        type: 'bar',
+        data: {
+          labels: scoreLabels,
+          datasets: [{
+            label: 'מספר תגובות',
+            data: dist,
+            backgroundColor: SCORE_COLORS,
+            borderRadius: 5,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` ${ctx.raw} תגובות (${((ctx.raw/s.total)*100).toFixed(1)}%)`,
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 13, weight: '700' } }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1, font: { size: 10 } },
+              grid: { color: '#f0f0f0' }
+            }
+          }
+        }
+      }
+    );
+
+    // Pie / Doughnut chart
+    const pieKey = `pie-${cardId}`;
+    if (chartInstances[pieKey]) chartInstances[pieKey].destroy();
+    chartInstances[pieKey] = new Chart(
+      document.getElementById(pieKey),
+      {
+        type: 'doughnut',
+        data: {
+          labels: scoreLabels.map(l => `ציון ${l}`),
+          datasets: [{
+            data: dist,
+            backgroundColor: SCORE_COLORS,
+            borderWidth: 2,
+            borderColor: '#fff',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '55%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` ${ctx.raw} (${((ctx.raw/s.total)*100).toFixed(1)}%)`,
+              }
+            }
+          }
+        }
+      }
+    );
+  });
+}
+
+/* ── INIT ── */
+renderSummary('he-summary', HE_STATS, 'משיבים עבריים');
+renderSummary('ar-summary', AR_STATS, 'משיבים ערביים');
+renderCards('he-grid', HE_STATS, HE_QUESTIONS, null,       'he');
+renderCards('ar-grid', AR_STATS, AR_QUESTIONS, AR_TRANS, 'ar');
+</script>
+</body>
+</html>
