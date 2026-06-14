@@ -350,7 +350,6 @@
     <button onclick="showTab('must')">MUST vs Nice-to-Have</button>
     <button onclick="showTab('proposals')">ניתוח הצעות</button>
     <button onclick="showTab('compare')">השוואה מפורטת</button>
-    <button onclick="showTab('recommend')">השוואה בין הצעות</button>
     <button onclick="showTab('journey');resetJourney();" style="background:rgba(99,102,241,.2);color:#c7d2fe;font-weight:700;border:1px solid rgba(99,102,241,.45);">🔍 הדרך להמלצות</button>
     <button class="tab-star-glow" onclick="showTab('tecom-options')" style="background:rgba(234,179,8,.35);color:#fde68a;font-weight:900;border:2px solid rgba(234,179,8,.75);font-size:.95rem;">⭐ המלצות סופיות</button>
   </nav>
@@ -630,8 +629,12 @@
         <h3>טכום אלקטרוניקה בע"מ</h3>
         <div style="font-size:.82rem;opacity:.8;">פארק אפק, ראש העין | 31/5/26</div>
       </div>
-      <div class="price-tag">₪210,470 — ללא מע"מ (מסך LED)</div>
-      <div class="verdict">★★★★☆ מוצרים מעולים</div>
+      <div class="price-tag" style="font-size:.78rem;line-height:1.8;">
+  אופציה 1 — מקרן: ₪151,300 כולל מע"מ<br>
+  אופציה 2 — BOE LED: ₪178,318 כולל מע"מ<br>
+  אופציה 3 — QSTECH LED: ₪248,355 כולל מע"מ
+</div>
+      <div class="verdict">★★★★☆ מוצרים מעולים &nbsp;|&nbsp; ✅ נבחרה</div>
     </div>
     <div class="company-body">
       <div class="company-grid">
@@ -666,7 +669,7 @@
         <div class="cons">
           <h5>חסרונות / הסתייגויות</h5>
           <ul>
-            <li>מחיר גבוה יחסית — ₪210,470 לעומת ₪117,739 של ברקאי</li>
+            <li>מחיר גבוה יחסית כולל מע"מ — אופ' 1 מקרן: ₪151,300 / אופ' 2 BOE: ₪178,318 / אופ' 3 QSTECH: ₪248,355 — לעומת ₪138,932 של ברקאי</li>
             <li>אין מצלמת PTZ ואין מערכת הקלטה בהצעה</li>
             <li>ממתג וידאו עם כניסת HDMI בלבד — אין USB-C/DisplayPort (כמו האלפאטרון של ברקאי)</li>
             <li>אחריות 12 חודש בלבד — קצרה מפרוטאץ' (24 חודש)</li>
@@ -688,7 +691,7 @@
         <h3>מולטיפקט בע"מ</h3>
         <div style="font-size:.82rem;opacity:.8;">פתח תקווה | 12.5.2026</div>
       </div>
-      <div class="price-tag">₪216,480 — ללא מע"מ</div>
+      <div class="price-tag">₪255,446 כולל מע"מ</div>
       <div class="verdict">★★★★☆ מקיף מאוד</div>
     </div>
     <div class="company-body">
@@ -723,7 +726,7 @@
         <div class="cons">
           <h5>חסרונות / הסתייגויות</h5>
           <ul>
-            <li>יקרה ביותר — ₪216K, תוספת של ₪100K על ברקאי</li>
+            <li>יקרה ביותר — ₪255,446 כולל מע"מ, תוספת של ₪116,514 על ברקאי</li>
             <li>Epson WXGA (1280×800) — רזולוציה נמוכה ממה שמצופה ב-2026</li>
             <li>AKG wireless — לא Shure/Sennheiser כנדרש באפיון</li>
             <li>כבד מאוד בהקלטה/מצלמות — פחות רלוונטי לטכנודע</li>
@@ -740,10 +743,10 @@
   <div class="company-card company-barkai" style="border:3px solid #14b8a6;">
     <div class="company-header">
       <div>
-        <h3>ברקאי בני ברוקשטיין בע"מ ⭐ מומלץ</h3>
+        <h3>ברקאי בני ברוקשטיין בע"מ</h3>
         <div style="font-size:.82rem;opacity:.8;">רעננה | תאריך ההצעה</div>
       </div>
-      <div class="price-tag">₪117,739 — ללא מע"מ</div>
+      <div class="price-tag">₪138,932 כולל מע"מ</div>
       <div class="verdict">★★★★★ מחיר/ביצועים מנצח</div>
     </div>
     <div class="company-body">
@@ -751,7 +754,7 @@
         <div class="company-stat"><div class="val">Epson EB-L530U</div><div class="lbl">לייזר 5200 אנסי WUXGA 4K</div></div>
         <div class="company-stat"><div class="val">Biamp TesiraFORTE CI</div><div class="lbl">DSP מקצועי מלא</div></div>
         <div class="company-stat"><div class="val">Crestron RMC4</div><div class="lbl">בקר שליטה Gold Standard</div></div>
-        <div class="company-stat"><div class="val">₪117,739</div><div class="lbl">הזול ביותר | 12 חודשי אחריות</div></div>
+        <div class="company-stat"><div class="val">₪138,932 כולל מע"מ</div><div class="lbl">הזול ביותר | 12 חודשי אחריות</div></div>
       </div>
 
       <div class="bar-section">
@@ -774,7 +777,7 @@
             <li>Lumens LC100 — מערכת הקלטה עם 2TB</li>
             <li>מסך הקרנה חשמלי 195" — גדול ומרשים</li>
             <li>BUKAI פודיום קומפקטי — עצוב לאקדמיה</li>
-            <li><strong>הזול ביותר!</strong> חיסכון של ₪93K מטכום (LED), ₪99K ממולטיפקט</li>
+            <li><strong>הזול ביותר!</strong> לעומת טכום כולל מע"מ — חיסכון ₪12,368 (אופ' מקרן) / ₪39,386 (אופ' BOE) / ₪109,423 (אופ' QSTECH). לעומת מולטיפקט — חיסכון ₪116,514</li>
           </ul>
         </div>
         <div class="cons">
@@ -802,7 +805,7 @@
         <h3>פרוטאץ' מערכות מולטימדיה מתקדמות</h3>
         <div style="font-size:.82rem;opacity:.8;">פתח תקווה | 6.5.2026</div>
       </div>
-      <div class="price-tag">₪191,937 — ללא מע"מ</div>
+      <div class="price-tag">₪226,486 כולל מע"מ</div>
       <div class="verdict">★★★☆☆ LED מרשים, שאלות על מוצרים</div>
     </div>
     <div class="company-body">
@@ -873,10 +876,28 @@
         <tr class="category-row"><td colspan="5">💰 מחירים</td></tr>
         <tr>
           <td>סה"כ הצעה (ללא מע"מ)</td>
-          <td>₪210,470</td>
+          <td style="font-size:.8rem;line-height:1.9;">
+            אופ' 1 מקרן: ₪128,220<br>
+            אופ' 2 BOE: ₪151,118<br>
+            אופ' 3 QSTECH: ₪210,470
+          </td>
           <td class="cell-bad">₪216,480</td>
           <td class="cell-good">₪117,739 ✓</td>
           <td>₪191,937</td>
+        </tr>
+        <tr style="font-weight:700;background:rgba(37,99,200,.07);">
+          <td>סה"כ הצעה כולל מע"מ (18%)</td>
+          <td style="font-size:.82rem;line-height:2;">
+            אופ' 1 — מקרן לייזר:<br>
+            <span style="font-size:1rem;font-weight:900;color:#1d4ed8;">₪151,300</span><br>
+            אופ' 2 — BOE LED (פרוטאץ'):<br>
+            <span style="font-size:1rem;font-weight:900;color:#1d4ed8;">₪178,318</span><br>
+            אופ' 3 — QSTECH LED:<br>
+            <span style="font-size:1rem;font-weight:900;color:#1d4ed8;">₪248,355</span>
+          </td>
+          <td class="cell-bad" style="font-size:1rem;">₪255,446</td>
+          <td class="cell-good" style="font-size:1rem;">₪138,932 ✓</td>
+          <td style="font-size:1rem;">₪226,486</td>
         </tr>
         <tr>
           <td>זמן אספקה</td>
@@ -1098,184 +1119,6 @@
       <div class="score-stars">⭐⭐⭐☆☆</div>
       <div style="font-size:.75rem;color:var(--gray4);margin-top:8px;">חששות מוצרים, LED מרשים</div>
     </div>
-  </div>
-</div>
-
-<!-- ===================== RECOMMEND ===================== -->
-<div class="section" id="tab-recommend">
-
-  <div class="rec-banner">
-    <h2>✅ המלצה סופית — ברקאי + בירור LED</h2>
-    <p>ברקאי היא הבחירה המועדפת — ציוד מקצועי מהשורה הראשונה במחיר הנמוך ביותר. <strong>לפני הסגירה: לבקש מברקאי הצעה חלופית עם מסך LED. טכום כבר הגישו הצעה עם LED במחיר ₪210,470.</strong></p>
-    <div class="rec-options">
-      <div class="rec-option primary">
-        <h4>🥇 אפשרות A — ברקאי עם מסך LED</h4>
-        <p>לבקש מברקאי להחליף את Epson EB-L530U + מסך 195" במסך LED מסוג P1.5–P2 בגודל 3×2 מ'. ברקאי מציעה כבר Lumens VC-TR61, Crestron ואלפאטרון ממתג — בסיס מצוין. ההפרש בעלות צפוי להיות ₪30K–₪50K נוספים אך מדובר בפתרון לעשר שנים.</p>
-        <div class="price">~₪150,000–₪170,000 משוער</div>
-      </div>
-      <div class="rec-option">
-        <h4>🥈 אפשרות B — ברקאי כמות שהיא (מקרן)</h4>
-        <p>ההצעה הקיימת ₪117,739 — לבקש שדרוג מקרן ל-7000 לומן. כולל Alfatron ממתג 4K, Crestron, Biamp מלא, Lumens PTZ והקלטה — הכל כבר פנימה.</p>
-        <div class="price">~₪120,000–₪125,000 משוער</div>
-      </div>
-      <div class="rec-option">
-        <h4>🥉 אפשרות C — לפנות לפרוטאץ' לצמצום</h4>
-        <p>פרוטאץ' מציעה LED מעולה (BOE P1.5) ואחריות 24 חודש. לבקש החלפת Behringer X18 במיקסר מקצועי (Yamaha TF) ואת רמקולי TW במותג מוכר — ייתכן שייצא ב-₪170K–₪180K.</p>
-        <div class="price">~₪175,000 לאחר שדרוג</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LED box -->
-  <div style="background:linear-gradient(135deg,#1e3a5f,#1e4d8c);color:#fff;border-radius:var(--radius);padding:22px 26px;margin-bottom:24px;">
-    <h3 style="font-size:1rem;font-weight:800;margin-bottom:10px;">📺 למה מסך LED עדיף על מקרן לייזר לאודיטוריום?</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
-      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:12px;">
-        <div style="font-weight:700;font-size:.9rem;margin-bottom:4px;">☀️ בהירות קבועה</div>
-        <div style="font-size:.8rem;opacity:.85;">600–800 nits — לא נדהה עם הזמן, לא תלוי בנורה</div>
-      </div>
-      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:12px;">
-        <div style="font-weight:700;font-size:.9rem;margin-bottom:4px;">🔧 אפס תחזוקה</div>
-        <div style="font-size:.8rem;opacity:.85;">אין החלפת נורות (₪2,000–₪5,000 לנורת מקרן), אין כיול תקופתי</div>
-      </div>
-      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:12px;">
-        <div style="font-weight:700;font-size:.9rem;margin-bottom:4px;">🎯 חדות מושלמת</div>
-        <div style="font-size:.8rem;opacity:.85;">Pixel-perfect — קוד, גרפים ומצגות טכניות נראים חדים</div>
-      </div>
-      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:12px;">
-        <div style="font-weight:700;font-size:.9rem;margin-bottom:4px;">⏱️ מיידי</div>
-        <div style="font-size:.8rem;opacity:.85;">אין המתנה להתחממות, כיבוי/הדלקה מיידי</div>
-      </div>
-    </div>
-    <p style="font-size:.82rem;opacity:.8;margin-top:14px;">⚠️ חסרון עיקרי: עלות רכישה גבוהה יותר (₪40K–₪65K) — אך לאורך 10 שנה, כולל חיסכון בתחזוקה, הפרש העלות מצטמצם משמעותית.</p>
-  </div>
-
-  <!-- Detailed reasoning -->
-  <div class="section-title">נימוקים מפורטים</div>
-
-  <div class="opinion-box">
-    <h3>🔊 על מערכת השמע — הלב של הפרויקט</h3>
-    <p><strong>Biamp TesiraFORTE CI</strong> הוא אחד ה-DSP הטובים בעולם לאולמות הרצאה. הוא כולל מיקסר דיגיטלי מובנה (12 כניסות), ביטול הדהוד (AEC), פרוצסינג מלא ושליטה בעוצמות. זה אומר שאין צורך במיקסר חיצוני נוסף — הכל בתוך יחידה אחת, אינטגרציה מושלמת.</p>
-    <p>המגבר <strong>Voltera D2400.8</strong> הוא אותו מגבר שמציעה גם טכום — 8 ערוצים, 2400W כולל, מבוסס Biamp. הרמקולים <strong>ENT220W</strong> הם קולונות שנבחרות שוב ושוב באולמות הרצאה בישראל ובעולם — פיזור אחיד, ביצועים מהימנים.</p>
-    <p>לסיכום: מערכת השמע של ברקאי <strong>עדיפה על פרוטאץ' (Behringer), מקבילה לטכום</strong>, וחסכונית ב-₪30K מולטיפקט.</p>
-  </div>
-
-  <div class="opinion-box">
-    <h3>📺 על מערכת ההקרנה — מסך LED הוא הפתרון המועדף</h3>
-    <p><strong>עמדת טכנודע ברורה: מסך LED עדיף על מקרן לייזר.</strong> טכום כבר הגישו הצעה עם מסך LED QSTECH (3.63×2.15 מ', פיטצ' 1.25 COB) במחיר ₪210,470. פרוטאץ' מציעה LED (BOE P1.5), ומולטיפקט לא כללה LED כלל. נותר לבקש מברקאי הצעה חלופית עם מסך LED.</p>
-    <p>אם בחרים בברקאי עם LED — הבסיס המצוין שלהם (Biamp, Crestron, Lumens) נשאר, ורק רכיב ההקרנה מוחלף. <strong>ברקאי ראויה לקבל את ההזדמנות הזו.</strong></p>
-    <p>אם בסופו של דבר נשארים עם מקרן לייזר — לדרוש 7,000 לומן לפחות (Epson EB-L735U / Sony VPL-PHZ51) למסך בגודל 195".</p>
-  </div>
-
-  <div class="opinion-box">
-    <h3>🎛️ על מערכת השליטה — הכי קריטית לחוויית המרצה</h3>
-    <p>ברקאי בוחרת ב-<strong>Crestron RMC4</strong> — זהו בקר אחד עם ברנד Crestron שמחיר הרכישה שלו בהצעה (₪2,860) נמוך בהרבה ממחיר ברשת, מה שמשקף הסכמי הנחה מקצועיים. Crestron היא ה"gold standard" של השוק.</p>
-    <p>מה שמייחד את ברקאי: <strong>Alfatron ALF-SC61e</strong> — ממתג וידאו דיגיטלי 4K עם 3 כניסות HDMI, USB-C, DP ו-VGA. זה אומר שמרצה שמגיע עם MacBook (USB-C), Windows עם DisplayPort, או מחשב ישן עם VGA — הכל עובד ללא מתאמים. זה יתרון תפעולי ענק!</p>
-  </div>
-
-  <div class="opinion-box">
-    <h3>📷 על מצלמה והקלטה — ניתוח הוגן</h3>
-    <p>כפי שצוין על ידכם — אלו "Nice to Have". עם זאת, ברקאי כוללת את <strong>Lumens VC-TR61</strong> — מצלמת PTZ מקצועית ב-4K עם זום 30X ועקיבה אוטומטית. זה מוצר ברמה גבוהה מאוד, הרבה מעל מה שהמתחרות מציעות (Tellycam של טכום, MINRRAY של פרוטאץ').</p>
-    <p>מערכת ההקלטה <strong>Lumens LC100 עם 2TB</strong> כלולה — ואם בעתיד תרצו להתחיל להקליט הרצאות, הכל כבר מוכן. השקעה נכונה.</p>
-  </div>
-
-  <div class="opinion-box">
-    <h3>🚨 למה לא לבחור פרוטאץ'?</h3>
-    <p>פרוטאץ' היא חברה מכובדת עם לקוחות גדולים (Rockwell, Intel, CheckPoint). <strong>אבל</strong> — ההצעה שלהם לטכנודע מכילה שני דגלים אדומים שקשה לעבור עליהם:</p>
-    <p><strong>1. Behringer X18:</strong> מיקסר שמחירו ברחוב ₪2,500–₪3,000, מיועד לרשמקולים פרטיים ואירועים קטנים. בסביבה מקצועית של אודיטוריום עם DSP, מציפים מיקסר כזה בדרך כלל בשמות כמו Yamaha TF, Allen & Heath Qu, או QSC TouchMix. Behringer X18 כאן — זו קיצור דרך.</p>
-    <p><strong>2. TW speakers:</strong> לא מופיעים ברשימות יצרנים מורשים של האפיון (JBL, QSC, Bose, Yamaha). קשה להעריך איכות ותמיכה לאורך זמן.</p>
-  </div>
-
-  <hr class="divider">
-
-  <div class="section-title">סדר פעולות מומלץ</div>
-  <div class="grid2">
-    <div class="card">
-      <h3><span class="icon">1️⃣</span>לפנות לברקאי — שאלות מרכזיות</h3>
-      <ul class="feat-list">
-        <li><span class="dot"></span><strong>האם ניתן להציע מסך LED במקום מקרן?</strong> (זה השינוי הכי חשוב)</li>
-        <li><span class="dot"></span>אם מקרן — שדרוג ל-7000 לומן, מה המחיר?</li>
-        <li><span class="dot"></span>שדרוג אחריות ל-24 חודש בבית לקוח?</li>
-        <li><span class="dot"></span>האם מבוצע תכנון אקוסטי מוקדם?</li>
-        <li><span class="dot"></span>האם ניתן לנצל iPad קיים של טכנודע?</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3><span class="icon">2️⃣</span>טכום — הצעה עם מסך LED קיימת</h3>
-      <ul class="feat-list">
-        <li><span class="dot"></span><strong>טכום כבר הגישו הצעה עם מסך LED QSTECH ₪210,470</strong></li>
-        <li><span class="dot"></span>לברר האם ניתן לשלב Alfatron ממתג 4K (HDMI/USB-C) במקום HDP</li>
-        <li><span class="dot"></span>לשאול על אפשרות הוספת מצלמת PTZ בעתיד</li>
-        <li><span class="dot"></span>לדון על הרחבת אחריות ל-36 חודש (8,350 ₪/שנה)</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3><span class="icon">3️⃣</span>פרוטאץ' — תנאי לשיקול</h3>
-      <ul class="feat-list">
-        <li><span class="dot"></span>LED מצוין (BOE P1.5) + אחריות 24 חודש</li>
-        <li><span class="dot"></span><strong>לדרוש: החלפת Behringer X18</strong> ב-Yamaha TF1 / QSC TouchMix</li>
-        <li><span class="dot"></span><strong>לדרוש: החלפת רמקולי TW</strong> ב-JBL / QSC / Biamp</li>
-        <li><span class="dot"></span>אם מסכימים — ייתכן שתהפוך לאופציה אמיתית</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3><span class="icon">4️⃣</span>בדיקות לפני חתימה</h3>
-      <ul class="feat-list">
-        <li><span class="dot"></span>לבקש רשימות התייחסות (אתרים דומים שהותקנו)</li>
-        <li><span class="dot"></span>לדרוש תכנון אקוסטי לפני ההתקנה</li>
-        <li><span class="dot"></span>לוודא שהתשתית (חשמל, רשת) מוכנה</li>
-        <li><span class="dot"></span>לדרוש הדגמת מסך LED / מקרן בתנאי האולם</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Final table -->
-  <div style="background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);margin-top:8px;">
-    <h3 style="color:var(--blue);font-size:1rem;margin-bottom:16px;">סיכום: What You Get for Your Money <span style="font-size:.75rem;color:var(--gray3);">(ההדגשה: LED עדיף)</span></h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>חברה</th><th>מחיר</th><th>שמע</th><th>הקרנה</th><th>שליטה</th><th>מתאים לטכנודע?</th><th>המלצה</th></tr></thead>
-        <tbody>
-          <tr>
-            <td>🔵 טכום</td>
-            <td>₪210,470</td>
-            <td class="cell-good">מצוין</td>
-            <td class="cell-good">QSTECH LED ✓</td>
-            <td class="cell-ok">טוב</td>
-            <td class="cell-good">✓ כן</td>
-            <td><span class="badge must">כולל LED</span></td>
-          </tr>
-          <tr>
-            <td>🟣 מולטיפקט</td>
-            <td class="cell-bad">₪216,480</td>
-            <td class="cell-good">מצוין</td>
-            <td class="cell-ok">מקרן בלבד (WXGA)</td>
-            <td class="cell-good">מצוין</td>
-            <td class="cell-ok">חלקית</td>
-            <td><span class="badge warning">יקר מדי</span></td>
-          </tr>
-          <tr style="background:#f0fdf4;">
-            <td style="font-weight:800;">🟢 ברקאי ⭐</td>
-            <td class="cell-good" style="font-weight:800;">₪117,739 + LED?</td>
-            <td class="cell-good">מצוין</td>
-            <td class="cell-ok">מקרן עכשיו → לבקש LED</td>
-            <td class="cell-good">מצוין</td>
-            <td class="cell-good">✓ מאוד</td>
-            <td><span class="badge must">מומלץ!</span></td>
-          </tr>
-          <tr>
-            <td>🟠 פרוטאץ'</td>
-            <td>₪191,937</td>
-            <td class="cell-bad">Behringer ⚠</td>
-            <td class="cell-good">LED מצוין ✓</td>
-            <td class="cell-ok">טוב</td>
-            <td class="cell-ok">אם ישפרו שמע</td>
-            <td><span class="badge warning">מותנה</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="font-size:.78rem;color:var(--gray3);margin-top:8px;">* לומן 5200 — מומלץ לשדרג ל-7000 לומן בעלות תוספת קטנה. כל המחירים ללא מע"מ.</div>
   </div>
 </div>
 
