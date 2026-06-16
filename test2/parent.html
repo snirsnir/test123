@@ -252,7 +252,7 @@
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────────
-const SCRIPT_URL = ''; // הדבק כאן את ה-Apps Script URL שלך
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx_osM5tuf-a6IdTA5ru8bHrhN2hNyqNCvhgno9VlEWGbLjd-aBItz3eykvF6wkhx-G/exec';
 
 const QUESTIONS = [
     { id: 1, title: "המפגש בבית", question: "כשהילד/ה נכנסים הביתה בפרצוף מבואס, מה הפעולה הראשונה שלכם?", options: ["שואלים מיד 'מה קרה?'", "נותנים חיבוק חזק ומחכים שהם יפתחו בשיחה."], img: "1o-n-8LfZCIlrtxFu_tk-qOC-F9QKVvxq" },
@@ -358,7 +358,7 @@ function attachEvents() {
     document.getElementById('btn-next')?.addEventListener('click', async () => {
         if (selectedAnswer === null) return;
         const q = QUESTIONS[currentIdx];
-        answers.push({ question: q.id, answer: q.options[selectedAnswer] });
+        answers.push({ questionId: q.id, question: q.question, answer: q.options[selectedAnswer] });
 
         if (currentIdx < QUESTIONS.length - 1) {
             currentIdx++;
