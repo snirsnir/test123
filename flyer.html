@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>חבילת הטבות עובדי טכנודע</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:  #52b447;
+      --blue:   #3394d4;
+      --purple: #8b489a;
+      --pink:   #d63a6e;
+      --orange: #f0852a;
+      --yellow: #f5c518;
+      --dark:   #222;
+      --gray:   #666;
+      --bg:     #f8f7fc;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Rubik', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ════════════════════════════════
+       SPLASH / INTRO
+    ════════════════════════════════ */
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: linear-gradient(150deg, #3b0f5e 0%, #1e1060 45%, #0d3d8e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 28px;
+      text-align: center;
+      transition: opacity .7s ease, visibility .7s;
+    }
+    #splash.hidden { opacity: 0; visibility: hidden; }
+
+    /* floating dots decoration */
+    .sp-dot {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.18;
+      animation: float 6s ease-in-out infinite;
+    }
+    .sp-dot-1 { width:180px;height:180px;background:var(--orange);top:-60px;right:-40px;animation-delay:0s; }
+    .sp-dot-2 { width:120px;height:120px;background:var(--green); bottom:40px;left:-30px;animation-delay:2s; }
+    .sp-dot-3 { width:80px; height:80px; background:var(--pink);  top:30%;left:5%;    animation-delay:4s; }
+    .sp-dot-4 { width:60px; height:60px; background:var(--yellow);bottom:20%;right:8%;animation-delay:1s; }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-18px); }
+    }
+
+    .sp-logo-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 14px 24px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+    }
+    .sp-logo-card img { height: 56px; width: auto; display: block; }
+
+    #tw-wrap {
+      position: relative;
+      z-index: 1;
+      height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 12px;
+      margin-bottom: 32px;
+      /* full width so RTL lines can align right within it */
+      width: 100%;
+      max-width: 520px;
+    }
+
+    #tw-line1 {
+      font-size: clamp(1.6rem, 6vw, 2.6rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.25;
+      min-height: 1.3em;
+      margin-bottom: 18px;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.25);
+      /* RTL: anchored to the right, grows leftward */
+      direction: rtl;
+      text-align: right;
+    }
+
+    #tw-line2 {
+      font-size: clamp(1rem, 3.5vw, 1.35rem);
+      font-weight: 500;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.65;
+      min-height: 5em;
+      opacity: 0;
+      transition: opacity .3s;
+      direction: rtl;
+      text-align: right;
+    }
+    #tw-line2.visible { opacity: 1; }
+
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.1em;
+      background: var(--yellow);
+      vertical-align: middle;
+      margin-right: 2px;
+      border-radius: 2px;
+      animation: blink .75s step-end infinite;
+    }
+    .cursor.done { animation: none; opacity: 0; }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    #btn-holder {
+      position: relative;
+      z-index: 1;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #continue-btn {
+      display: none;
+      background: var(--yellow);
+      color: #3b0f5e;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      font-family: 'Rubik', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+      animation: pop-in .5s cubic-bezier(.34,1.56,.64,1) both;
+      transition: transform .15s, box-shadow .15s;
+    }
+    #continue-btn:hover  { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    #continue-btn:active { transform: translateY(0); }
+
+    @keyframes pop-in {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    /* ════════════════════════════════
+       MAIN CONTENT (hidden until splash done)
+    ════════════════════════════════ */
+    #main-content {
+      opacity: 0;
+      transition: opacity .6s ease .1s;
+    }
+    #main-content.visible { opacity: 1; }
+
+    /* ════════════════════════════════
+       HERO
+    ════════════════════════════════ */
+    .hero {
+      background: linear-gradient(150deg, #5c1b80 0%, #2e1870 50%, #1565c4 100%);
+      color: #fff;
+      text-align: center;
+      padding: 36px 24px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 260px; height: 260px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+      top: -100px; right: -70px;
+      pointer-events: none;
+    }
+
+    .hero-logo-card {
+      display: inline-block;
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+      position: relative;
+      z-index: 1;
+    }
+    .hero-logo-card img { height: 52px; width: auto; display: block; }
+
+    .hero h1 {
+      font-size: clamp(1.3rem, 5vw, 1.9rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    /* ── Big price bubble ── */
+    .price-bubble {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--yellow);
+      color: #3b1200;
+      border-radius: 22px;
+      padding: 18px 36px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.22);
+      position: relative;
+      z-index: 1;
+    }
+    .price-bubble .pb-label { font-size: 0.78rem; font-weight: 700; opacity: 0.75; }
+    .price-bubble .pb-amount {
+      font-size: clamp(3rem, 10vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+    .price-bubble .pb-per { font-size: 0.82rem; font-weight: 700; opacity: 0.75; }
+
+    .hero-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 10px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(4px);
+    }
+
+    /* wave */
+    .hero-wave { display: block; line-height: 0; margin-top: -1px; }
+    .hero-wave svg { display: block; width: 100%; }
+
+    /* ════════════════════════════════
+       SECTIONS
+    ════════════════════════════════ */
+    section { padding: 30px 18px; }
+    section + section { padding-top: 0; }
+
+    .sec-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .sec-heading .line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to left, transparent, #ddd);
+    }
+    .sec-heading h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--purple);
+      white-space: nowrap;
+    }
+
+    /* ════════════════════════════════
+       BENEFITS
+    ════════════════════════════════ */
+    .benefits-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+    .benefit {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 12px 13px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      position: relative;
+      overflow: hidden;
+    }
+    .benefit::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; left: 0;
+      height: 4px;
+      border-radius: 16px 16px 0 0;
+    }
+    .benefit.b1::before { background: var(--blue); }
+    .benefit.b2::before { background: var(--orange); }
+    .benefit.b3::before { background: var(--green); }
+    .benefit.b4::before { background: var(--purple); }
+    .benefit.b5::before { background: var(--pink); }
+    .benefit.b6::before { background: var(--yellow); }
+    .benefit.b7::before { background: linear-gradient(90deg,var(--purple),var(--blue)); }
+
+    .benefit-num {
+      position: absolute;
+      top: 8px; left: 10px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #ccc;
+    }
+    .benefit-icon { font-size: 1.9rem; margin-bottom: 7px; }
+    .benefit h3 { font-size: 0.82rem; font-weight: 700; line-height: 1.3; }
+    .benefit p  { font-size: 0.68rem; color: var(--gray); margin-top: 3px; }
+
+    .benefit.wide { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px 16px; }
+    .benefit.wide .benefit-icon { font-size: 1.7rem; margin-bottom: 0; }
+    .benefit.wide h3 { font-size: 0.88rem; text-align: right; }
+
+    /* ════════════════════════════════
+       GIVING SECTION
+    ════════════════════════════════ */
+    .giving-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(139,72,154,0.15);
+    }
+    .giving-top {
+      background: linear-gradient(135deg, #f5c518 0%, #f0a500 100%);
+      color: #3b1200;
+      text-align: center;
+      padding: 30px 20px 26px;
+    }
+    .giving-label { font-size: 0.9rem; opacity: 0.7; font-weight: 600; margin-bottom: 4px; }
+    .giving-amount {
+      font-size: clamp(4rem, 14vw, 6rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -2px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      display: inline-block;
+      animation: price-pulse 2.8s ease-in-out infinite;
+    }
+    @keyframes price-pulse {
+      0%, 100% { transform: scale(1);    }
+      50%       { transform: scale(1.06); }
+    }
+    .giving-per { font-size: 1rem; opacity: 0.7; font-weight: 600; margin-top: 4px; }
+    .giving-bottom {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .giving-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--dark);
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .gi-icon { font-size: 1.3rem; flex-shrink: 0; }
+
+    /* ════════════════════════════════
+       NOTES
+    ════════════════════════════════ */
+    .notes-wrap { display: flex; flex-direction: column; gap: 10px; }
+
+    .note {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 13px 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-right: 5px solid #ccc;
+    }
+    .note.n-yellow { border-color: var(--yellow); }
+    .note.n-blue   { border-color: var(--blue); }
+    .note.n-green  { border-color: var(--green); }
+    .note.n-pink   { border-color: var(--pink); }
+
+    .note-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+    .note-body strong { display: block; font-size: 0.86rem; color: var(--dark); margin-bottom: 2px; }
+    .note-body span   { font-size: 0.79rem; color: var(--gray); line-height: 1.5; }
+
+    /* ════════════════════════════════
+       FAQ
+    ════════════════════════════════ */
+    .faq-wrap { display: flex; flex-direction: column; gap: 8px; }
+
+    .faq {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: right;
+      padding: 15px 16px;
+      font-size: 0.87rem;
+      font-weight: 700;
+      color: var(--dark);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Rubik', sans-serif;
+    }
+    .faq-q .arr {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #f0eaf6;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.68rem;
+      transition: transform .3s, background .2s;
+      flex-shrink: 0;
+      color: var(--purple);
+    }
+    .faq-q.open .arr { transform: rotate(180deg); background: var(--purple); color: #fff; }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .3s;
+      font-size: 0.82rem;
+      color: var(--gray);
+      line-height: 1.65;
+      padding: 0 16px;
+    }
+    .faq-a.open { max-height: 300px; padding: 0 16px 14px; }
+    .faq-a ul { padding-right: 16px; }
+    .faq-a li { margin-bottom: 4px; }
+    .faq-a strong { color: var(--dark); }
+
+    /* ════════════════════════════════
+       REGISTER
+    ════════════════════════════════ */
+    .register-card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 24px rgba(139,72,154,0.13);
+      overflow: hidden;
+    }
+    .card-top {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      padding: 20px 20px 16px;
+      text-align: center;
+    }
+    .card-top h2 { font-size: 1.05rem; font-weight: 800; margin-bottom: 4px; }
+    .card-top p  { font-size: 0.78rem; opacity: 0.88; }
+
+    .card-body { padding: 20px; }
+
+    .choice-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gray);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .choice-opt {
+      border: 2.5px solid #e8e0f0;
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      background: #fafafa;
+      user-select: none;
+    }
+    .choice-opt:hover { border-color: var(--purple); }
+    .choice-opt.sel  { border-color: var(--purple); background: #f5effe; box-shadow: 0 0 0 3px rgba(139,72,154,0.12); }
+    .choice-opt .ci  { font-size: 1.6rem; margin-bottom: 5px; }
+    .choice-opt h4   { font-size: 0.82rem; font-weight: 700; }
+    .choice-opt p    { font-size: 0.67rem; color: var(--gray); margin-top: 2px; }
+
+    .inp-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .inp-group input {
+      border: 2px solid #e8e0f0;
+      border-radius: 12px;
+      padding: 13px 14px;
+      font-size: 0.9rem;
+      width: 100%;
+      font-family: 'Rubik', sans-serif;
+      color: var(--dark);
+      background: #fafafa;
+      transition: border .2s;
+    }
+    .inp-group input:focus { outline: none; border-color: var(--purple); background: #fff; }
+    .inp-group input::placeholder { color: #bbb; }
+
+    .err { display: none; color: var(--pink); font-size: 0.78rem; text-align: center; margin-bottom: 8px; }
+
+    .cta-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Rubik', sans-serif;
+      transition: opacity .2s, transform .15s;
+      box-shadow: 0 4px 16px rgba(139,72,154,0.3);
+    }
+    .cta-btn:active { transform: scale(0.98); }
+    .cta-btn:disabled { opacity: 0.55; cursor: default; }
+
+    .success-box {
+      display: none;
+      margin-top: 16px;
+      background: #eafaf1;
+      border: 2px solid var(--green);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+    }
+    .success-box .tick { font-size: 2.2rem; }
+    .success-box h3 { font-size: 1rem; font-weight: 800; color: var(--green); margin: 6px 0 4px; }
+    .success-box p  { font-size: 0.82rem; color: var(--gray); }
+
+    /* ════════════════════════════════
+       FOOTER
+    ════════════════════════════════ */
+    footer {
+      background: var(--dark);
+      color: #aaa;
+      text-align: center;
+      padding: 24px 20px;
+      font-size: 0.78rem;
+      line-height: 1.7;
+    }
+    footer img { height: 32px; opacity: 0.55; display: block; margin: 0 auto 10px; filter: brightness(0) invert(1); }
+    footer strong { color: #ddd; }
+
+    /* ════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════ */
+    @media (min-width: 540px) {
+      section { padding: 34px 32px; max-width: 600px; margin: 0 auto; }
+    }
+    @media (min-width: 768px) {
+      section { max-width: 680px; }
+      .benefits-wrap { grid-template-columns: repeat(4, 1fr); }
+      .benefit.wide { grid-column: auto; display: block; padding: 16px 12px 13px; }
+      .benefit.wide .benefit-icon { margin-bottom: 7px; font-size: 1.9rem; }
+      .benefit.wide h3 { text-align: center; font-size: 0.82rem; }
+    }
+
+    [id] { scroll-margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     SPLASH SCREEN
+════════════════════════════════ -->
+<div id="splash">
+  <div class="sp-dot sp-dot-1"></div>
+  <div class="sp-dot sp-dot-2"></div>
+  <div class="sp-dot sp-dot-3"></div>
+  <div class="sp-dot sp-dot-4"></div>
+
+  <div class="sp-logo-card">
+    <img src="technoda.png" alt="טכנודע" />
+  </div>
+
+  <div id="tw-wrap">
+    <div id="tw-line1"><span id="tw-text1"></span><span class="cursor" id="cur1"></span></div>
+    <div id="tw-line2"><span id="tw-text2"></span><span class="cursor" id="cur2"></span></div>
+  </div>
+
+  <div id="btn-holder">
+    <button id="continue-btn" onclick="enterSite()">בואו נראה את ההטבות ↓</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════ -->
+<div id="main-content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-logo-card">
+      <img src="technoda.png" alt="טכנודע" />
+    </div>
+
+    <h1>7 הטבות שוות<br/>לכל עובד טכנודע 🎁</h1>
+    <div class="hero-date">🗓 מתחיל&nbsp;<strong>1.7.2025</strong></div>
+  </div>
+
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 48" preserveAspectRatio="none" height="48" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,24 C360,56 1080,0 1440,24 L1440,0 L0,0 Z" fill="#1565c4" opacity=".6"/>
+      <path d="M0,32 C480,64 960,0 1440,32 L1440,48 L0,48 Z" fill="#f8f7fc"/>
+    </svg>
+  </div>
+
+  <!-- BENEFITS -->
+  <section id="benefits">
+    <div class="sec-heading">
+      <h2>🎁 מה אתם מקבלים?</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="benefits-wrap">
+      <div class="benefit b1">
+        <span class="benefit-num">01</span>
+        <div class="benefit-icon">🥂</div>
+        <h3>5 מועדי Happy Hour</h3>
+        <p>בראנץ' מפתיע שמגיע אליכם לעבודה!</p>
+      </div>
+      <div class="benefit b2">
+        <span class="benefit-num">02</span>
+        <div class="benefit-icon">🍽️</div>
+        <h3>סיבוס / תלושי מזון</h3>
+        <p>לבחירתכם — אחד בלבד</p>
+      </div>
+      <div class="benefit b3">
+        <span class="benefit-num">03</span>
+        <div class="benefit-icon">🏖️</div>
+        <h3>טיול שנתי</h3>
+        <p>חוויה משותפת</p>
+      </div>
+      <div class="benefit b4">
+        <span class="benefit-num">04</span>
+        <div class="benefit-icon">🎭</div>
+        <h3>מסיבת פורים</h3>
+        <p>ערב חגיגי לכל הצוות</p>
+      </div>
+      <div class="benefit b5">
+        <span class="benefit-num">05</span>
+        <div class="benefit-icon">🎤</div>
+        <h3>2 הרצאות</h3>
+        <p>תכנים מקצועיים</p>
+      </div>
+      <div class="benefit b6">
+        <span class="benefit-num">06</span>
+        <div class="benefit-icon">🎁</div>
+        <h3>שי לחגים</h3>
+        <p>ראש השנה ופסח</p>
+      </div>
+      <div class="benefit b7 wide">
+        <div class="benefit-icon">🎂</div>
+        <h3>שי ליום הולדת — כי כל עובד מיוחד!</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT YOU GIVE -->
+  <section id="giving">
+    <div class="sec-heading">
+      <h2>💰 מה אתם נותנים?</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="giving-card">
+      <div class="giving-top">
+        <div class="giving-label">כל זה תמורת</div>
+        <div class="giving-amount">15 ₪</div>
+        <div class="giving-per">לחודש בלבד</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTES -->
+  <section id="notes">
+    <div class="sec-heading">
+      <h2>📋 חשוב לדעת</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="notes-wrap">
+      <div class="note n-yellow">
+        <span class="note-icon">📅</span>
+        <div class="note-body">
+          <strong>תחילת השירות — 1 ביולי</strong>
+          <span>ההטבות מתחילות מיד עם תחילת יולי. מומלץ להירשם כמה שקודם!</span>
+        </div>
+      </div>
+
+      <div class="note n-blue">
+        <span class="note-icon">💳</span>
+        <div class="note-body">
+          <strong>גביית התשלום</strong>
+          <span>הסכום ייגבה ישירות מתלוש השכר. לעובדים ללא תלוש — 15 ₪ לחודש או 180 ₪ לשנה, מזומן לרונית מהשכר.</span>
+        </div>
+      </div>
+
+      <div class="note n-pink">
+        <span class="note-icon">⚠️</span>
+        <div class="note-body">
+          <strong>סיבוס או תלושים — בוחרים רק אחד!</strong>
+          <span>ניתן לבחור סיבוס <em>או</em> תלושי מזון.</span>
+        </div>
+      </div>
+
+      <div class="note n-green">
+        <span class="note-icon">✅</span>
+        <div class="note-body">
+          <strong>פתוח לכלל העובדים</strong>
+          <span>כל עובד יכול להצטרף. לשאלות — פנו לרונית מהשכר.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="sec-heading">
+      <h2>❓ שאלות ותשובות</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="faq-wrap">
+
+      <div class="faq">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          מה ההבדל בין סיבוס לתלושי מזון?
+          <div class="arr">▼</div>
+        </button>
+        <div class="faq-a">
+          <p style="margin-bottom:10px"><strong>סיבוס (Cibus)</strong> היא פלטפורמה טכנולוגית המאפשרת למעסיקים לסבסד ארוחות והטבות לעובדים באמצעות אפליקציה או כרטיס נטען. בחדרה והסביבה תוכלו לנצל את התקציב בכ-80 מסעדות, לצד רשתות שיווק ופארם מובילות. המערכת מאפשרת להזמין משלוחים ישירות למקום העבודה, או לקנות מוצרים לבית. השימוש פשוט — הפקת קוד תשלום מהיר בנייד או תשלום ישירות באתר בעת ההזמנה.</p>
+          <ul>
+            <li><strong>תלושי מזון</strong> — התלושים שכולנו מכירים, שמכבדים בסביח, סלייס ובשווארמה.</li>
+            <li>⚠️ יש לבחור <strong>אחד בלבד</strong>, לא ניתן לשנות לאחר ההרשמה.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          איך מתבצעת הגביה?
+          <div class="arr">▼</div>
+        </button>
+        <div class="faq-a">
+          גביה אוטומטית מתלוש השכר — לא צריך לעשות כלום. מי שאין לו תלוש מעביר <strong>15 ₪ לחודש</strong> או <strong>180 ₪ לשנה</strong> מזומן לרונית מהשכר.
+        </div>
+      </div>
+
+      <div class="faq">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          מה זה 5 מועדי Happy Hour?
+          <div class="arr">▼</div>
+        </button>
+        <div class="faq-a">
+          יום עבודה משוגע? פתאום מגיע אליכם בראנץ' מטורף שנוחת ישירות אצלכם — 5 פעמים בשנה. הכל קורה בתוך הטכנודע, ההנאה מגיעה אליכם!
+        </div>
+      </div>
+
+      <div class="faq">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          מה כוללים שי לחגים?
+          <div class="arr">▼</div>
+        </button>
+        <div class="faq-a">
+          כל עובד מקבל מתנה לפני <strong>ראש השנה</strong> ולפני <strong>פסח</strong>. פרטי המתנה יפורסמו לפני כל חג.
+        </div>
+      </div>
+
+      <div class="faq">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          מה עם שי יום הולדת?
+          <div class="arr">▼</div>
+        </button>
+        <div class="faq-a">
+          כל עובד יקבל הפתעה ביום ההולדת שלו — אנחנו רוצים שכל אחד ירגיש מיוחד ומוערך! (יש לוודא שהתאריך מעודכן בהרשמה)
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- REGISTER -->
+  <section id="register" style="display:none">
+    <div class="sec-heading">
+      <h2>✍️ הצטרפו עכשיו</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="register-card">
+      <div class="card-top">
+        <h2>הרשמה לחבילת ההטבות</h2>
+        <p>בחרו את סוג ההטבה והשאירו פרטים — נדאג לשאר!</p>
+      </div>
+
+      <div class="card-body">
+        <span class="choice-label">בחרו סיבוס או תלושי מזון (חובה — אחד בלבד):</span>
+        <div class="choice-grid">
+          <div class="choice-opt" id="opt-cibus" onclick="pick('cibus')">
+            <div class="ci">📱</div>
+            <h4>סיבוס</h4>
+            <p>Cibus אפליקציה</p>
+          </div>
+          <div class="choice-opt" id="opt-sodexo" onclick="pick('sodexo')">
+            <div class="ci">🎫</div>
+            <h4>תלושי מזון</h4>
+            <p>שוברי מזון</p>
+          </div>
+        </div>
+
+        <div class="inp-group">
+          <input type="text"  id="f-name"  placeholder="שם מלא *" />
+          <input type="tel"   id="f-phone" placeholder="טלפון *" dir="ltr" />
+          <input type="date"  id="f-bday"  title="תאריך לידה (לשי יום הולדת)" />
+          <input type="text"  id="f-dept"  placeholder="מחלקה (אופציונלי)" />
+        </div>
+
+        <div class="err" id="err">נא למלא שם, טלפון ולבחור סיבוס / תלושים.</div>
+        <button class="cta-btn" id="cta" onclick="submitForm()">🎉 אני רוצה להצטרף!</button>
+
+        <div class="success-box" id="ok">
+          <div class="tick">✅</div>
+          <h3>תודה! הרשמתך התקבלה</h3>
+          <p>ברוכים הבאים לחבילת ההטבות של טכנודע.<br/>נעדכן אתכם בהמשך.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <img src="technoda.png" alt="טכנודע" />
+    <div>© 2025 טכנודע — המודאון הישראלי לרפואה ומדע, חדרה</div>
+    <div>שאלות? פנו ל<strong>רונית מהשכר</strong></div>
+  </footer>
+
+</div><!-- /main-content -->
+
+<script>
+/* ══════════════════════════════════
+   TYPEWRITER
+══════════════════════════════════ */
+const LINE1 = "עובדי טכנודע, שומעים??";
+const LINE2 = "לאחר מחשב רבה והתייעצויות\nאנו גאים להציג לכם\nאת חבילת ההטבות שלנו.";
+
+const el1   = document.getElementById('tw-text1');
+const el2   = document.getElementById('tw-text2');
+const cur1  = document.getElementById('cur1');
+const cur2  = document.getElementById('cur2');
+const line2 = document.getElementById('tw-line2');
+const btn   = document.getElementById('continue-btn');
+
+function typeChars(el, text, speed, cb) {
+  let i = 0;
+  const chars = [...text];  // handle unicode / emoji properly
+  const tick = () => {
+    if (i < chars.length) {
+      const ch = chars[i++];
+      if (ch === '\n') {
+        el.appendChild(document.createElement('br'));
+      } else {
+        el.appendChild(document.createTextNode(ch));
+      }
+      setTimeout(tick, speed + Math.random() * 30);
+    } else {
+      if (cb) cb();
+    }
+  };
+  tick();
+}
+
+// Start sequence
+typeChars(el1, LINE1, 65, () => {
+  // pause 1s, then show line2
+  setTimeout(() => {
+    cur1.classList.add('done');
+    line2.classList.add('visible');
+    cur2.style.display = 'inline-block';
+
+    typeChars(el2, LINE2, 48, () => {
+      cur2.classList.add('done');
+      // show continue button
+      btn.style.display = 'block';
+    });
+  }, 1000);
+});
+
+function enterSite() {
+  const splash  = document.getElementById('splash');
+  const content = document.getElementById('main-content');
+  splash.classList.add('hidden');
+  content.classList.add('visible');
+  window.scrollTo(0, 0);
+}
+
+/* ══════════════════════════════════
+   FAQ ACCORDION
+══════════════════════════════════ */
+function toggleFaq(btn) {
+  const ans    = btn.nextElementSibling;
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { ans.classList.add('open'); btn.classList.add('open'); }
+}
+
+/* ══════════════════════════════════
+   CHOICE + FORM
+══════════════════════════════════ */
+let chosen = null;
+
+function pick(val) {
+  chosen = val;
+  document.getElementById('opt-cibus' ).classList.toggle('sel', val === 'cibus');
+  document.getElementById('opt-sodexo').classList.toggle('sel', val === 'sodexo');
+}
+
+function submitForm() {
+  const name  = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const err   = document.getElementById('err');
+  const ok    = document.getElementById('ok');
+  const cta   = document.getElementById('cta');
+
+  if (!name || !phone || !chosen) {
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+
+  const payload = {
+    name, phone, choice: chosen,
+    birthday: document.getElementById('f-bday').value,
+    dept:     document.getElementById('f-dept').value.trim(),
+    ts:       new Date().toLocaleString('he-IL')
+  };
+  console.log('📋 Registration:', payload);
+
+  cta.disabled = true;
+  ok.style.display = 'block';
+  ok.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+</body>
+</html>
