@@ -3,87 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>השוואת משובים פרה-פוסט | תשפ"ו</title>
+<title>ניתוח משובים | תשפ"ו</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
-.header{background:linear-gradient(135deg,#1e293b,#0f172a);padding:2rem;text-align:center;border-bottom:1px solid #334155}
-.header h1{font-size:2rem;font-weight:800;color:#f8fafc;margin-bottom:.4rem}
-.header p{color:#94a3b8;font-size:.95rem}
-#home{display:block}
-#detail{display:none}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;padding:2rem;max-width:1400px;margin:0 auto}
-.card{background:#1e293b;border-radius:1rem;padding:1.5rem;cursor:pointer;transition:transform .2s,box-shadow .2s;border:1px solid #334155;position:relative;overflow:hidden}
-.card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
-.card::before{content:'';position:absolute;top:0;right:0;left:0;height:4px;background:var(--c)}
-.card-icon{font-size:2.5rem;margin-bottom:.75rem}
-.card-title{font-size:1.25rem;font-weight:700;color:#f8fafc;margin-bottom:.25rem}
-.card-desc{font-size:.83rem;color:#94a3b8;margin-bottom:1rem;line-height:1.5}
-.card-stats{display:flex;gap:.75rem;margin-bottom:1rem}
-.stat{background:#0f172a;border-radius:.5rem;padding:.5rem .75rem;flex:1;text-align:center}
-.stat-lbl{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
-.stat-val{font-size:1.15rem;font-weight:700;color:#f8fafc}
-.card-imp{background:#0f172a;border-radius:.5rem;padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem}
-.imp-arrow{font-size:1.3rem;font-weight:800}
-.imp-txt{font-size:.82rem;color:#94a3b8}
+.header{background:linear-gradient(135deg,#1e293b,#0f172a);padding:1.75rem 2rem;text-align:center;border-bottom:1px solid #334155}
+.header h1{font-size:1.9rem;font-weight:800;color:#f8fafc;margin-bottom:.35rem}
+.header p{color:#94a3b8;font-size:.9rem}
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:2px solid #334155;padding:0 2rem;max-width:1400px;margin:0 auto}
+.tab{padding:.75rem 1.5rem;font-size:.9rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab.active{color:#f8fafc;border-bottom-color:#6366f1}
+.tab:hover{color:#cbd5e1}
+/* Pages */
+.page{display:none}.page.active{display:block}
+/* Home grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.25rem;padding:1.75rem 2rem;max-width:1400px;margin:0 auto}
+.card{background:#1e293b;border-radius:1rem;padding:1.4rem;cursor:pointer;transition:transform .18s,box-shadow .18s;border:1px solid #334155;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);box-shadow:0 18px 36px rgba(0,0,0,.4)}
+.card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--c)}
+.card-icon{font-size:2.2rem;margin-bottom:.6rem}
+.card-title{font-size:1.15rem;font-weight:700;color:#f8fafc;margin-bottom:.2rem}
+.card-desc{font-size:.81rem;color:#94a3b8;margin-bottom:.9rem;line-height:1.5}
+.card-stats{display:flex;gap:.6rem;margin-bottom:.9rem}
+.stat{background:#0f172a;border-radius:.45rem;padding:.4rem .6rem;flex:1;text-align:center}
+.stat-lbl{font-size:.65rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.stat-val{font-size:1.05rem;font-weight:700;color:#f8fafc}
+.card-imp{background:#0f172a;border-radius:.45rem;padding:.6rem .9rem;display:flex;align-items:center;gap:.6rem}
+.imp-arrow{font-size:1.2rem;font-weight:800}
+.imp-txt{font-size:.79rem;color:#94a3b8}
 .pos{color:#34d399}.neg{color:#f87171}.neu{color:#94a3b8}
-/* Detail */
-.det-hdr{background:#1e293b;padding:1.25rem 2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid #334155;position:sticky;top:0;z-index:10}
-.back-btn{background:#334155;border:none;color:#e2e8f0;padding:.5rem 1.1rem;border-radius:.5rem;cursor:pointer;font-size:.9rem;font-family:inherit;transition:background .2s;white-space:nowrap}
+/* Amadot home card special */
+.amadot-card{background:linear-gradient(135deg,#1e1b4b,#1e293b);border:1px solid #4338ca}
+.amadot-card::before{background:linear-gradient(90deg,#6366f1,#a78bfa)}
+/* Detail pages */
+.det-hdr{background:#1e293b;padding:1.1rem 2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid #334155;position:sticky;top:0;z-index:10}
+.back-btn{background:#334155;border:none;color:#e2e8f0;padding:.45rem 1rem;border-radius:.45rem;cursor:pointer;font-size:.88rem;font-family:inherit;transition:background .2s}
 .back-btn:hover{background:#475569}
-.det-title{font-size:1.4rem;font-weight:800;color:#f8fafc;display:flex;align-items:center;gap:.6rem}
-.det-body{max-width:1200px;margin:0 auto;padding:2rem}
-.sum-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
-.sum-card{background:#1e293b;border-radius:.75rem;padding:1rem 1.25rem;border:1px solid #334155}
-.sum-card h3{font-size:.72rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem}
-.sum-big{font-size:1.8rem;font-weight:800;color:#f8fafc}
-.sum-sub{font-size:.78rem;color:#94a3b8;margin-top:.15rem}
-.sec-title{font-size:.82rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #334155}
-.ov-wrap{background:#1e293b;border-radius:1rem;padding:1.5rem;margin-bottom:2rem;border:1px solid #334155}
-.ov-chart{position:relative;height:280px}
-.q-list{display:grid;gap:1.5rem}
-.q-card{background:#1e293b;border-radius:1rem;padding:1.5rem;border:1px solid #334155}
-.q-num{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem}
-.q-text{font-size:1rem;font-weight:600;color:#f8fafc;margin-bottom:.9rem;line-height:1.5}
-.correct-badge{display:inline-flex;align-items:center;gap:.3rem;background:#064e3b;color:#34d399;padding:.25rem .85rem;border-radius:2rem;font-size:.78rem;font-weight:600;margin-bottom:1rem}
+.det-title{font-size:1.35rem;font-weight:800;color:#f8fafc;display:flex;align-items:center;gap:.5rem}
+.det-body{max-width:1200px;margin:0 auto;padding:1.75rem 2rem}
+/* Summary cards */
+.sum-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.75rem}
+.sum-card{background:#1e293b;border-radius:.75rem;padding:.9rem 1.1rem;border:1px solid #334155}
+.sum-card h3{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.sum-big{font-size:1.7rem;font-weight:800;color:#f8fafc}
+.sum-sub{font-size:.75rem;color:#94a3b8;margin-top:.1rem}
+/* Section heading */
+.sec-ttl{font-size:.78rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.9rem;padding-bottom:.4rem;border-bottom:1px solid #334155}
+/* Overview chart */
+.ov-wrap{background:#1e293b;border-radius:.9rem;padding:1.35rem;margin-bottom:1.75rem;border:1px solid #334155}
+.ov-chart{position:relative;height:270px}
+/* Question cards */
+.q-list{display:grid;gap:1.25rem}
+.q-card{background:#1e293b;border-radius:.9rem;padding:1.35rem;border:1px solid #334155}
+.q-num{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem}
+.q-text{font-size:.97rem;font-weight:600;color:#f8fafc;margin-bottom:.75rem;line-height:1.5}
+.correct-badge{display:inline-flex;align-items:center;gap:.25rem;background:#064e3b;color:#34d399;padding:.2rem .75rem;border-radius:2rem;font-size:.76rem;font-weight:600;margin-bottom:.9rem}
 .q-chart-box{position:relative}
-.pct-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem}
-.pct-card{background:#0f172a;border-radius:.5rem;padding:.75rem 1rem;text-align:center}
-.pct-lbl{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
-.pct-val{font-size:1.6rem;font-weight:800}
-.pct-blue{color:#60a5fa}
-.pct-green{color:#34d399}
-.delta{font-size:.85rem;font-weight:600}
-@media(max-width:700px){.sum-row{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
+.pct-row{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.9rem}
+.pct-card{background:#0f172a;border-radius:.45rem;padding:.65rem .9rem;text-align:center}
+.pct-lbl{font-size:.65rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.pct-val{font-size:1.5rem;font-weight:800}
+.pct-blue{color:#60a5fa}.pct-green{color:#34d399}
+.delta{font-size:.82rem;font-weight:600}
+/* ===== AMADOT section ===== */
+.amadot-body{max-width:1200px;margin:0 auto;padding:1.75rem 2rem}
+.amadot-sumrow{display:grid;grid-template-columns:repeat(5,1fr);gap:.9rem;margin-bottom:1.75rem}
+.grade-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.grade-pill{background:#1e293b;border:1px solid #334155;border-radius:2rem;padding:.2rem .7rem;font-size:.75rem;color:#e2e8f0}
+/* Amadot group card */
+.group-card{background:#1e293b;border-radius:.9rem;padding:1.35rem;border:1px solid #334155;margin-bottom:1.5rem}
+.group-title{font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.group-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.amadot-q{background:#0f172a;border-radius:.65rem;padding:1rem 1.1rem;margin-bottom:.8rem}
+.amadot-q:last-child{margin-bottom:0}
+.amadot-q-text{font-size:.9rem;font-weight:600;color:#f8fafc;margin-bottom:.65rem;line-height:1.5}
+.amadot-q-meta{display:flex;align-items:center;gap:1rem;margin-bottom:.6rem}
+.avg-badge{font-size:1.1rem;font-weight:800;color:#f8fafc}
+.avg-of{font-size:.75rem;color:#64748b}
+.pos-badge{font-size:.82rem;font-weight:600;color:#34d399}
+/* Likert bar */
+.likert-bar{display:flex;height:22px;border-radius:4px;overflow:hidden;gap:1px}
+.likert-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.8);transition:all .3s;min-width:0}
+.l1{background:#ef4444}.l2{background:#f97316}.l3{background:#eab308}.l4{background:#22c55e}.l5{background:#16a34a}
+.likert-legend{display:flex;gap:.5rem;margin-top:.35rem;font-size:.68rem;color:#64748b;flex-wrap:wrap}
+.ll-item{display:flex;align-items:center;gap:.25rem}
+.ll-dot{width:10px;height:10px;border-radius:2px}
+/* Binary question special */
+.binary-bar{display:flex;height:28px;border-radius:6px;overflow:hidden}
+.binary-yes{background:#16a34a;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#fff}
+.binary-no{background:#ef4444;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:#fff}
+/* Radar/overview amadot chart */
+.amadot-ov-wrap{background:#1e293b;border-radius:.9rem;padding:1.35rem;border:1px solid #334155;margin-bottom:1.75rem}
+@media(max-width:700px){.sum-row,.amadot-sumrow{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>📊 השוואת משובים פרה-פוסט | תשפ"ו</h1>
-  <p>ידע תלמידים בתחילת השנה (פרה) מול סוף השנה (פוסט) — בחרו נושא לסקירה מפורטת</p>
+  <h1>📊 ניתוח משובים | תשפ"ו</h1>
+  <p>מערכת ניתוח ידע ועמדות תלמידים — בחרו רובריקה לסקירה מפורטת</p>
 </div>
 
-<div id="home">
-  <div class="grid" id="topicGrid"></div>
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('prepost')">📚 השוואת פרה-פוסט</div>
+  <div class="tab" onclick="switchTab('amadot')">💡 שאלון עמדות</div>
 </div>
 
-<div id="detail">
-  <div class="det-hdr">
-    <button class="back-btn" onclick="showHome()">← חזרה</button>
-    <div class="det-title" id="detTitle"></div>
+<!-- PRE-POST PAGE -->
+<div class="page active" id="page-prepost">
+  <div id="home-pp">
+    <div class="grid" id="topicGrid"></div>
   </div>
-  <div class="det-body">
-    <div class="sum-row" id="sumRow"></div>
-    <div class="sec-title">סקירה כללית — אחוז תשובות נכונות לפי שאלה</div>
-    <div class="ov-wrap"><div class="ov-chart"><canvas id="ovCanvas"></canvas></div></div>
-    <div class="sec-title">פירוט לפי שאלה</div>
-    <div class="q-list" id="qList"></div>
+  <div id="detail-pp" style="display:none">
+    <div class="det-hdr">
+      <button class="back-btn" onclick="showHome()">← חזרה</button>
+      <div class="det-title" id="detTitle"></div>
+    </div>
+    <div class="det-body">
+      <div class="sum-row" id="sumRow"></div>
+      <div class="sec-ttl">סקירה כללית — % תשובות נכונות לפי שאלה</div>
+      <div class="ov-wrap"><div class="ov-chart"><canvas id="ovCanvas"></canvas></div></div>
+      <div class="sec-ttl">פירוט לפי שאלה</div>
+      <div class="q-list" id="qList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- AMADOT PAGE -->
+<div class="page" id="page-amadot">
+  <div class="amadot-body">
+    <!-- Summary row -->
+    <div class="amadot-sumrow" id="amadotSum"></div>
+    <!-- Overview chart -->
+    <div class="sec-ttl">ממוצע לפי שאלה (סולם 1–5)</div>
+    <div class="amadot-ov-wrap"><div class="ov-chart"><canvas id="amadotOvCanvas"></canvas></div></div>
+    <!-- Groups -->
+    <div class="sec-ttl">פירוט לפי נושא</div>
+    <div id="amadotGroups"></div>
   </div>
 </div>
 
 <script>
+// =================== DATA ===================
+
 const T = [
   {
     name:'אשנב למדע', icon:'🔭', color:'#4F46E5',
@@ -182,7 +247,7 @@ const T = [
        opts:['שבתאי','מאדים','ארץ'],
        ok:1, pre:[5,2,4], post:[1,5,4]},
       {t:'מה הרעיון של חדר בריחה?',
-       opts:['למצוא מפתח הכיתה ולצאת ממנה','לסיים את כל המשימות בזמן נתון','להקדים את הקבוצות האחרות'],
+       opts:['למצוא מפתח הכיתה ולצאת','לסיים את כל המשימות בזמן נתון','להקדים את הקבוצות האחרות'],
        ok:1, pre:[4,6,1], post:[4,6,0]},
       {t:'מה מוביל אותנו בחדר בריחה?',
        opts:['כל מה שנכתב (חידות + אתגרים)','חידות','אתגרים','משימות'],
@@ -238,59 +303,117 @@ const T = [
   },
   {
     name:'רפואה', icon:'🏥', color:'#9333EA',
-    desc:'מערכת הנשימה, מחזור הדם, שכבות העור והחייאה',
-    preN:82, postN:7, preDate:'נוב׳ 2024 – דצמ׳ 2025', postDate:'מאי 2026',
+    desc:'נשימה, מחזור דם, שכבות עור והחייאה — דצמ׳ 2025',
+    preN:12, postN:7, preDate:'דצמ׳ 2025', postDate:'מאי 2026',
     qs:[
       {t:'מהם תפקידי מערכת הנשימה?',
-       opts:['להכניס O₂ ולאוורר CO₂ החוצה','להכניס אוויר ולהוציא אוויר','לסלק CO₂ בלבד','להזרים את הדם בגוף'],
-       ok:0, pre:[36,35,5,6], post:[4,3,0,0]},
+       opts:['להכניס O₂ ולאוורר CO₂','להכניס אוויר ולהוציא אוויר','לסלק CO₂ בלבד','להזרים את הדם'],
+       ok:0, pre:[5,4,1,2], post:[4,3,0,0]},
       {t:'איזה מחלה אינה קשורה למחלות הנשימה?',
        opts:['טרשת עורקים','COPD','אסטמה','דלקת ריאות'],
-       ok:0, pre:[41,21,11,9], post:[5,1,0,1]},
+       ok:0, pre:[4,5,1,2], post:[5,1,0,1]},
       {t:'סדרו שכבות העור מבחוץ לפנים:',
        opts:['הפי דרמיס → דרמיס → סאב קותאן','דרמיס → הפי דרמיס → סאב קותאן','סאב קותאן → דרמיס → הפי דרמיס','כל התשובות נכונות'],
-       ok:0, pre:[16,25,24,17], post:[4,1,1,1]},
+       ok:0, pre:[1,3,2,6], post:[4,1,1,1]},
       {t:'מבנה הלב:',
        opts:['2 עליות, 2 חדרים, 4 מסתמים + מחיצה','2 מסתמים, 2 חדרים, 2 עליות, 2 מחיצות','2 חדרים, 3 עליות, 2 מסתמים','2 חדרים ו-2 עליות בלבד'],
-       ok:0, pre:[30,22,22,8], post:[3,1,2,1]},
+       ok:0, pre:[5,2,4,1], post:[3,1,2,1]},
       {t:'מערכת ההובלה מורכבת מ:',
        opts:['ורידים, עורקים, נימים','כל התשובות נכונות','עורקים, ורידים, נאדיות הריאה','מכלי דם כליליים'],
-       ok:0, pre:[30,24,15,13], post:[4,3,0,0]},
+       ok:0, pre:[5,2,4,1], post:[4,3,0,0]},
       {t:'תפקיד כדוריות הדם הלבנות:',
-       opts:['להלחם בזיהומים ולהתרבות בדלקת','לקשר חמצן אל התאים','לצבוע את הדם בצבע כהה','אחראיות על כרישיות הדם'],
-       ok:0, pre:[36,27,11,8], post:[5,1,0,1]},
+       opts:['להלחם בזיהומים ולהתרבות בדלקת','לקשר חמצן אל התאים','לצבוע את הדם בצבע כהה','כרישיות הדם'],
+       ok:0, pre:[4,5,3,0], post:[5,1,0,1]},
       {t:'משמעות המילה פריסטלטיקה:',
        opts:['פעילות מעיים — דחיפת המזון קדימה','פעילות הלב — הובלת דם לקיבה','פעילות מערכת העצבים בזמן אכילה','קשור לתחום הקוסמטיקה'],
-       ok:0, pre:[25,28,16,9], post:[5,1,0,1]},
+       ok:0, pre:[3,1,5,3], post:[5,1,0,1]},
       {t:'יחס עיסויים : הנשמות בהחייאת מבוגר:',
        opts:['30 עיסויים ו-2 הנשמות','15 עיסויים ו-2 הנשמות','5 עיסויים ו-2 הנשמות','2 עיסויים ו-30 הנשמות'],
-       ok:0, pre:[28,20,11,19], post:[4,3,0,0]},
+       ok:0, pre:[3,5,0,4], post:[4,3,0,0]},
       {t:'לפני תחילת החייאה חשוב ל:',
        opts:['כל התשובות נכונות','להזעיק עזרה','לשמור על בטיחות','לחבר דפיברלטור'],
-       ok:0, pre:[41,21,10,5], post:[6,1,0,0]},
+       ok:0, pre:[5,2,2,3], post:[6,1,0,0]},
       {t:'סנדלי חבלה משמשות ל:',
        opts:['הרחבת שטח הפנים + הפחתת לחץ על הפצע','לקבע פצצות למקום','סנדלים הקשורות לחבלים','להחלקה על הקרח'],
-       ok:0, pre:[30,26,11,9], post:[6,1,0,0]}
+       ok:0, pre:[1,4,1,6], post:[6,1,0,0]}
     ]
   }
 ];
 
+// =================== AMADOT DATA ===================
+const AMADOT = {
+  n: 55, date: 'פברואר 2026',
+  grades: [
+    {name:'שכבה ג', n:15, color:'#4F46E5'},
+    {name:'שכבה ד', n:16, color:'#059669'},
+    {name:'שכבה ה', n:12, color:'#D97706'},
+    {name:'שכבה ו', n:11, color:'#DB2777'}
+  ],
+  groups: [
+    {
+      name:'עניין במדע ועתיד', icon:'🔬', color:'#4F46E5',
+      qs:[0,1,2,3]
+    },
+    {
+      name:'גישה ללמידה וצמיחה', icon:'🌱', color:'#059669',
+      qs:[4,5,6]
+    },
+    {
+      name:'מחויבות לתוכנית', icon:'🎯', color:'#D97706',
+      qs:[7,8]
+    },
+    {
+      name:'ערכים חברתיים', icon:'🤝', color:'#EC4899',
+      qs:[9]
+    },
+    {
+      name:'יחס לתוכנית ומדריכים', icon:'⭐', color:'#9333EA',
+      qs:[10,11,12,13]
+    }
+  ],
+  questions: [
+    {text:'אני מתעניין/ת במדע ובטכנולוגיה', avg:3.45, dist:[5,9,14,10,17], pos:49},
+    {text:'כשאגדל ארצה ללמוד/לעבוד במדע או רפואה', avg:2.93, dist:[14,10,12,4,15], pos:35},
+    {text:'הייתי רוצה להשתתף בחוגים/שיעורים במדע', avg:2.93, dist:[13,9,13,9,11], pos:36},
+    {text:'לומד/ת מדע גורם לי לרצות לדעת ולהמשיך ללמוד', avg:4.2, binary:true, yes:44, no:11, pos:80},
+    {text:'אני סקרן/ית ללמוד דברים חדשים שלא הכרתי לפני', avg:4.18, dist:[3,3,8,8,33], pos:75},
+    {text:'אני לא מתייאש/ת ולא מרים/ה ידיים גם כשהמשימה קשה', avg:4.22, dist:[2,4,6,11,32], pos:78},
+    {text:'אני מרגיש/ה בנוח לשתף את הרעיונות שלי בקבוצה', avg:3.8, dist:[4,6,12,8,25], pos:60},
+    {text:'בזכות התכנים הנלמדים — שמתי למטרה להגיע לשיעורים', avg:3.73, dist:[5,6,9,14,21], pos:64},
+    {text:'אני יודע/ת שהדרך להצלחה כוללת קשיים ואתגרים', avg:4.16, dist:[3,3,6,13,30], pos:78},
+    {text:'הייתי רוצה לעזור לאנשים סביבי גם אם איני מכיר/ה אותם', avg:3.98, dist:[2,3,14,11,25], pos:65},
+    {text:'אני מרגיש/ה בנוח לדבר עם מדריכי/ות התוכנית', avg:3.91, dist:[5,4,7,14,25], pos:71},
+    {text:'אני מרגיש/ה שהתוכנית היא מקום בטוח בשבילי', avg:3.98, dist:[4,7,4,11,29], pos:73},
+    {text:'אני מרגיש/ה שהמדריכים/ות רוצים שאצליח', avg:4.42, dist:[4,1,3,7,40], pos:85},
+    {text:'הייתי רוצה להשתתף בתוכנית גם בשנה הבאה', avg:3.65, dist:[11,3,7,7,27], pos:62}
+  ]
+};
+
+// =================== HELPERS ===================
 function pct(q, isPre) {
   const a = isPre ? q.pre : q.post;
   const tot = a.reduce((s,v)=>s+v,0);
   return tot ? Math.round(a[q.ok]/tot*100) : 0;
 }
-function avg(topic, isPre) {
-  const ps = topic.qs.map(q=>pct(q,isPre));
+function avgTopic(t, isPre) {
+  const ps = t.qs.map(q=>pct(q,isPre));
   return Math.round(ps.reduce((s,v)=>s+v,0)/ps.length);
 }
 
-// ---- Home ----
+// =================== TABS ===================
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', (i===0&&tab==='prepost')||(i===1&&tab==='amadot')));
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
+  if(tab==='amadot') renderAmadot();
+}
+
+// =================== PRE-POST HOME ===================
 function renderHome() {
   const g = document.getElementById('topicGrid');
   g.innerHTML = '';
   T.forEach((t,i) => {
-    const pa = avg(t,true), qa = avg(t,false), d = qa-pa;
+    const pa = avgTopic(t,true), qa = avgTopic(t,false), d = qa-pa;
     const cls = d>3?'pos':d<-3?'neg':'neu';
     const arrow = d>3?'↑':d<-3?'↓':'→';
     g.innerHTML += `
@@ -311,20 +434,25 @@ function renderHome() {
   });
 }
 
-// ---- Detail ----
-let ovChart = null, qCharts = [];
+// =================== PRE-POST DETAIL ===================
+let ovChart=null, qCharts=[];
+
+function showHome() {
+  document.getElementById('detail-pp').style.display='none';
+  document.getElementById('home-pp').style.display='block';
+  if(ovChart){ovChart.destroy();ovChart=null;}
+  qCharts.forEach(c=>c.destroy()); qCharts=[];
+}
 
 function showDetail(idx) {
-  const t = T[idx];
-  document.getElementById('home').style.display = 'none';
-  document.getElementById('detail').style.display = 'block';
+  const t=T[idx];
+  document.getElementById('home-pp').style.display='none';
+  document.getElementById('detail-pp').style.display='block';
   window.scrollTo(0,0);
-
-  document.getElementById('detTitle').innerHTML = `${t.icon} ${t.name}`;
-
-  const pa = avg(t,true), qa = avg(t,false), d = qa-pa;
-  const dcls = d>=0?'pos':'neg', dsign = d>=0?'+':'';
-  document.getElementById('sumRow').innerHTML = `
+  document.getElementById('detTitle').innerHTML=`${t.icon} ${t.name}`;
+  const pa=avgTopic(t,true), qa=avgTopic(t,false), d=qa-pa;
+  const dcls=d>=0?'pos':'neg', ds=d>=0?'+':'';
+  document.getElementById('sumRow').innerHTML=`
     <div class="sum-card">
       <h3>תלמידים — פרה</h3>
       <div class="sum-big">${t.preN}</div>
@@ -342,91 +470,57 @@ function showDetail(idx) {
     </div>
     <div class="sum-card">
       <h3>ממוצע נכונות — פוסט</h3>
-      <div class="sum-big ${dcls}">${qa}% <span style="font-size:1rem">(${dsign}${d}%)</span></div>
+      <div class="sum-big ${dcls}">${qa}% <span style="font-size:1rem">(${ds}${d}%)</span></div>
       <div class="sum-sub">סוף שנה</div>
     </div>`;
 
-  // Destroy old charts
   if(ovChart){ovChart.destroy();ovChart=null;}
-  qCharts.forEach(c=>c.destroy());
-  qCharts=[];
+  qCharts.forEach(c=>c.destroy()); qCharts=[];
 
-  // Overview chart
-  const labels = t.qs.map((_,i)=>`שאלה ${i+1}`);
-  const preD = t.qs.map(q=>pct(q,true));
-  const postD = t.qs.map(q=>pct(q,false));
-  ovChart = new Chart(document.getElementById('ovCanvas').getContext('2d'),{
+  ovChart=new Chart(document.getElementById('ovCanvas').getContext('2d'),{
     type:'bar',
-    data:{labels,datasets:[
-      {label:'פרה — תחילת שנה',data:preD,backgroundColor:t.color+'55',borderColor:t.color,borderWidth:2,borderRadius:5},
-      {label:'פוסט — סוף שנה',data:postD,backgroundColor:t.color+'cc',borderColor:t.color,borderWidth:2,borderRadius:5}
-    ]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{labels:{color:'#e2e8f0',font:{size:12}}},
-        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y}%`}}
-      },
-      scales:{
-        x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}},
-        y:{min:0,max:100,ticks:{color:'#94a3b8',callback:v=>v+'%'},grid:{color:'#334155'}}
-      }
+    data:{
+      labels:t.qs.map((_,i)=>`שאלה ${i+1}`),
+      datasets:[
+        {label:'פרה — תחילת שנה',data:t.qs.map(q=>pct(q,true)),backgroundColor:t.color+'55',borderColor:t.color,borderWidth:2,borderRadius:5},
+        {label:'פוסט — סוף שנה',data:t.qs.map(q=>pct(q,false)),backgroundColor:t.color+'cc',borderColor:t.color,borderWidth:2,borderRadius:5}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#e2e8f0',font:{size:12}}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}},y:{min:0,max:100,ticks:{color:'#94a3b8',callback:v=>v+'%'},grid:{color:'#334155'}}}
     }
   });
 
-  // Question cards
-  const ql = document.getElementById('qList');
-  ql.innerHTML = '';
+  const ql=document.getElementById('qList'); ql.innerHTML='';
   t.qs.forEach((q,qi)=>{
-    const pp = pct(q,true), qp = pct(q,false), dd = qp-pp;
-    const ddcls = dd>=0?'pos':'neg', dds = dd>=0?'+':'';
-    const h = Math.max(160, q.opts.length*52);
-    const cid = `qc${qi}`;
-    ql.innerHTML += `
+    const pp=pct(q,true), qp=pct(q,false), dd=qp-pp;
+    const ddcls=dd>=0?'pos':'neg', dds=dd>=0?'+':'';
+    const h=Math.max(150,q.opts.length*50);
+    ql.innerHTML+=`
     <div class="q-card">
       <div class="q-num" style="color:${t.color}">שאלה ${qi+1}</div>
       <div class="q-text">${q.t}</div>
       <div class="correct-badge">✓ תשובה נכונה: ${q.opts[q.ok]}</div>
-      <div class="q-chart-box" style="height:${h}px"><canvas id="${cid}"></canvas></div>
+      <div class="q-chart-box" style="height:${h}px"><canvas id="qc${qi}"></canvas></div>
       <div class="pct-row">
-        <div class="pct-card">
-          <div class="pct-lbl">פרה — תחילת שנה</div>
-          <div class="pct-val pct-blue">${pp}%</div>
-        </div>
-        <div class="pct-card">
-          <div class="pct-lbl">פוסט — סוף שנה</div>
-          <div class="pct-val pct-green">${qp}% <span class="delta ${ddcls}">(${dds}${dd}%)</span></div>
-        </div>
+        <div class="pct-card"><div class="pct-lbl">פרה — תחילת שנה</div><div class="pct-val pct-blue">${pp}%</div></div>
+        <div class="pct-card"><div class="pct-lbl">פוסט — סוף שנה</div><div class="pct-val pct-green">${qp}% <span class="delta ${ddcls}">(${dds}${dd}%)</span></div></div>
       </div>
     </div>`;
   });
-
   setTimeout(()=>{
     t.qs.forEach((q,qi)=>{
-      const tp = q.pre.reduce((s,v)=>s+v,0)||1;
-      const tq = q.post.reduce((s,v)=>s+v,0)||1;
-      const preD = q.pre.map(v=>Math.round(v/tp*100));
-      const postD = q.post.map(v=>Math.round(v/tq*100));
-      const bgPre = q.opts.map((_,i)=>i===q.ok?'#3b82f6':'#3b82f622');
-      const bgPost = q.opts.map((_,i)=>i===q.ok?'#10b981':'#10b98122');
-      const brPre = q.opts.map((_,i)=>i===q.ok?'#3b82f6':'#3b82f644');
-      const brPost = q.opts.map((_,i)=>i===q.ok?'#10b981':'#10b98144');
-      const c = new Chart(document.getElementById(`qc${qi}`).getContext('2d'),{
+      const tp=q.pre.reduce((s,v)=>s+v,0)||1, tq=q.post.reduce((s,v)=>s+v,0)||1;
+      const c=new Chart(document.getElementById(`qc${qi}`).getContext('2d'),{
         type:'bar',
         data:{labels:q.opts,datasets:[
-          {label:'פרה %',data:preD,backgroundColor:bgPre,borderColor:brPre,borderWidth:1,borderRadius:3},
-          {label:'פוסט %',data:postD,backgroundColor:bgPost,borderColor:brPost,borderWidth:1,borderRadius:3}
+          {label:'פרה %',data:q.pre.map(v=>Math.round(v/tp*100)),backgroundColor:q.opts.map((_,i)=>i===q.ok?'#3b82f6':'#3b82f622'),borderRadius:3},
+          {label:'פוסט %',data:q.post.map(v=>Math.round(v/tq*100)),backgroundColor:q.opts.map((_,i)=>i===q.ok?'#10b981':'#10b98122'),borderRadius:3}
         ]},
-        options:{
-          responsive:true,maintainAspectRatio:false,indexAxis:'y',
-          plugins:{
-            legend:{labels:{color:'#e2e8f0',font:{size:11}}},
-            tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.x}%`}}
-          },
-          scales:{
-            x:{min:0,max:100,ticks:{color:'#94a3b8',callback:v=>v+'%'},grid:{color:'#334155'}},
-            y:{ticks:{color:'#e2e8f0',font:{size:11}},grid:{color:'#1e293b'}}
-          }
+        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+          plugins:{legend:{labels:{color:'#e2e8f0',font:{size:11}}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.x}%`}}},
+          scales:{x:{min:0,max:100,ticks:{color:'#94a3b8',callback:v=>v+'%'},grid:{color:'#334155'}},y:{ticks:{color:'#e2e8f0',font:{size:11}},grid:{color:'#1e293b'}}}
         }
       });
       qCharts.push(c);
@@ -434,14 +528,141 @@ function showDetail(idx) {
   },80);
 }
 
-function showHome(){
-  document.getElementById('detail').style.display='none';
-  document.getElementById('home').style.display='block';
-  if(ovChart){ovChart.destroy();ovChart=null;}
-  qCharts.forEach(c=>c.destroy());
-  qCharts=[];
+// =================== AMADOT ===================
+let amadotChartInstance = null;
+
+function renderAmadot() {
+  // Summary row
+  const sr = document.getElementById('amadotSum');
+  const gradeHTML = AMADOT.grades.map(g=>`<span class="grade-pill" style="border-color:${g.color}30;background:${g.color}11">${g.name}: <b>${g.n}</b></span>`).join('');
+  const avgAll = (AMADOT.questions.reduce((s,q)=>s+q.avg,0)/AMADOT.questions.length).toFixed(2);
+  const topQ = [...AMADOT.questions].sort((a,b)=>b.avg-a.avg)[0];
+  const botQ = [...AMADOT.questions].sort((a,b)=>a.avg-b.avg)[0];
+  sr.innerHTML=`
+    <div class="sum-card">
+      <h3>סה"כ תלמידים</h3>
+      <div class="sum-big">55</div>
+      <div class="sum-sub">${AMADOT.date}</div>
+    </div>
+    <div class="sum-card" style="grid-column:span 2">
+      <h3>פיזור שכבות</h3>
+      <div class="grade-pills" style="margin-top:.4rem">${gradeHTML}</div>
+    </div>
+    <div class="sum-card">
+      <h3>ממוצע כללי</h3>
+      <div class="sum-big pct-green">${avgAll}</div>
+      <div class="sum-sub">מתוך סולם 1–5</div>
+    </div>
+    <div class="sum-card">
+      <h3>הוסיף הכי גבוה</h3>
+      <div class="sum-big" style="font-size:1.3rem;color:#34d399">${topQ.avg}</div>
+      <div class="sum-sub" style="line-height:1.4">${topQ.text}</div>
+    </div>`;
+
+  // Overview chart
+  if(amadotChartInstance){amadotChartInstance.destroy();amadotChartInstance=null;}
+  const labels = AMADOT.questions.map((_,i)=>`ש׳${i+1}`);
+  const avgs = AMADOT.questions.map(q=>q.avg);
+  const colors = [];
+  AMADOT.groups.forEach(g => g.qs.forEach(qi => colors.push(g.color)));
+  amadotChartInstance = new Chart(document.getElementById('amadotOvCanvas').getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[{
+      label:'ממוצע (1–5)',data:avgs,
+      backgroundColor:colors.map(c=>c+'99'),borderColor:colors,borderWidth:2,borderRadius:5
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          title:ctx=>{const i=ctx[0].dataIndex;return AMADOT.questions[i].text},
+          label:ctx=>`ממוצע: ${ctx.parsed.y} | ${AMADOT.questions[ctx.dataIndex].pos}% חיובי`
+        }}
+      },
+      scales:{
+        x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}},
+        y:{min:1,max:5,ticks:{color:'#94a3b8'},grid:{color:'#334155'},
+          title:{display:true,text:'ממוצע',color:'#64748b'}}
+      }
+    }
+  });
+
+  // Legend for overview
+  const gc = document.getElementById('amadotGroups');
+  gc.innerHTML = '';
+
+  // Color legend
+  let legendHtml = '<div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem">';
+  AMADOT.groups.forEach((g,gi)=>{
+    const qNums = g.qs.map(i=>`ש׳${i+1}`).join(', ');
+    legendHtml+=`<div style="display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:#94a3b8"><span style="width:12px;height:12px;border-radius:3px;background:${g.color};display:inline-block"></span>${g.icon} ${g.name} (${qNums})</div>`;
+  });
+  legendHtml+='</div>';
+  gc.innerHTML = legendHtml;
+
+  // Group cards with questions
+  AMADOT.groups.forEach(g=>{
+    let qHtml = '';
+    g.qs.forEach(qi=>{
+      const q = AMADOT.questions[qi];
+      if(q.binary){
+        const yesPct = Math.round(q.yes/AMADOT.n*100);
+        const noPct = Math.round(q.no/AMADOT.n*100);
+        qHtml+=`
+        <div class="amadot-q">
+          <div class="amadot-q-text">שאלה ${qi+1}: ${q.text}</div>
+          <div class="amadot-q-meta">
+            <span class="pos-badge">✓ ${yesPct}% מסכים מאוד</span>
+            <span style="color:#f87171;font-size:.82rem">✗ ${noPct}% לא מסכים</span>
+          </div>
+          <div class="binary-bar">
+            <div class="binary-yes" style="width:${yesPct}%">${yesPct}%</div>
+            <div class="binary-no" style="width:${noPct}%">${noPct}%</div>
+          </div>
+          <div class="likert-legend"><span>מסכים מאוד (${q.yes})</span> <span style="margin-right:auto">לא מסכים (${q.no})</span></div>
+        </div>`;
+      } else {
+        const tot = q.dist.reduce((s,v)=>s+v,0)||1;
+        const bars = q.dist.map((v,i)=>{
+          const w = Math.round(v/tot*100);
+          return w>0?`<div class="likert-seg l${i+1}" style="width:${w}%">${w>8?w+'%':''}</div>`:'';
+        }).join('');
+        qHtml+=`
+        <div class="amadot-q">
+          <div class="amadot-q-text">שאלה ${qi+1}: ${q.text}</div>
+          <div class="amadot-q-meta">
+            <div><span class="avg-badge">${q.avg}</span><span class="avg-of"> / 5</span></div>
+            <span class="pos-badge">▲ ${q.pos}% ציינו 4–5</span>
+          </div>
+          <div class="likert-bar">${bars}</div>
+          <div class="likert-legend">
+            ${q.dist.map((v,i)=>`<span class="ll-item"><span class="ll-dot l${i+1}"></span>${i+1}: ${v}</span>`).join('')}
+          </div>
+        </div>`;
+      }
+    });
+
+    const groupAvg = (g.qs.reduce((s,qi)=>s+AMADOT.questions[qi].avg,0)/g.qs.length).toFixed(2);
+    gc.innerHTML+=`
+    <div class="group-card">
+      <div class="group-title">
+        <span class="group-dot" style="background:${g.color}"></span>
+        ${g.icon} ${g.name}
+        <span style="margin-right:auto;font-size:.85rem;font-weight:400;color:#94a3b8">ממוצע קבוצתי: <b style="color:${g.color}">${groupAvg}</b></span>
+      </div>
+      ${qHtml}
+    </div>`;
+  });
+
+  // Bottom legend for Likert
+  gc.innerHTML+=`
+  <div style="background:#1e293b;border-radius:.75rem;padding:1rem 1.35rem;border:1px solid #334155;display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+    <span style="font-size:.8rem;color:#94a3b8;font-weight:600">סולם תשובות:</span>
+    ${[1,2,3,4,5].map(i=>`<span class="ll-item"><span class="ll-dot l${i}" style="width:14px;height:14px;border-radius:3px;display:inline-block"></span> <span style="font-size:.8rem;color:#e2e8f0">${i} — ${['לא מסכים בכלל','לא מסכים','ניטרלי','מסכים','מסכים מאוד'][i-1]}</span></span>`).join('')}
+  </div>`;
 }
 
+// =================== INIT ===================
 renderHome();
 </script>
 </body>
