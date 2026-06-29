@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דוח פרה-פוסט | תוכנית נאווה</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy: #1a2744;
+    --teal: #2a7f8f;
+    --teal-light: #3da5b8;
+    --gold: #f0a500;
+    --gold-light: #ffc842;
+    --pre: #e87040;
+    --post: #2eaadc;
+    --green: #27ae60;
+    --red: #e74c3c;
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --text: #1e2a3a;
+    --text-light: #5a6a7e;
+    --border: #dde4ef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    direction: rtl;
+    line-height: 1.6;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, #2d4a8a 50%, var(--teal) 100%);
+    color: white;
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .header-inner { position: relative; max-width: 1100px; margin: 0 auto; }
+  .header h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .header h1 span { color: var(--gold-light); }
+  .header p { font-size: 1.1rem; opacity: 0.85; }
+  .header-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .meta-pill span { opacity: 0.7; }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== KPI STRIP ===== */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 32px auto;
+    max-width: 1100px;
+    padding: 0 24px;
+  }
+  .kpi {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 22px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .kpi-val {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--teal);
+    line-height: 1;
+  }
+  .kpi-val.gold { color: var(--gold); }
+  .kpi-val.navy { color: var(--navy); }
+  .kpi-val.green { color: var(--green); }
+  .kpi-label { font-size: 0.82rem; color: var(--text-light); margin-top: 6px; }
+
+  /* ===== SECTION TITLE ===== */
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 40px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--teal-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .icon { font-size: 1.5rem; }
+
+  /* ===== OVERVIEW CHART ===== */
+  .chart-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .chart-card h3 {
+    font-size: 1.05rem;
+    color: var(--navy);
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.88rem;
+    color: var(--text-light);
+  }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+
+  /* ===== QUESTION CARDS ===== */
+  .questions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .q-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+    border-right: 5px solid var(--teal);
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .q-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  .q-card.negative { border-right-color: #e0885a; }
+  .q-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .q-card.negative .q-num { color: #c0663a; }
+  .q-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+    min-height: 42px;
+  }
+  .q-scores {
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    height: 70px;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .q-bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    gap: 4px;
+  }
+  .q-bar-wrap {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .q-bar {
+    width: 54%;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    min-height: 4px;
+    transition: height 0.4s;
+  }
+  .q-bar.pre { background: var(--pre); }
+  .q-bar.post { background: var(--post); }
+  .q-bar-val {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: inherit;
+    white-space: nowrap;
+  }
+  .q-bar-label {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    text-align: center;
+  }
+  .q-change {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 100px;
+    width: fit-content;
+  }
+  .q-change.up { background: #e8f8f0; color: var(--green); }
+  .q-change.down { background: #fdecea; color: var(--red); }
+  .q-change.neutral { background: #f0f3f8; color: var(--text-light); }
+  .q-change.up-neg { background: #fdecea; color: var(--red); }
+  .q-change.down-neg { background: #e8f8f0; color: var(--green); }
+  .neg-tag {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 0.68rem;
+    background: #fff3ec;
+    color: #c0663a;
+    border: 1px solid #f0b894;
+    border-radius: 100px;
+    padding: 2px 8px;
+    font-weight: 600;
+  }
+
+  /* ===== RADAR CHART ===== */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+
+  /* ===== INSIGHTS ===== */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .insight-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 22px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .insight-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .insight-card h4 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .insight-card p {
+    font-size: 0.86rem;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+  .insight-card.highlight { background: linear-gradient(135deg, #f0f8ff, #e6f4ff); border-color: var(--teal-light); }
+  .insight-card.warning { background: linear-gradient(135deg, #fffbf0, #fff8e6); border-color: var(--gold); }
+  .insight-card.positive { background: linear-gradient(135deg, #f0fff6, #e6faf0); border-color: #6fcf97; }
+
+  /* ===== SCALE LEGEND ===== */
+  .scale-box {
+    background: linear-gradient(135deg, var(--navy), #2d4a8a);
+    color: white;
+    border-radius: 14px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .scale-box-title { font-weight: 700; font-size: 0.92rem; opacity: 0.8; min-width: 80px; }
+  .scale-items { display: flex; gap: 0; flex: 1; }
+  .scale-item {
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
+    border-left: 1px solid rgba(255,255,255,0.15);
+  }
+  .scale-item:last-child { border-left: none; }
+  .scale-num { font-size: 1.3rem; font-weight: 800; color: var(--gold-light); }
+  .scale-text { font-size: 0.72rem; opacity: 0.8; margin-top: 2px; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.82rem;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .kpi-strip { grid-template-columns: repeat(2,1fr); }
+    .questions-grid { grid-template-columns: 1fr; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <h1>דוח <span>פרה-פוסט</span> | תוכנית נאווה</h1>
+    <p>השוואת תחילת שנה מול סוף שנה — עמדות, מיומנויות ורגשות התלמידים</p>
+    <div class="header-meta">
+      <div class="meta-pill"><span>&#128100;</span> 35 תלמידים — תחילת שנה</div>
+      <div class="meta-pill"><span>&#128100;</span> 32 תלמידים — סוף שנה</div>
+      <div class="meta-pill"><span>&#128196;</span> 16 שאלות</div>
+      <div class="meta-pill"><span>&#11088;</span> סולם 1–5</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== KPI STRIP ===== -->
+<div class="kpi-strip">
+  <div class="kpi">
+    <div class="kpi-val navy">3.68</div>
+    <div class="kpi-label">ממוצע כללי — תחילת שנה</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val teal">3.72</div>
+    <div class="kpi-label">ממוצע כללי — סוף שנה</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val green">+0.43</div>
+    <div class="kpi-label">שינוי מרבי חיובי (ש׳ 6 — מחשב ככלי)</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val gold">4.63</div>
+    <div class="kpi-label">ציון הגבוה ביותר (ש׳ 7 — שיתוף פעולה)</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== SCALE ===== -->
+  <div class="scale-box">
+    <div class="scale-box-title">סולם הציונים:</div>
+    <div class="scale-items">
+      <div class="scale-item"><div class="scale-num">1</div><div class="scale-text">כלל לא</div></div>
+      <div class="scale-item"><div class="scale-num">2</div><div class="scale-text">במידה מועטה</div></div>
+      <div class="scale-item"><div class="scale-num">3</div><div class="scale-text">במידה בינונית</div></div>
+      <div class="scale-item"><div class="scale-num">4</div><div class="scale-text">במידה רבה</div></div>
+      <div class="scale-item"><div class="scale-num">5</div><div class="scale-text">במידה רבה מאוד</div></div>
+    </div>
+  </div>
+
+
+  <!-- ===== RADAR + CHANGE CHART ===== -->
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>&#127919; פרופיל לפי נושאים</h3>
+      <canvas id="radarChart" height="280"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>&#128200; שינוי לפי שאלה (פוסט מינוס פרה)</h3>
+      <canvas id="changeChart" height="280"></canvas>
+    </div>
+  </div>
+
+  <!-- ===== QUESTION CARDS ===== -->
+  <div class="section-title"><span class="icon">&#128203;</span> פירוט לפי שאלה</div>
+  <div class="questions-grid" id="cardsGrid"></div>
+
+  <!-- ===== INSIGHTS ===== -->
+  <div class="section-title"><span class="icon">&#128161;</span> תובנות</div>
+  <div class="insights-grid">
+    <div class="insight-card highlight">
+      <span class="insight-icon">&#128187;</span>
+      <h4>טכנולוגיה ככלי עזר — שיפור משמעותי</h4>
+      <p>הציון לשאלה "המחשב הוא כלי שיכול לעזור לי" קפץ מ-3.91 ל-4.34 (+0.43), השיפור הגדול ביותר בכל השאלות. גם יכולת חיפוש המידע באינטרנט (ש׳ 4) עלתה מ-3.20 ל-3.38. התוכנית הצליחה ממש לשנות עמדות כלפי הטכנולוגיה.</p>
+    </div>
+    <div class="insight-card positive">
+      <span class="insight-icon">&#128483;</span>
+      <h4>ביטוי עצמי בכיתה — צמיחה בולטת</h4>
+      <p>הרגשת היכולת לבטא דעה בכיתה (ש׳ 12) עלתה מ-3.80 ל-4.16 (+0.36). שיפור זה, לצד עלייה בויסות הרגשי (ש׳ 11: 3.89→4.09), מצביע על סביבה בטוחה ומעודדת שנוצרה בתוכנית.</p>
+    </div>
+    <div class="insight-card positive">
+      <span class="insight-icon">&#129309;</span>
+      <h4>שיתוף פעולה — גבוה ויציב</h4>
+      <p>שאלת שיתוף הפעולה עם חברים (ש׳ 7) קיבלה את הציון הגבוה ביותר בשני המדידות (4.60 ו-4.63). הקשבה לחברים (ש׳ 10) עמדה על 4.54 בתחילה — מה שמראה שיש בסיס חברתי חיובי חזק בקבוצה.</p>
+    </div>
+    <div class="insight-card warning">
+      <span class="insight-icon">&#127981;</span>
+      <h4>אנגלית — אתגר מתמשך</h4>
+      <p>אהבת האנגלית (ש׳ 1) נשארה נמוכה יחסית (3.29→3.31). שאלת "אני ממש לא אוהב/ת אנגלית" (ש׳ 15 — שלילית) עמדה על 2.71→2.69 — ציון בינוני שמצביע על יחס אמביוולנטי. זה תחום שכדאי להמשיך לעבוד עליו.</p>
+    </div>
+    <div class="insight-card warning">
+      <span class="insight-icon">&#128241;</span>
+      <h4>מדיה חברתית וחשיבה ביקורתית — נקודה לתשומת לב</h4>
+      <p>הנכונות להאמין לכל מה שרואים בטלוויזיה ובטיק טוק (ש׳ 16 — שלילית) עלתה מ-1.83 ל-2.13. למרות שהציון עדיין נמוך, המגמה ראויה לתשומת לב. מומלץ לשלב יותר תכנים של אוריינות מדיה.</p>
+    </div>
+    <div class="insight-card highlight">
+      <span class="insight-icon">&#128218;</span>
+      <h4>קשר עם צוות התוכנית — גבוה לאורך השנה</h4>
+      <p>התלמידים דיווחו על תחושה שהצוות מקשיב ומנסה לעזור (ש׳ 9) בציון גבוה של 4.43 בתחילת השנה ו-4.47 בסופה. זהו מדד אמון שמהווה תשתית חיונית לכל פעולה חינוכית.</p>
+    </div>
+  </div>
+
+  <!-- ===== SUMMARY CHART ===== -->
+  <div class="section-title"><span class="icon">&#128736;</span> ממוצעים לפי תחומים</div>
+  <div class="chart-card">
+    <canvas id="domainChart" height="220"></canvas>
+  </div>
+
+</div>
+
+<div class="footer">
+  דוח פרה-פוסט | תוכנית נאווה | נוצר אוטומטית על בסיס נתוני השאלוניות
+</div>
+
+<script>
+// ===== DATA =====
+const questions = [
+  { id: 1,  text: "אני אוהב/ת לדבר באנגלית",                                               negative: false, pre: 3.29, post: 3.31 },
+  { id: 2,  text: "אני אוהב/ת מדע ולעשות ניסויים",                                         negative: false, pre: 4.17, post: 4.19 },
+  { id: 3,  text: "אני יודע/ת להשתמש במחשב",                                                negative: false, pre: 4.20, post: 4.09 },
+  { id: 4,  text: "קל לי למצוא מידע באינטרנט כדי להכין משימה או מצגת",                    negative: false, pre: 3.20, post: 3.38 },
+  { id: 5,  text: "אני מרגיש/ה בנוח לפנות לשגית/לנאוה כשאני צריך/ה עזרה",                 negative: false, pre: 4.29, post: 4.09 },
+  { id: 6,  text: "אני חושב/ת שהמחשב הוא כלי שיכול לעזור לי בהכנת עבודות",               negative: false, pre: 3.91, post: 4.34 },
+  { id: 7,  text: "אני אוהב/ת לשתף פעולה עם חברים",                                        negative: false, pre: 4.60, post: 4.63 },
+  { id: 8,  text: "כשאני צריך/ה להכין מצגת אני מתקשה למצוא מידע באינטרנט",               negative: true,  pre: 3.00, post: 2.75 },
+  { id: 9,  text: "צוות התוכנית מקשיב לי ומנסה לעזור לי",                                  negative: false, pre: 4.43, post: 4.47 },
+  { id: 10, text: "אני מקשיב/ה לחברים ומאפשר/ת להם להשלים את דבריהם",                    negative: false, pre: 4.54, post: 4.28 },
+  { id: 11, text: "ברגעי כעס אני מנסה להירגע לפני שאני מגיב/ה",                            negative: false, pre: 3.89, post: 4.09 },
+  { id: 12, text: "אני מרגיש/ה שאני מסוגל/ת לבטא את דעתי בכיתה",                         negative: false, pre: 3.80, post: 4.16 },
+  { id: 13, text: "קשה לי לשתף פעולה ולעבוד בצוות",                                        negative: true,  pre: 2.54, post: 2.56 },
+  { id: 14, text: "אני מאמין/ה שאני יכול/ה להצליח",                                         negative: false, pre: 4.51, post: 4.38 },
+  { id: 15, text: "אני ממש לא אוהב/ת לדבר באנגלית",                                        negative: true,  pre: 2.71, post: 2.69 },
+  { id: 16, text: "אני מאמין/ה לכל דבר שרואים בטלוויזיה או בטיק טוק",                    negative: true,  pre: 1.83, post: 2.13 },
+];
+
+// ===== RADAR CHART =====
+const domains = [
+  { name: 'אנגלית', qPre: [3.29], qPost: [3.31] },
+  { name: 'מדע וסקרנות', qPre: [4.17], qPost: [4.19] },
+  { name: 'מיומנויות דיגיטליות', qPre: [4.20,3.20,3.91], qPost: [4.09,3.38,4.34] },
+  { name: 'קשר עם צוות', qPre: [4.29,4.43], qPost: [4.09,4.47] },
+  { name: 'שיתוף פעולה', qPre: [4.60,4.54], qPost: [4.63,4.28] },
+  { name: 'ויסות רגשי', qPre: [3.89], qPost: [4.09] },
+  { name: 'ביטוי עצמי', qPre: [3.80,4.51], qPost: [4.16,4.38] },
+];
+const avg = arr => arr.reduce((a,b)=>a+b,0)/arr.length;
+const ctx2 = document.getElementById('radarChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'radar',
+  data: {
+    labels: domains.map(d => d.name),
+    datasets: [
+      {
+        label: 'תחילת שנה',
+        data: domains.map(d => +avg(d.qPre).toFixed(2)),
+        backgroundColor: 'rgba(232,112,64,0.18)',
+        borderColor: 'rgba(232,112,64,0.9)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(232,112,64,1)',
+        pointRadius: 4,
+      },
+      {
+        label: 'סוף שנה',
+        data: domains.map(d => +avg(d.qPost).toFixed(2)),
+        backgroundColor: 'rgba(46,170,220,0.18)',
+        borderColor: 'rgba(46,170,220,0.9)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(46,170,220,1)',
+        pointRadius: 4,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      r: {
+        min: 0, max: 5,
+        ticks: { stepSize: 1, font: { size: 10 } },
+        pointLabels: { font: { size: 11, weight: 'bold' } },
+        grid: { color: '#e0e8f0' }
+      }
+    },
+    plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }
+  }
+});
+
+// ===== CHANGE CHART =====
+const changes = questions.map(q => +(q.post - q.pre).toFixed(2));
+const changeColors = questions.map(q => {
+  const diff = q.post - q.pre;
+  if (q.negative) return diff < 0 ? 'rgba(39,174,96,0.85)' : 'rgba(231,76,60,0.85)';
+  return diff >= 0 ? 'rgba(39,174,96,0.85)' : 'rgba(231,76,60,0.85)';
+});
+const ctx3 = document.getElementById('changeChart').getContext('2d');
+new Chart(ctx3, {
+  type: 'bar',
+  data: {
+    labels: questions.map(q => `ש׳ ${q.id}`),
+    datasets: [{
+      label: 'שינוי (פוסט - פרה)',
+      data: changes,
+      backgroundColor: changeColors,
+      borderRadius: 5,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: ctx => `שאלה ${ctx[0].dataIndex + 1}`,
+          label: ctx => {
+            const q = questions[ctx.dataIndex];
+            const d = ctx.raw;
+            const dir = q.negative ? (d < 0 ? ' ✓ שיפור (שאלה שלילית)' : ' ↓ ירידה') : (d >= 0 ? ' ↑ שיפור' : ' ↓ ירידה');
+            return `שינוי: ${d > 0 ? '+' : ''}${d}${dir}`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: { grid: { color: '#eee' }, ticks: { font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// ===== DOMAIN BAR CHART =====
+const ctx4 = document.getElementById('domainChart').getContext('2d');
+new Chart(ctx4, {
+  type: 'bar',
+  data: {
+    labels: domains.map(d => d.name),
+    datasets: [
+      {
+        label: 'תחילת שנה',
+        data: domains.map(d => +avg(d.qPre).toFixed(2)),
+        backgroundColor: 'rgba(232,112,64,0.85)',
+        borderRadius: 6,
+      },
+      {
+        label: 'סוף שנה',
+        data: domains.map(d => +avg(d.qPost).toFixed(2)),
+        backgroundColor: 'rgba(46,170,220,0.85)',
+        borderRadius: 6,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 12 } } }
+    },
+    scales: {
+      y: { min: 0, max: 5, grid: { color: '#eee' }, ticks: { font: { size: 11 } } },
+      x: { grid: { display: false }, ticks: { font: { size: 12 } } }
+    }
+  }
+});
+
+// ===== QUESTION CARDS =====
+const grid = document.getElementById('cardsGrid');
+const maxVal = 5;
+
+questions.forEach(q => {
+  const diff = q.post - q.pre;
+  const preH = Math.round((q.pre / maxVal) * 56);
+  const postH = Math.round((q.post / maxVal) * 56);
+
+  let changeClass, changeIcon, changeText;
+  if (q.negative) {
+    if (diff < -0.05)      { changeClass = 'down-neg'; changeIcon = '✓'; changeText = `שיפור (${diff.toFixed(2)})`; }
+    else if (diff > 0.05)  { changeClass = 'up-neg';   changeIcon = '↑'; changeText = `עלייה (${'+'}${diff.toFixed(2)})`; }
+    else                    { changeClass = 'neutral';  changeIcon = '→'; changeText = `ללא שינוי (${diff.toFixed(2)})`; }
+  } else {
+    if (diff > 0.05)       { changeClass = 'up';      changeIcon = '↑'; changeText = `שיפור (+${diff.toFixed(2)})`; }
+    else if (diff < -0.05) { changeClass = 'down';    changeIcon = '↓'; changeText = `ירידה (${diff.toFixed(2)})`; }
+    else                    { changeClass = 'neutral'; changeIcon = '→'; changeText = `ללא שינוי (${diff.toFixed(2)})`; }
+  }
+
+  const card = document.createElement('div');
+  card.className = `q-card${q.negative ? ' negative' : ''}`;
+  card.innerHTML = `
+    ${q.negative ? '<span class="neg-tag">שאלה שלילית</span>' : ''}
+    <div class="q-num">שאלה ${q.id}</div>
+    <div class="q-text">${q.text}</div>
+    <div class="q-scores">
+      <div class="q-bar-group">
+        <div class="q-bar-wrap">
+          <div class="q-bar pre" style="height:${preH}px">
+            <span class="q-bar-val" style="color:var(--pre)">${q.pre.toFixed(2)}</span>
+          </div>
+        </div>
+        <div class="q-bar-label">תחילת שנה</div>
+      </div>
+      <div style="width:12px"></div>
+      <div class="q-bar-group">
+        <div class="q-bar-wrap">
+          <div class="q-bar post" style="height:${postH}px">
+            <span class="q-bar-val" style="color:var(--post)">${q.post.toFixed(2)}</span>
+          </div>
+        </div>
+        <div class="q-bar-label">סוף שנה</div>
+      </div>
+    </div>
+    <div class="q-change ${changeClass}">${changeIcon} ${changeText}</div>
+  `;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
